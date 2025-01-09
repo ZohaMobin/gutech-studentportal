@@ -39,9 +39,11 @@
   
   /* Navigation Links */
   .nav-links {
-    list-style: none;
+    text-decoration: none !important;
+    list-style: none !important;
     padding: 0;
     margin: 0;
+    color: white;
   }
   
   .nav-links li {
@@ -60,4 +62,9 @@
   .sidebar.collapsed .nav-links li {
     justify-content: center;
   }
-  
+  .sideBar-link{
+    list-style: none !important;
+    list-style-type: none;
+    text-decoration: none;
+    color: white !important;
+  }
