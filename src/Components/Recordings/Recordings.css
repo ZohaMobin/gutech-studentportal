@@ -1,0 +1,59 @@
+/* Recordings.css */
+
+.recordings-container {
+  text-align: center;
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.recordings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.recording-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.recording-card h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.recording-card p {
+  color: #555;
+  margin: 5px 0;
+}
+
+.recording-actions {
+  margin-top: 15px;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.watch-now {
+  background-color: #f56a00;
+  color: white;
+  margin-right: 10px;
+}
+
+.download {
+  background-color: #007bff;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
