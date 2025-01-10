@@ -1,10 +1,10 @@
-import './App.css';
-import Signup_page from "./Pages/Signup/Signup" 
+import React from 'react';
+import Signup from './Pages/Signup/Signup'; // Ensure the path to Signup.js is correct
+
 function App() {
   return (
     <div>
-      <h1>React App</h1>
-      <Signup_page/>
+      <Signup />
     </div>
   );
 }
