@@ -38,6 +38,26 @@ const recordingsData = [
 const RecordingsPage = () => {
   return (
     <div className="recordings-container">
+       <nav className="navbar">
+      <div className="navbar-center">
+      <div className="navbar-search-container">
+  <input type="text" className="navbar-search-input" placeholder="Search" />
+  <span className="navbar-search-icon">🔍 </span>
+  <span className="navbar-search-icon">⌘</span>
+  <span className="navbar-search-icon">F</span>
+</div>
+
+      </div>
+      <div className="navbar-right">
+        <button className="navbar-notification"></button>
+        <div className="navbar-profile">
+          <img src="/path/to/profile.png" alt="User Profile" className="navbar-profile-img" />
+          <span className="navbar-profile-name">Mudassir</span>
+          <span className="navbar-profile-name">⌵</span>
+        </div>
+      </div>
+    </nav> 
+        
       <h1>Class Recordings</h1>
       <p>Access and review past class sessions</p>
       <div className="recordings-grid">
