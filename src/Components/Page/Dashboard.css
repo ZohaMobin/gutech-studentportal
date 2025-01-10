@@ -1,0 +1,53 @@
+.card2 {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); 
+    border-radius: 20px;
+    background-color: white;
+    width: 350px;
+    height: auto;
+    padding: 15px;
+    padding-top: 0;
+    text-align: center;
+    margin-top: 5px;
+    transition: transform 0.3s ease;
+    left: 73%;
+    top: 20px;
+    position: fixed;
+}
+
+.card2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card2 h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.bar-container {
+    width: 100%;
+    background-color: #e0e0e0; 
+    border-radius: 10px;
+    height: 20px;
+    margin-bottom: 15px;
+}
+
+.bar {
+    height: 100%;
+    border-radius: 10px;
+    text-align: right;
+    color: white;
+    padding-right: 10px; 
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.overall-attendance {
+    background-color: #007bff; 
+}
+
+.overall-progress {
+    background-color: #28a745; 
+}
