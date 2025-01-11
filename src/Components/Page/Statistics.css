@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .card2 {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
@@ -9,13 +14,13 @@
     text-align: center;
     margin-top: 5px;
     transition: transform 0.3s ease;
-    left: 5%;
+    left: 25px; 
     bottom: 5%;
     position: fixed;
-    border: 1px solid #ccc; 
-    }
-    
-  
+    border: 1px solid #ccc;
+    margin-left: 0; 
+}
+
 
 .card2 h3 {
     font-size: 1.5rem;
@@ -26,7 +31,7 @@
 
 .bar-container {
     width: 100%;
-    background-color: #e0e0e0; 
+    background-color: #e0e0e0;
     border-radius: 10px;
     height: 20px;
     margin-bottom: 15px;
@@ -37,15 +42,16 @@
     border-radius: 10px;
     text-align: right;
     color: white;
-    padding-right: 10px; 
+    padding-right: 10px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
+
 .overall-attendance {
-    background-color: #007bff; 
+    background-color: #007bff;
 }
 
 .overall-progress {
-    background-color: #28a745; 
+    background-color: #28a745;
 }

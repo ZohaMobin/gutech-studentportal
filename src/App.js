@@ -2,7 +2,8 @@
 import './App.css';
 import Staistics from './Components/Page/Statistics';
 import './Components/Page/Statistics';
-
+import Announcement from './Components/Page/Announcement';
+import './Components/Page/Announcement';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   return (
     <div className="container">
     <Staistics Statistics_Data={Statistics_Data1}/>
+    <Announcement/>
     </div>
   );
 }
