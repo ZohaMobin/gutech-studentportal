@@ -35,7 +35,7 @@ const Signup = () => {
           <div className="toggle-panel toggle-left">
             <h1>Hello, Friend</h1>
             <p>Register with your personal details to use all of the site's features</p>
-            <p className='back'>Already Have an Account?<br/> Log In to Continue!</p>
+            <p className='back'>Already Have an Account?<br/> Sign In to Continue!</p>
             <button className="hidden" onClick={() => setIsActive(false)}>
               Sign In
             </button>
