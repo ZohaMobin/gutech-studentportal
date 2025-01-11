@@ -1,0 +1,44 @@
+.recording-links-container {
+    padding: 20px;
+}
+  
+.recordings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+  
+.recording-link-card {
+    border: 1px solid #323232; /* Dark border color */
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+  
+.recording-link-card h3 {
+    margin: 0 0 10px 0;
+    color: #991D20; /* Title color */
+}
+  
+.recording-link-card p {
+    margin: 5px 0;
+    color: #323232; /* Text color */
+}
+  
+.recording-link-card strong {
+    color: #991D20; /* Strong text color */
+}
+  
+.watch-recording-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    color: white;
+    background-color: #991D20; /* Button background */
+    text-decoration: none;
+    border-radius: 5px;
+}
+  
+.watch-recording-button:hover {
+    background-color: #323232; /* Button hover background */
+}

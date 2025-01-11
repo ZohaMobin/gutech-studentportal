@@ -1,13 +1,17 @@
-// App.js
 import React from "react";
-import RecordingsPage from "./Components/Pages/Recordingspage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import RecordingsPage from "./Components/Recordings/Recordings";
+import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
 
-const App = () => {
+function App() {
   return (
-    <div>
-      <RecordingsPage />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<RecordingsPage />} />
+        <Route path="/recording-links" element={<RecordingLinksPage />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;
