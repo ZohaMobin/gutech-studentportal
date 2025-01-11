@@ -33,15 +33,17 @@ const Signup = () => {
       <div className="toggle-container">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
-            <h1>Welcome Back!</h1>
-            <p>Enter your personal details to use all of the site's features</p>
+            <h1>Hello, Friend</h1>
+            <p>Register with your personal details to use all of the site's features</p>
+            <p className='back'>Already Have an Account?<br/> Log In to Continue!</p>
             <button className="hidden" onClick={() => setIsActive(false)}>
               Sign In
             </button>
           </div>
           <div className="toggle-panel toggle-right">
-            <h1>Hello, Friend</h1>
-            <p>Register with your personal details to use all of the site's features</p>
+            <h1>Welcome Back!</h1>
+            <p>Enter your personal details to use all of the site's features</p>
+            <p className='back'>Don't Have an Account Yet?<br/> Let’s Get You Started!</p>
             <button className="hidden" onClick={() => setIsActive(true)}>
               Sign Up
             </button>

@@ -64,6 +64,8 @@ body {
 .container button.hidden {
   background-color: transparent;
   border-color: #fff;
+  margin-top: 0px;
+
 }
 
 .container button:hover {
@@ -192,6 +194,24 @@ body {
   transition: all 0.6s ease-in-out;
 }
 
+/* Adjust the text and button spacing inside the toggle panels */
+.toggle-panel p.back {
+  margin-top: 20px; /* Add margin above the text for distinction */
+  margin-bottom: 10px; /* Reduce spacing below the text */
+  font-size: 14px; /* Optional: Adjust font size if needed */
+  font-weight: bold;
+  line-height: 1.5; /* Ensure good readability */
+  color: #fff; /* Keep the text color white */
+}
+
+/* Style the button in the toggle panel */
+.toggle-panel button {
+  margin-top: 10px; /* Close the gap between the text and the button */
+  padding: 8px 30px; /* Adjust padding for a compact button */
+  font-size: 12px; /* Ensure button text size matches compact layout */
+}
+
+
 .toggle-left {
   transform: translateX(-200%);
 }
@@ -207,72 +227,4 @@ body {
 
 .container.active .toggle-right {
   transform: translateX(200%);
-}
-
-
-/* Forgot Password container adjustments */
-
-.forgot-password-container {
-  width: 100%;
-  max-width: 600px; /* Restrict form width */
-  padding: 30px 20px; /* Compact padding */
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  background: #fff;
-  text-align: center;
-}
-
-/* Update spacing for elements inside the container */
-.forgot-password-container p {
-  margin: 10px 0 20px; /* Reduce vertical spacing for compactness */
-  color: #991D20;
-  font-size: 14px;
-}
-
-.forgot-password-container input {
-  width: 100%;
-  margin-bottom: 10px; /* Reduce spacing below the input */
-  padding: 10px 15px;
-  font-size: 14px;
-  border: 1px solid #991D20;
-  border-radius: 8px;
-  outline: none;
-  background-color: #f9ecee;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.forgot-password-container button[type="button"] {
-  width: 100%; /* Ensure button takes full width */
-  padding: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #991D20;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-bottom: 0; /* Remove bottom margin */
-}
-
-.forgot-password-container button[type="button"]:hover {
-  background-color: #b52427; /* Slightly lighter red for hover */
-}
-
-/* Back button styles */
-.back-button {
-  background: none;
-  border: none;
-  color: #991D20;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 10px; /* Reduce margin below the back button */
-  text-align: left;
-  transition: all 0.3s ease-in-out;
-}
-
-.back-button:hover {
-  color: #b52427;
-  transform: translateX(-3px); /* Smooth leftward motion on hover */
 }
