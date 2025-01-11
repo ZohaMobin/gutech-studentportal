@@ -68,3 +68,27 @@
     text-decoration: none;
     color: white !important;
   }
+
+  /* Dropdown Toggle */
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  list-style: none;
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.dropdown-menu li {
+  margin: 5px 0;
+}
