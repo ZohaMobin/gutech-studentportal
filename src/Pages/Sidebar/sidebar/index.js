@@ -229,6 +229,11 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/courses" className="sideBar-link">
+            {isCollapsed ? "Grades" : "Grades"}
+          </Link>
+        </li>
+        <li>
           <Link to="/resources" className="sideBar-link">
             {isCollapsed ? "Resources" : "Resources"}
           </Link>
@@ -264,7 +269,7 @@ const Sidebar = () => {
             <ul className="dropdown-menu">
               <li>
                 <Link to="/fees" className="sideBar-link">
-                  {isCollapsed ? "Fees/Scholarship" : "Fees/Scholarship"}
+                  {isCollapsed ? "Fees" : "Fees/Scholarship"}
                 </Link>
               </li>
               <li>
@@ -274,7 +279,7 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to="/job-opportunities" className="sideBar-link">
-                  {isCollapsed ? "Job-Opportunities" : "Job-Opportunities"}
+                  {isCollapsed ? "Job" : "Job-Opportunities"}
                 </Link>
               </li>
               <li>
