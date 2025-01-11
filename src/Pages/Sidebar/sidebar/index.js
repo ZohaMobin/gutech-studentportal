@@ -27,12 +27,11 @@
 //         </Link>
 //         <Link to="/assignments" className="sideBar-link">
 //         <li>
-       
+
 //             {isCollapsed ? "Assignments" : "Assignments"}
-      
+
 //         </li>
 //         </Link>
-        
 
 //         <Link to="/classes" className="sideBar-link">
 //   <li>
@@ -52,23 +51,23 @@
 // </Link>
 // <Link to=" " className="sideBar-link">
 //         <li>
-        
+
 //             {isCollapsed ? "Schedules" : "Schedules"}
-        
+
 //         </li>
 //         </Link>
 //         <Link to=" " className="sideBar-link">
 //         <li>
-        
+
 //             {isCollapsed ? "Timetable" : "Timetable"}
-        
+
 //         </li>
 //         </Link>
 //         <Link to=" " className="sideBar-link">
 //         <li>
-        
+
 //             {isCollapsed ? "Calender" : "Calender"}
-        
+
 //         </li>
 //         </Link>
 //         <Link to="/recordings" className="sideBar-link">
@@ -140,23 +139,25 @@
 
 // export default Sidebar;
 
-
-
-
 import React, { useState } from "react";
 import "./navbar.css";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
+  const [isDropdown1Open, setIsDropdown1Open] = useState(false); // State for 1st dropdown
+  const [isDropdown2Open, setIsDropdown2Open] = useState(false); // State for 2nd dropdown
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown1 = () => {
+    setIsDropdown1Open(!isDropdown1Open);
+  };
+
+  const toggleDropdown2 = () => {
+    setIsDropdown2Open(!isDropdown2Open);
   };
 
   return (
@@ -181,42 +182,40 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        {/* Dropdown Section */}
-        <li>
+        {/* Dropdown 1: Schedules, Timetable, Calendar */}
+        <li className="moreOptions">
           <div
             className="dropdown-toggle sideBar-link"
-            onClick={toggleDropdown}
+            onClick={toggleDropdown1}
           >
-            {isCollapsed ? "More" : "More Options"}
+            {isCollapsed ? "Schedules" : "Schedules"}
             <span className="dropdown-icon">
-              {isDropdownOpen ? "▲" : "▼"}
+              {isDropdown1Open ? "▲" : "▼"}
             </span>
           </div>
-          {isDropdownOpen && (
+          {isDropdown1Open && (
             <ul className="dropdown-menu">
               <li>
-                <Link to="/resources" className="sideBar-link">
-                  {isCollapsed ? "Resources" : "Resources"}
+                <Link to="/schedules" className="sideBar-link">
+                  {isCollapsed ? "Schedules" : "Schedules"}
                 </Link>
               </li>
               <li>
-                <Link to="/notes" className="sideBar-link">
-                  {isCollapsed ? "Notes" : "Notes"}
+                <Link to="/timetable" className="sideBar-link">
+                  {isCollapsed ? "Timetable" : "Timetable"}
                 </Link>
               </li>
               <li>
-                <Link to="/downloads" className="sideBar-link">
-                  {isCollapsed ? "Downloads" : "Downloads"}
-                </Link>
-              </li>
-              <li>
-                <Link to="/settings" className="sideBar-link">
-                  {isCollapsed ? "Settings" : "Settings"}
+                <Link to="/calendar" className="sideBar-link">
+                  {isCollapsed ? "Event-Calendar" : "Event-Calendar"}
                 </Link>
               </li>
             </ul>
           )}
         </li>
+
+        {/* Dropdown 2: More Options */}
+        
 
         {/* Other Links */}
         <li>
@@ -230,19 +229,61 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/schedules" className="sideBar-link">
-            {isCollapsed ? "Schedules" : "Schedules"}
+          <Link to="/resources" className="sideBar-link">
+            {isCollapsed ? "Resources" : "Resources"}
           </Link>
         </li>
         <li>
-          <Link to="/timetable" className="sideBar-link">
-            {isCollapsed ? "Timetable" : "Timetable"}
+          <Link to="/downloads" className="sideBar-link">
+            {isCollapsed ? "Downloads" : "Downloads"}
           </Link>
         </li>
         <li>
-          <Link to="/calendar" className="sideBar-link">
-            {isCollapsed ? "Calendar" : "Calendar"}
+          <Link to="/notes" className="sideBar-link">
+            {isCollapsed ? "Notes" : "Notes"}
           </Link>
+        </li>
+        <li>
+          <Link to="/discussions" className="sideBar-link">
+            {isCollapsed ? "Discussions" : "Discussions"}
+          </Link>
+        </li>
+
+
+        <li className="moreOptions">
+          <div
+            className="dropdown-toggle sideBar-link"
+            onClick={toggleDropdown2}
+          >
+            {isCollapsed ? "More" : "More Options"}
+            <span className="dropdown-icon">
+              {isDropdown2Open ? "▲" : "▼"}
+            </span>
+          </div>
+          {isDropdown2Open && (
+            <ul className="dropdown-menu">
+              <li>
+                <Link to="/fees" className="sideBar-link">
+                  {isCollapsed ? "Fees/Scholarship" : "Fees/Scholarship"}
+                </Link>
+              </li>
+              <li>
+                <Link to="/transcript" className="sideBar-link">
+                  {isCollapsed ? "Transcript" : "Transcript"}
+                </Link>
+              </li>
+              <li>
+                <Link to="/job-opportunities" className="sideBar-link">
+                  {isCollapsed ? "Job-Opportunities" : "Job-Opportunities"}
+                </Link>
+              </li>
+              <li>
+                <Link to="/settings" className="sideBar-link">
+                  {isCollapsed ? "Settings" : "Settings"}
+                </Link>
+              </li>
+            </ul>
+          )}
         </li>
       </ul>
     </div>
