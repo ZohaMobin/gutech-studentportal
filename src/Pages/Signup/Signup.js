@@ -13,7 +13,7 @@ const Signup = () => {
           <h1 className="ss">Create Account</h1>
           <input type="text" placeholder="Name" />
           <input type="email" placeholder="GU-Tech E-mail" />
-          <input type="password" placeholder="Roll-No" />
+          <input type="value" placeholder="Roll-No" />
           <button type="button">Sign Up</button>
         </form>
       </div>
