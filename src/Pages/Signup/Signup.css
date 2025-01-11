@@ -32,7 +32,7 @@ body {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.3px;
-  margin: 20px 0;
+  margin: 30px 0;
 }
 
 .container span {
@@ -109,6 +109,11 @@ body {
   z-index: 2;
 }
 
+.ss{
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
 .container.active .sign-in {
   transform: translateX(100%);
 }
@@ -136,28 +141,6 @@ body {
     opacity: 1;
     z-index: 5;
   }
-}
-
-.social-icons {
-  margin: 20px 0;
-}
-
-.social-icons a {
-  border: 1px solid #991D20;
-  border-radius: 20%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 3px;
-  width: 40px;
-  height: 40px;
-  color: #991D20;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.social-icons a:hover {
-  background-color: #991D20;
-  color: #fff;
 }
 
 .toggle-container {
@@ -224,4 +207,72 @@ body {
 
 .container.active .toggle-right {
   transform: translateX(200%);
+}
+
+
+/* Forgot Password container adjustments */
+
+.forgot-password-container {
+  width: 100%;
+  max-width: 600px; /* Restrict form width */
+  padding: 30px 20px; /* Compact padding */
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  text-align: center;
+}
+
+/* Update spacing for elements inside the container */
+.forgot-password-container p {
+  margin: 10px 0 20px; /* Reduce vertical spacing for compactness */
+  color: #991D20;
+  font-size: 14px;
+}
+
+.forgot-password-container input {
+  width: 100%;
+  margin-bottom: 10px; /* Reduce spacing below the input */
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #991D20;
+  border-radius: 8px;
+  outline: none;
+  background-color: #f9ecee;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.forgot-password-container button[type="button"] {
+  width: 100%; /* Ensure button takes full width */
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #991D20;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 0; /* Remove bottom margin */
+}
+
+.forgot-password-container button[type="button"]:hover {
+  background-color: #b52427; /* Slightly lighter red for hover */
+}
+
+/* Back button styles */
+.back-button {
+  background: none;
+  border: none;
+  color: #991D20;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px; /* Reduce margin below the back button */
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+}
+
+.back-button:hover {
+  color: #b52427;
+  transform: translateX(-3px); /* Smooth leftward motion on hover */
 }

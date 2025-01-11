@@ -1,12 +1,18 @@
 import React from 'react';
-import Signup from './Pages/Signup/Signup'; // Ensure the path to Signup.js is correct
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Signup from './Pages/Signup/Signup';
+import ForgotPassword from './Pages/Signup/ForgotPassword';
 
-function App() {
+
+const App = () => {
   return (
-    <div>
-      <Signup />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
