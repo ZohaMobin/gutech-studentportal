@@ -1,5 +1,4 @@
 
-/* Sidebar Container */
 .sidebar {
   height: 100vh;
   width: 250px;
@@ -8,14 +7,13 @@
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
-  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-y: auto; 
 }
 
 .sidebar.collapsed {
   width: 120px;
 }
 
-/* Sidebar Header */
 .sidebar-header {
   display: flex;
   justify-content: space-between;
@@ -24,13 +22,11 @@
   border-bottom: 1px solid #34495e;
 }
 
-/* Logo */
 .logo {
   font-size: 1.5em;
   margin: 0;
 }
 
-/* Toggle Button */
 .toggle-btn {
   background-color: #34495e;
   border: none;
@@ -39,15 +35,14 @@
   cursor: pointer;
 }
 
-/* Navigation Links */
 .nav-links {
   text-decoration: none !important;
   list-style: none !important;
   padding: 0;
   margin: 0;
   color: white;
-  flex-grow: 1; /* Allow the list to grow and fill the remaining space */
-  overflow-y: auto; /* Enable scrolling for the links */
+  flex-grow: 1; 
+  overflow-y: auto;
 }
 
 .nav-links li {
@@ -62,7 +57,6 @@
   background-color: #34495e;
 }
 
-/* Icons for collapsed state */
 .sidebar.collapsed .nav-links li {
   justify-content: center;
 }
@@ -72,10 +66,10 @@
   list-style-type: none;
   text-decoration: none;
   color: white !important;
-  width: 100%; /* Ensure the link takes full width */
+  width: 100%; 
 }
 
-/* Dropdown Toggle */
+
 .dropdown-toggle {
   display: flex;
   align-items: center;
@@ -92,7 +86,7 @@
   font-size: 12px;
 }
 
-/* Dropdown Menu */
+
 .dropdown-menu {
   list-style: none;
 padding: 0;
@@ -103,25 +97,25 @@ padding: 0;
   margin: 5px 0;
 }
 
-/* Scrollbar Styling */
+
 .nav-links {
   scrollbar-width: thin; 
   scrollbar-color: #34495e #2c3e50; 
 }
 
 .nav-links::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
+  width: 8px; 
 }
 
 .nav-links::-webkit-scrollbar-track {
-  background: #2c3e50; /* Color of the track */
+  background: #2c3e50; 
 }
 
 .nav-links::-webkit-scrollbar-thumb {
-  background: #34495e; /* Color of the scrollbar thumb */
-  border-radius: 4px; /* Rounded corners */
+  background: #34495e;
+  border-radius: 4px; 
 }
 
 .nav-links::-webkit-scrollbar-thumb:hover {
-  background: #1abc9c; /* Color of the scrollbar thumb on hover */
+  background: #1abc9c;
 }
