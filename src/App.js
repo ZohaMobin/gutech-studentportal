@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship'; // Import the ScholarshipPage component
 
-function App() {
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        {/* Add your navigation or top bar here if needed */}
+        <Routes>
+          {/* Route for the ScholarshipPage */}
+          <Route path="/" element={<ScholarshipPage />} />
+          {/* Add other routes as needed */}
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
