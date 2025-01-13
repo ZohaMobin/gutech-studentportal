@@ -16,6 +16,7 @@
   flex-direction: column;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
 
 .sidebar-title {
@@ -25,13 +26,16 @@
 }
 
 .search-bar {
+  display: flex;
+  align-items: center;
+  position: relative;
   margin-bottom: 1.5rem;
   width: 85%;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 10px 15px;
+  padding: 10px 15px 10px 40px; /* Add left padding for spacing */
   border-radius: 25px;
   border: 1px solid #ccc;
   outline: none;
@@ -42,13 +46,20 @@
   border-color: #991d20;
 }
 
+.search-icon {
+  position: absolute;
+  left: 15px; /* Position the icon inside the input */
+  color: #991d20;
+  font-size: 1rem;
+  pointer-events: none; /* Prevent click events on the icon */
+}
+
 .section {
   margin: 1.5rem 0;
   padding: 10px 15px;
-  border-radius: 25px;
+  border-radius: 10px;
   border: 1px solid #ccc;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .section-title {
@@ -71,7 +82,16 @@
   justify-content: space-between; 
   padding: 10px;
   border-radius: 10px;
-  background-color: #fff
+  background-color: #fff;
+  transition: background-color 0.3s;
+}
+
+.list li:hover {
+  background-color: #f0f0f0;
+}
+
+.list li.active {
+  background-color: #e6e6e6;
 }
 
 .list-item-avatar {
@@ -102,13 +122,18 @@
   white-space: nowrap;
 }
 
+.no-results {
+  text-align: center;
+  color: #999;
+  padding: 10px;
+}
+
 .chat-area {
   flex: 1;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
 }
-
 
 .chat-header {
   display: flex;
@@ -126,12 +151,32 @@
   gap: 15px; /* Space between icons */
 }
 
-/* Styling for each icon */
+.icon-container {
+  position: relative; /* To position the email display */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .header-icon {
   font-size: 1.2rem;
   color: #991d20;
   cursor: pointer;
   transition: color 0.3s;
+}
+
+.header-icon:hover {
+  color: #7a1418;
+}
+
+.email-display {
+  margin-top: 5px;
+  font-size: 0.85rem;
+  color: #333;
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
 }
 
 .user-info {
@@ -246,3 +291,46 @@
   transition: background-color 0.3s;
 }
 
+.send-btn:hover {
+  background-color: #7a1418;
+}
+
+.no-messages {
+  text-align: center;
+  color: #999;
+  margin-top: 20px;
+}
+
+.no-contact-selected {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* To stack the message and logo vertically */
+  justify-content: center;
+  align-items: center;
+  color: #666;
+  font-size: 1.1rem;
+  padding: 20px;
+}
+
+.gutech-logo {
+  margin-top: 20px;
+  width: 150px; /* Adjust the size as needed */
+  height: auto;
+  opacity: 0.8;
+}
+
+/* Responsive Design Adjustments (Optional) */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 35%;
+  }
+
+  .chat-header-icons {
+    gap: 10px;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
