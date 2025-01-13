@@ -5,6 +5,7 @@ import Assignments from './Pages/assignments/assignments';
 
 import Dashboard from './Pages/dashboard/dashboard';
 
+
 function App() {
   return (
     <Router>
@@ -13,17 +14,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard/>} /> 
           <Route path="/assignments" element={<Assignments />} />
-          {/* <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} /> */}
+         
         </Routes>
+       
       </div>
+  
     </Router>
   );
 }
