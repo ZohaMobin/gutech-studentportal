@@ -24,7 +24,7 @@ const Signup = () => {
           <h1 className="ss">Sign In</h1>
           <input type="email" placeholder="Email or Roll-No" />
           <input type="password" placeholder="Password" />
-          <Link to="/forgot-password">Forget Your Password?</Link>
+          <Link to="/forgot-password">Forgot Your Password?</Link>
           <button type="button">Sign In</button>
         </form>
       </div>
