@@ -1,88 +1,210 @@
+/* General Container for Page */
 .recording-links-container {
-    padding: 20px;
+    padding: 40px 60px; /* Increased padding for more breathing room */
     font-family: Arial, sans-serif;
-  }
-  
-  h1 {
-    color: #991D20; /* Main heading color */
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    color: #555555; /* General paragraph text color */
-    font-size: 1rem;
-  }
-  
-  .recordings-list {
+    background-color: #f5f5f5; /* Soft background color for contrast */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Elevate container */
+}
+
+/* Header Section */
+.header {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .recording-link-card {
-    border: 1px solid #323232; /* Dark border color */
-    border-radius: 8px;
-    padding: 15px;
-    background: linear-gradient(135deg, #f9f9f9, #ffffff); /* Subtle gradient background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for card depth */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .recording-link-card:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-  }
-  
-  .recording-link-card p {
-    margin: 5px 0;
-    color: #323232; /* Text color */
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #991D20; /* Add underline to visually separate header */
+    padding-bottom: 10px;
+}
+
+h1 {
+    color: #991D20; /* Main heading color */
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Search Bar */
+.search-bar-container {
+    position: relative; /* For icons or dynamic placements */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Add space between the search bar and button */
+}
+
+.search-bar {
+    padding: 10px 15px;
+    border: 2px solid #991D20;
+    border-radius: 30px;
+    font-size: 1rem;
+    width: 300px;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color:  #6b0000;
+    box-shadow: 0 4px 10px rgba(153, 29, 32, 0.4); /* Softer glow effect */
+}
+
+.search-bar::placeholder {
+    color: #888;
+    font-style: italic;
     font-size: 0.9rem;
-  }
-  
-  .recording-link-card strong {
-    color: #991D20; /* Strong text color */
-  }
-  
-  .watch-recording-button {
-    display: inline-block;
-    margin-top: 10px;
+}
+
+/* Add a search icon */
+
+/* Search Button */
+.search-button {
     padding: 10px 20px;
     color: white;
-    background-color: #991D20; /* Button background */
-    text-decoration: none;
-    border-radius: 5px;
+    background-color: #991D20;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
     font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-button:hover {
+    background-color: #6b0000; /* Hover color change */
+    transform: scale(1.05); /* Slight enlargement */
+}
+
+.search-button:active {
+    background-color: #6b0000;
+    transform: scale(0.95); /* Subtle shrink effect when clicked */
+}
+
+/* Dynamic Empty Search Results */
+.no-results {
+    color: #991D20;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 20px;
+    animation: fade-in 0.3s ease-in-out;
+}
+
+/* Recordings List */
+.recordings-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adapt for different screen sizes */
+    gap: 20px;
+}
+
+/* Recording Link Card */
+.recording-link-card {
+    border: 1px solid #323232; /* Dark border color */
+    border-radius: 12px; /* Smooth rounded corners */
+    padding: 20px;
+    background: linear-gradient(135deg, #f9f9f9, #ffffff); /* Clean gradient for depth */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Better elevation */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+    min-height: 200px; /* Ensure consistent card height */
+}
+
+.recording-link-card:hover {
+    transform: translateY(-5px); /* Lift card */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Hover shadow */
+    background-color: #fafafa; /* Add slight background change on hover */
+}
+
+.recording-link-card p {
+    margin: 10px 0;
+    color: #333; /* Slightly darker text for contrast */
+    font-size: 0.95rem;
+    line-height: 1.8; /* Improved readability */
+}
+
+.recording-link-card strong {
+    color: #991D20;
+    font-size: 1.05rem;
+}
+
+/* Placeholder for Thumbnail */
+.recording-link-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.watch-recording-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 25px;
+    color: white;
+    background-color: #991D20;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
     text-align: center;
     transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .watch-recording-button:hover {
-    background-color: #323232; /* Button hover background */
-    transform: scale(1.005); /* Slight scaling effect on hover */
-  }
-  
-  .watch-recording-button:active {
-    background-color: #6b0000; /* Active button color */
-    transform: scale(0.98); /* Slight shrink effect when clicked */
-  }
-  
-  @media screen and (max-width: 768px) {
-    .recording-link-card {
-      padding: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Subtle elevation */
+}
+
+.watch-recording-button:hover {
+    background-color: #323232; /* Invert color on hover */
+    transform: scale(1.03); /* Slight enlargement */
+}
+
+.watch-recording-button:active {
+    background-color: #6b0000;
+    transform: scale(0.98); /* Subtle shrink effect when clicked */
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
-  
+
     h1 {
-      font-size: 1.5rem;
+        font-size: 1.8rem;
     }
-  
-    p {
-      font-size: 0.9rem;
+
+    .search-bar {
+        width: 100%; /* Full-width for smaller screens */
+        font-size: 0.9rem;
     }
-  
+
+    .recordings-list {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller card layout */
+        gap: 15px;
+    }
+
     .watch-recording-button {
-      padding: 8px 16px;
-      font-size: 0.9rem;
+        padding: 10px 20px;
+        font-size: 0.9rem;
     }
-  }
-  
+
+    .search-bar-container {
+        flex-direction: column; /* Stack search bar and button */
+        align-items: stretch;
+    }
+}
+
+/* Animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade-in effect for entire page */
+.recording-links-container {
+    animation: fade-in 0.5s ease-in-out;
+}

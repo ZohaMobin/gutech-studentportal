@@ -1,44 +1,55 @@
+/* eslint-disable no-unreachable */
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Recordings.css";
 
+// Your recordings data
 const recordingsData = [
   {
     title: "PSPF - Problem solving and fundamentals By Sir Twaha Minai",
     duration: "10:12:09",
-    lessons: 10,
+    lessons: 4,
     description: "Coding like poetry should be short and concise.",
     links: [
-      { date: "2025-01-10", url: "https://www.loom.com/share/example1" },
-      { date: "2025-01-11", url: "https://www.loom.com/share/example2" },
+      { date: "2025-01-10", topic: "Introduction to PSPF", url: "https://www.loom.com/share/example1" },
+      { date: "2025-01-11", topic: "Advanced Problem Solving", url: "https://www.loom.com/share/example2" },
+      { date: "2025-01-12", topic: "Efficiency and Optimization", url: "https://www.loom.com/share/example12" },
+      { date: "2025-01-13", topic: "Data Structures Overview", url: "https://www.loom.com/share/example13" },
     ],
   },
   {
     title: "Design Thinking By Sir Rauf",
     duration: "3:50:05",
-    lessons: 6,
+    lessons: 4,
     description: "A process for solving problems by prioritizing the consumer's needs above all else.",
     links: [
-      { date: "2025-01-09", url: "https://www.loom.com/share/example3" },
+      { date: "2025-01-09", topic: "Introduction to Design Thinking", url: "https://www.loom.com/share/example3" },
+      { date: "2025-01-10", topic: "Empathy Mapping", url: "https://www.loom.com/share/example14" },
+      { date: "2025-01-11", topic: "Defining the Problem", url: "https://www.loom.com/share/example15" },
+      { date: "2025-01-12", topic: "Ideation and Prototyping", url: "https://www.loom.com/share/example16" },
     ],
   },
   {
     title: "Web Technologies By Sir Khubaib",
     duration: "5:30:05",
-    lessons: 8,
-    description: "The means by which computers communicate with each other using markup languages and multimedia packages..",
+    lessons: 5,
+    description: "The means by which computers communicate with each other using markup languages and multimedia packages.",
     links: [
-      { date: "2025-01-08", url: "https://www.loom.com/share/example4" },
-      { date: "2025-01-12", url: "https://www.loom.com/share/example5" },
+      { date: "2025-01-08", topic: "Introduction to Web Technologies", url: "https://www.loom.com/share/example4" },
+      { date: "2025-01-09", topic: "HTML Basics", url: "https://www.loom.com/share/example17" },
+      { date: "2025-01-10", topic: "CSS Styling and Layout", url: "https://www.loom.com/share/example18" },
+      { date: "2025-01-11", topic: "JavaScript Fundamentals", url: "https://www.loom.com/share/example19" },
+      { date: "2025-01-12", topic: "Responsive Web Design", url: "https://www.loom.com/share/example5" },
     ],
   },
   {
     title: "Functional English By Sir Ali Dossa",
     duration: "4:00:00",
     lessons: 2,
-    description: "Usage of the English language required to perform a specific function like academic study or career progression..",
+    description: "Usage of the English language required to perform a specific function like academic study or career progression.",
     links: [
-      { date: "2025-01-07", url: "https://www.loom.com/share/example6" },
+      { date: "2025-01-07", topic: "Introduction to Functional English", url: "https://www.loom.com/share/example6" },
+      { date: "2025-01-08", topic: "Writing Academic Papers", url: "https://www.loom.com/share/example20" },
     ],
   },
   {
@@ -47,34 +58,38 @@ const recordingsData = [
     lessons: 2,
     description: "Let's learn about colors, color contrast, and color styles.",
     links: [
-      { date: "2025-01-06", url: "https://www.loom.com/share/example7" },
+      { date: "2025-01-06", topic: "Basic Color Theory", url: "https://www.loom.com/share/example7" },
+      { date: "2025-01-07", topic: "Accessibility and Color Contrast", url: "https://www.loom.com/share/example21" },
     ],
   },
   {
     title: "Discrete Structures By Sir Shahzad",
     duration: "2:50:00",
-    lessons: 2,
+    lessons: 3,
     description: "Deals with the study of mathematical structures.",
     links: [
-      { date: "2025-01-05", url: "https://www.loom.com/share/example8" },
-      { date: "2025-01-13", url: "https://www.loom.com/share/example9" },
+      { date: "2025-01-05", topic: "Introduction to Discrete Structures", url: "https://www.loom.com/share/example8" },
+      { date: "2025-01-06", topic: "Set Theory", url: "https://www.loom.com/share/example22" },
+      { date: "2025-01-13", topic: "Graph Theory", url: "https://www.loom.com/share/example9" },
     ],
   },
   {
     title: "PSPF-Lab By Miss Zoha Mobin",
     duration: "3:00:00",
-    lessons: 4,
+    lessons: 2,
     description: "Lab sessions focused on applying problem-solving techniques.",
     links: [
-      { date: "2025-01-15", url: "https://www.loom.com/share/example10" },
-      { date: "2025-01-16", url: "https://www.loom.com/share/example11" },
+      { date: "2025-01-15", topic: "Lab 1: Basic Problem Solving", url: "https://www.loom.com/share/example10" },
+      { date: "2025-01-16", topic: "Lab 2: Algorithm Design", url: "https://www.loom.com/share/example11" },
     ],
   },
 ];
 
+
 const RecordingsPage = () => {
   const navigate = useNavigate();
 
+  // Navigate to the RecordingLinksPage with selected recording data
   const handleWatchNow = (recording) => {
     navigate("/recording-links", { state: { recording } });
   };
@@ -98,7 +113,6 @@ const RecordingsPage = () => {
               >
                 Watch Now
               </button>
-            
             </div>
           </div>
         ))}
