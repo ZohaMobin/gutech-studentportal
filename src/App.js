@@ -1,16 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RecordingsPage from "./Components/Recordings/Recordings";
-import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
+import ExamSchedual from "./Components/Exam Schedual/ExamSchedual";
+import "./Components/Exam Schedual/ExamSchedual.css";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<RecordingsPage />} />
-        <Route path="/recording-links" element={<RecordingLinksPage />} />
-      </Routes>
-    </Router>
+    <div>
+      <ExamSchedual />
+    </div>
   );
 }
 
