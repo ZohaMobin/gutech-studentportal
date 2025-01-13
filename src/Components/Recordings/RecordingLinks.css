@@ -1,10 +1,11 @@
 /* General Container for Page */
 .recording-links-container {
-    padding: 40px 60px; /* Increased padding for more breathing room */
+    padding: 40px 60px;
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5; /* Soft background color for contrast */
+    background-color: #f5f5f5;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Elevate container */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    animation: fade-in 0.5s ease-in-out;
 }
 
 /* Header Section */
@@ -13,77 +14,137 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    border-bottom: 2px solid #991D20; /* Add underline to visually separate header */
+    border-bottom: 2px solid #991D20;
     padding-bottom: 10px;
 }
 
 h1 {
-    color: #991D20; /* Main heading color */
+    color: #991D20;
     font-size: 2.5rem;
     font-weight: bold;
     margin: 0;
 }
 
-/* Search Bar */
+/* Search Bar Container */
 .search-bar-container {
-    position: relative; /* For icons or dynamic placements */
     display: flex;
-    align-items: center;
-    gap: 10px; /* Add space between the search bar and button */
+    align-items: center; /* Align search box and button vertically centered */
+    gap: 15px; /* Add spacing between search box and buttons */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: flex-start; /* Align items to the left */
 }
 
-.search-bar {
-    padding: 10px 15px;
+/* Input with Icon */
+.input-with-icon {
+    position: relative;
+    flex-grow: 1; /* Allow search box to take available space */
+    max-width: 450px; /* Set a maximum width for the search box */
+    margin-right: 100px; /* Push search box to the left */
+    
+}
+
+.input-with-icon .search-bar {
+    width: 100%; /* Use full width of the container */
+    padding: 8px 12px; /* Adjust padding for height consistency */
+    padding-right: 45px; /* Space for calendar icon */
     border: 2px solid #991D20;
     border-radius: 30px;
-    font-size: 1rem;
-    width: 300px;
+    font-size: 0.95rem;
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    height: 30px; /* Reduced height */
+    margin-top: 20px;
 }
 
-.search-bar:focus {
+.input-with-icon .search-bar:focus {
     outline: none;
-    border-color:  #6b0000;
-    box-shadow: 0 4px 10px rgba(153, 29, 32, 0.4); /* Softer glow effect */
+    border-color: #6b0000;
+    box-shadow: 0 4px 10px rgba(153, 29, 32, 0.4);
 }
 
-.search-bar::placeholder {
+.input-with-icon .search-bar::placeholder {
     color: #888;
     font-style: italic;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
-/* Add a search icon */
+/* Interactive Calendar Icon */
+.input-with-icon .calendar-icon {
+    position: absolute;
+    top: 50%; /* Center vertically within the search bar */
+    right: 1px; /* Fixed distance from the right edge of the search bar */
+    transform: translateY(-50%); /* Perfect vertical centering */
+    font-size: 1.1rem;
+    color: #888;
+    cursor: pointer; /* Make the icon clickable */
+}
+
+.input-with-icon .calendar-icon::before {
+    content: "\1F4C5"; /* Unicode for calendar emoji */
+}
+
+/* Hidden Date Picker */
+.input-with-icon .date-picker-inline {
+    position: absolute;
+    opacity: 0; /* Hidden by default */
+    pointer-events: all; /* Allow interaction with the date picker */
+}
 
 /* Search Button */
 .search-button {
-    padding: 10px 20px;
+    padding: 8px 18px; /* Adjust padding for height consistency */
     color: white;
     background-color: #991D20;
     border: none;
     border-radius: 30px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 38px; /* Match height with the search bar */
+    flex-shrink: 0; /* Prevent the button from shrinking */
 }
 
 .search-button:hover {
-    background-color: #6b0000; /* Hover color change */
-    transform: scale(1.05); /* Slight enlargement */
+    background-color: #6b0000;
+    transform: scale(1.05);
 }
 
 .search-button:active {
     background-color: #6b0000;
-    transform: scale(0.95); /* Subtle shrink effect when clicked */
+    transform: scale(0.95);
 }
 
-/* Dynamic Empty Search Results */
+/* Clear Button */
+.clear-button {
+    padding: 8px 18px; /* Adjust padding for height consistency */
+    color: white;
+    background-color: #888;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 38px; /* Match height with search bar and button */
+}
+
+.clear-button:hover {
+    background-color: #555;
+    transform: scale(1.05);
+}
+
+.clear-button:active {
+    background-color: #444;
+    transform: scale(0.95);
+}
+
+/* No Results */
 .no-results {
     color: #991D20;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     margin-top: 20px;
     animation: fade-in 0.3s ease-in-out;
@@ -92,32 +153,32 @@ h1 {
 /* Recordings List */
 .recordings-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adapt for different screen sizes */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid layout */
     gap: 20px;
 }
 
 /* Recording Link Card */
 .recording-link-card {
-    border: 1px solid #323232; /* Dark border color */
-    border-radius: 12px; /* Smooth rounded corners */
+    border: 1px solid #323232;
+    border-radius: 12px;
     padding: 20px;
-    background: linear-gradient(135deg, #f9f9f9, #ffffff); /* Clean gradient for depth */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Better elevation */
+    background: linear-gradient(135deg, #f9f9f9, #ffffff);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
-    min-height: 200px; /* Ensure consistent card height */
+    min-height: 200px;
 }
 
 .recording-link-card:hover {
-    transform: translateY(-5px); /* Lift card */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Hover shadow */
-    background-color: #fafafa; /* Add slight background change on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    background-color: #fafafa;
 }
 
 .recording-link-card p {
     margin: 10px 0;
-    color: #333; /* Slightly darker text for contrast */
+    color: #333;
     font-size: 0.95rem;
-    line-height: 1.8; /* Improved readability */
+    line-height: 1.8;
 }
 
 .recording-link-card strong {
@@ -125,15 +186,7 @@ h1 {
     font-size: 1.05rem;
 }
 
-/* Placeholder for Thumbnail */
-.recording-link-card img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-/* Buttons */
+/* Watch Recording Button */
 .watch-recording-button {
     display: inline-block;
     margin-top: 15px;
@@ -146,17 +199,17 @@ h1 {
     font-size: 1rem;
     text-align: center;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Subtle elevation */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 .watch-recording-button:hover {
-    background-color: #323232; /* Invert color on hover */
-    transform: scale(1.03); /* Slight enlargement */
+    background-color: #323232;
+    transform: scale(1.03);
 }
 
 .watch-recording-button:active {
     background-color: #6b0000;
-    transform: scale(0.98); /* Subtle shrink effect when clicked */
+    transform: scale(0.98);
 }
 
 /* Responsive Adjustments */
@@ -171,24 +224,24 @@ h1 {
         font-size: 1.8rem;
     }
 
-    .search-bar {
-        width: 100%; /* Full-width for smaller screens */
-        font-size: 0.9rem;
+    .search-bar-container {
+        flex-direction: column; /* Stack search bar and buttons vertically */
+        align-items: stretch;
+    }
+
+    .search-button,
+    .clear-button {
+        width: 100%; /* Full width for buttons on smaller screens */
     }
 
     .recordings-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller card layout */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 15px;
     }
 
     .watch-recording-button {
         padding: 10px 20px;
         font-size: 0.9rem;
-    }
-
-    .search-bar-container {
-        flex-direction: column; /* Stack search bar and button */
-        align-items: stretch;
     }
 }
 
@@ -202,9 +255,4 @@ h1 {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Fade-in effect for entire page */
-.recording-links-container {
-    animation: fade-in 0.5s ease-in-out;
 }
