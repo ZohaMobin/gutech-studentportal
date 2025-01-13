@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship'; // Import the ScholarshipPage component
+import ApplicationForm from './Pages/Group5-JobOpportunities/ApplicationPage';
 
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
         <Routes>
           {/* Route for the ScholarshipPage */}
           <Route path="/" element={<ScholarshipPage />} />
+          <Route path="/apply-scholarship" element={<ApplicationForm />} />
           {/* Add other routes as needed */}
         </Routes>
       </div>
