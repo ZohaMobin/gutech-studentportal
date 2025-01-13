@@ -16,20 +16,20 @@ const SimpleTable = () => {
       <tbody>
         <tr>
           <td>Monday</td>
-          <td>
+          <td className='yellow-cell'>
             Problem Solving & Programming Fundamentals <br />
             by Sir Twaha Minai
           </td>
-          <td>
+          <td className='blue-cell'>
             Web Technologies <br />
             by Dr. Khubaib Ahmed
           </td>
-          <td>
+          <td  className='purple-cell'>
             Discrete Structures <br />
             by Dr. Shehzad
           </td>
-          <td>NAMAZ BREAK</td>
-          <td>
+          <td className='green-cell'>NAMAZ BREAK</td>
+          <td className='orange-cell'>
             Design Thinking <br />
             by Dr. Rauf Malik & Dr. Javaid Ghani
           </td>
@@ -40,55 +40,55 @@ const SimpleTable = () => {
         </tr>
         <tr>
           <td>Wednesday</td>
-          <td>
+          <td className='yellow-cell'>
             Problem Solving & Programming Fundamentals <br />
             by Sir Twaha Minai
           </td>
-          <td>
+          <td  className='blue-cell'>
             Web Technologies <br />
             by Dr. Khubaib Ahmed
           </td>
-          <td>
+          <td className='dark-blue-cell'>
             Web Technologies Lab <br />
             by Ms. Zoha Mobin
           </td>
-          <td>NAMAZ BREAK</td>
-          <td>
+          <td className='green-cell'>NAMAZ BREAK</td>
+          <td className='dark-blue-cell'>
             Web Technologies Lab <br />
             by Ms. Zoha Mobin
           </td>
         </tr>
         <tr>
           <td>Thursday</td>
-          <td>
+          <td className='dark-yellow-cell'>
             Problem Solving & Programming Fundamentals Lab <br />
             by Ms. Zoha Mobin
           </td>
-          <td>
+          <td className='dark-yellow-cell'>
             Problem Solving & Programming Fundamentals Lab <br />
             by Ms. Zoha Mobin
           </td>
-          <td>
+          <td className='purple-cell'>
             Discrete Structures <br />
             by Dr. Shehzad
           </td>
-          <td>NAMAZ BREAK</td>
-          <td>
+          <td className='green-cell'>NAMAZ BREAK</td>
+          <td className='orange-cell'>
             Design Thinking <br />
             by Dr. Rauf Malik & Dr. Javaid Ghani
           </td>
         </tr>
         <tr>
           <td>Friday</td>
-          <td>
+          <td className='aqua-cell'>
             English <br />
             by Dr. Samra Javed & Mr. Ali Dossa
           </td>
-          <td>
+          <td className='aqua-cell'>
             English <br />
             by Dr. Samra Javed & Mr. Ali Dossa
           </td>
-          <td>
+          <td className='aqua-cell'>
             English <br />
             by Dr. Samra Javed & Mr. Ali Dossa
           </td>

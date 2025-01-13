@@ -1,139 +1,167 @@
 .schedule-container {
-    margin: 0 auto;
-    padding: 20px;
-    max-width: 1000px;
-  }
-  .header-box {
-    margin-bottom: 10px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .header-table {
-    width: 100%;
-    border-collapse: collapse; 
-  }
-  .header-table thead th {
-    background-color: #f3f3f3;
-    padding: 15px;
-    border: 1px solid #ddd; 
-    font-weight: bold;
-    text-align: center;
-    font-family: Arial, sans-serif;
-  }
-  .content-box {
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .schedule-table {
-    width: 100%;
-    border-collapse: separate; 
-    border-spacing: 10px; 
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f9f9f9;
-  }
-  .schedule-table tbody td {
-    border: none; 
-    padding: 15px;
-    vertical-align: middle;
-    height: 80px;
-    text-align: left; 
-    padding-left: 10px; 
-  }
-  .schedule-table td:first-child,
-  .header-table th:first-child {
-    background-color: transparent; 
-    font-weight: bold; 
-    text-align: left; 
-    border-right: 1px solid #ddd; 
-    border-top: 1px solid #ddd;
-    padding: 10px;
-    font-size: 14px;
-  }
-  .yellow-cell {
-    background-color: #f7f5c8; 
-    color:#a7ad4a ;
-    font-weight: bold;
-    font-size: 12px;
-  }
-  .blue-cell {
-    background-color: #c8daf7;
-    color:#447dd8 ;
-    font-weight: bold;
-    font-size: 12px;
-    
-  }
-  .purple-cell {
-    background-color: #e7c8f7; 
-    color: #b27ccd;
-    font-weight: bold;
-    font-size: 12px;
-  }
-  .green-cell {
-    background-color: #d9f7c8;
-    color:#377911 ;
-    font-weight: bold;
-    font-size: 12px;
-  
-  }
-  .orange-cell {
-    background-color: #f7d3c8;
-    color: #447dd8 ;
-    font-weight: bold;
-    font-size: 12px;
-  }
-  .aqua-cell {
-    background-color: #c8f7e6; 
-    color: #3dce99;
-    font-weight: bold;
-    font-size: 12px;
-  }
-  .gray-cell{
-    background-color: rgb(183, 177, 177);
-    color: rgb(198, 130, 5);
-    font-weight: bold;
-     font-size: 12px;
-  }
-  .empty-cell {
-    background-color: #f9f9f9; 
-  }
-  .table-container{
-    background-color: #ccc;
-  }
-  table {
-    border-spacing: 0; 
-    border-collapse: collapse; 
-  }
-  
-  table td, table th {
-    border: 1px solid #ddd; 
-    margin: 0;
-    padding: 10px; 
-  }
-  @media (max-width: 768px) {
-    .schedule-container {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1000px;
+}
+
+.header-box {
+  margin-bottom: 10px;
+  border: 2px solid #e4c1a1; /* Soft warm border */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.header-table {
+  width: 100%;
+  border-collapse: collapse; 
+}
+
+.header-table thead th {
+  background-color: #f7e6d5; /* Soft warm beige */
+  padding: 15px;
+  border: 1px solid #f1c0a0; /* Warm light border */
+  font-weight: bold;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #6a4e23; /* Dark brown text */
+}
+
+.content-box {
+  border: 2px solid #f1c0a0; /* Warm light brown */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: separate; 
+  border-spacing: 10px; 
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #fef4e1; /* Very soft yellow-beige background */
+}
+
+.schedule-table tbody td {
+  border: none; 
+  padding: 15px;
+  vertical-align: middle;
+  height: 80px;
+  text-align: left; 
+  padding-left: 10px; 
+}
+
+.schedule-table td:first-child,
+.header-table th:first-child {
+  background-color: transparent; 
+  font-weight: bold; 
+  text-align: left; 
+  border-right: 1px solid #f1c0a0;
+  border-top: 1px solid #f1c0a0;
+  padding: 10px;
+  font-size: 14px;
+  color: #6a4e23; /* Dark brown text */
+}
+
+.yellow-cell {
+  background-color: #fae4b5; /* Soft yellow */
+  color: #c97f2f; /* Warm brown-orange text */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.dark-yellow-cell {
+  background-color: #f1c27d; /* Soft golden yellow */
+  color: #7d4f1e; /* Darker brown text */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.blue-cell {
+  background-color: #d3e5f3; /* Light soft blue */
+  color: #5173a3; /* Muted blue text */
+  font-weight: bold;
+  font-size: 12px; 
+}
+
+.dark-blue-cell {
+  background-color: #b8c9e0; /* Light powder blue */
+  color: #4e649c; /* Slightly darker blue text */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.purple-cell {
+  background-color: #e2c6e4; /* Soft lavender */
+  color: #9b4f98; /* Muted purple text */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.green-cell {
+  background-color: #b8e2b3; /* Soft pastel green */
+  color: #4e7d4b; /* Muted green text */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.orange-cell {
+  background-color: #f9c6a3; /* Soft pastel orange */
+  color: #d2691e; /* Brownish orange text */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.aqua-cell {
+  background-color: #dcf7ee; /* Soft mint aqua */
+  color: #3d8b7c; /* Muted teal text */
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.empty-cell {
+  background-color: #fef4e1; /* Soft light background for empty cells */
+}
+
+.table-container {
+  background-color: #f8e3ca; /* Light peach-beige background */
+}
+
+table {
+  border-spacing: 0; 
+  border-collapse: collapse; 
+}
+
+table td, table th {
+  border: 1px solid black; /* Soft warm border color */
+  margin: 0;
+  padding: 10px; 
+}
+
+@media (max-width: 768px) {
+  .schedule-container {
       padding: 10px;
-    }
-  
-    .header-table th, .schedule-table td {
+  }
+
+  .header-table th, .schedule-table td {
       padding: 8px;
       font-size: 12px; 
-    }
   }
-  .time-slot {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 8px; 
-  }
-  .class-info {
-    display: block;
-    font-size: 12px;
-    margin-bottom: 5px; 
-  }
-  .teacher-name {
-    display: block;
-    font-size: 12px;
-    margin-top: 5px; 
-  }
+}
+
+.time-slot {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px; 
+}
+
+.class-info {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px; 
+}
+
+.teacher-name {
+  display: block;
+  font-size: 12px;
+  margin-top: 5px; 
+}
