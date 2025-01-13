@@ -1,0 +1,139 @@
+.schedule-container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 1000px;
+  }
+  .header-box {
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .header-table {
+    width: 100%;
+    border-collapse: collapse; 
+  }
+  .header-table thead th {
+    background-color: #f3f3f3;
+    padding: 15px;
+    border: 1px solid #ddd; 
+    font-weight: bold;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  .content-box {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .schedule-table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 10px; 
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+  .schedule-table tbody td {
+    border: none; 
+    padding: 15px;
+    vertical-align: middle;
+    height: 80px;
+    text-align: left; 
+    padding-left: 10px; 
+  }
+  .schedule-table td:first-child,
+  .header-table th:first-child {
+    background-color: transparent; 
+    font-weight: bold; 
+    text-align: left; 
+    border-right: 1px solid #ddd; 
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    font-size: 14px;
+  }
+  .yellow-cell {
+    background-color: #f7f5c8; 
+    color:#a7ad4a ;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .blue-cell {
+    background-color: #c8daf7;
+    color:#447dd8 ;
+    font-weight: bold;
+    font-size: 12px;
+    
+  }
+  .purple-cell {
+    background-color: #e7c8f7; 
+    color: #b27ccd;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .green-cell {
+    background-color: #d9f7c8;
+    color:#377911 ;
+    font-weight: bold;
+    font-size: 12px;
+  
+  }
+  .orange-cell {
+    background-color: #f7d3c8;
+    color: #447dd8 ;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .aqua-cell {
+    background-color: #c8f7e6; 
+    color: #3dce99;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .gray-cell{
+    background-color: rgb(183, 177, 177);
+    color: rgb(198, 130, 5);
+    font-weight: bold;
+     font-size: 12px;
+  }
+  .empty-cell {
+    background-color: #f9f9f9; 
+  }
+  .table-container{
+    background-color: #ccc;
+  }
+  table {
+    border-spacing: 0; 
+    border-collapse: collapse; 
+  }
+  
+  table td, table th {
+    border: 1px solid #ddd; 
+    margin: 0;
+    padding: 10px; 
+  }
+  @media (max-width: 768px) {
+    .schedule-container {
+      padding: 10px;
+    }
+  
+    .header-table th, .schedule-table td {
+      padding: 8px;
+      font-size: 12px; 
+    }
+  }
+  .time-slot {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 8px; 
+  }
+  .class-info {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px; 
+  }
+  .teacher-name {
+    display: block;
+    font-size: 12px;
+    margin-top: 5px; 
+  }
