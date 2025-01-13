@@ -1,0 +1,74 @@
+.attendance-container {
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: grey;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+  }
+  
+  .attendance-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .student-info {
+    text-align: center;
+  }
+  
+  h3 {
+    margin: 0;
+    color: rgb(var(--color_42));
+  }
+  
+  h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: white;
+  }
+  
+  .search-bar {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: rgb(var(--color_42));
+    color: white;
+  }
+  
+  tr:nth-child(even) {
+    background-color: rgba(var(--color_42), 0.1);
+  }
+  
+  tr:hover {
+    background-color: rgba(var(--color_42), 0.3);
+  }
+  
