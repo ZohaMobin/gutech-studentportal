@@ -87,26 +87,27 @@ function Fees(){
                     
                 </div>
                 <div className="buttons">
-                <div className="download-container">
-                <a href="/fees-info.pdf" download>
-                    <button className="download-button">Download Fee Voucher</button>
-                </a>
-                </div>
-                <div className="upload-container">
-                <label htmlFor="file-upload" className="upload-button">
-                    Upload Payment Proof
-                </label>
-                <input 
-                    type="file" 
-                    id="file-upload" 
-                    style={{ display: 'none' }} 
-                    accept="image/*" 
-                    onChange={handleFileUpload} 
-                    aria-label="Upload proof of payment"
-                />
-                {fileName && <p>File uploaded: {fileName}</p>}
-            </div>
-            </div>
+    <div className="download-container">
+        <a href="/fees-info.pdf" download>
+            <button className="download-button">Download Fee Voucher</button>
+        </a>
+    </div>
+    <div className="upload-container">
+        <label htmlFor="file-upload" className="upload-button">
+            Upload Payment Proof
+        </label>
+        <input 
+            type="file" 
+            id="file-upload" 
+            style={{ display: 'none' }} 
+            accept="image/*" 
+            onChange={handleFileUpload} 
+            aria-label="Upload proof of payment"
+        />
+        {fileName && <p className="file-info">File uploaded: {fileName}</p>}
+    </div>
+</div>
+
         </div>
     )
 }
