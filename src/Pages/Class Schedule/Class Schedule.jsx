@@ -61,7 +61,7 @@ const SimpleTable = () => {
         <thead>
           <tr>
             <th></th>
-            <th>09:00 - 10:15 AM</th>
+            <th >09:00 - 10:15 AM</th>
             <th>10:25 - 11:40 AM</th>
             <th>11:50 - 01:20 PM</th>
             <th>01:20 - 01:45 PM</th>
@@ -71,7 +71,7 @@ const SimpleTable = () => {
         <tbody>
           {schedule.map((day, index) => (
             <tr key={index}>
-              <td>{day.day}</td>
+              <td className='days'>{day.day}</td>
               {day.slots.map((slot, idx) => (
                 <td key={idx} className={slot.classColor}>
                   {slot.subject && <>{slot.subject} <br /> by {slot.teacher}</>}

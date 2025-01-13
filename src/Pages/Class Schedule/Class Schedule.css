@@ -6,6 +6,9 @@
   padding: 20px;
   max-width: 1000px;
 }
+.days{
+  font-weight: bolder;
+}
 
 .header-box {
   margin-bottom: 10px;
