@@ -13,7 +13,7 @@ export const Topbar = () => {
           <img src='./notify.svg' alt='notify' />
         </button>
         <img src='./user.svg' alt='user-img' className='userImg' />
-        <p className='userName'> Osama Bin Laden </p>
+        <p className='userName'> Ahmed </p>
       </div>
     </nav>
   );
