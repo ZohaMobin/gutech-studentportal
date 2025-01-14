@@ -4,25 +4,22 @@ import Sidebar from "../src/Pages/Sidebar/sidebar/index";
 import Assignments from './Pages/assignments/assignments';
 
 import Dashboard from './Pages/dashboard/dashboard';
+import { Topbar } from './Pages/topbar/topbar';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Sidebar />
+        <div className='mainContent '>
+  <Topbar/>
         <Routes>
+
           <Route path="/" element={<Dashboard/>} /> 
           <Route path="/assignments" element={<Assignments />} />
-          {/* <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} />
-          <Route path="/Fees" element={<Fee/>} /> */}
+      
         </Routes>
+        </div>
       </div>
     </Router>
   );

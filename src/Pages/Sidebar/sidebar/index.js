@@ -2,13 +2,12 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./navbar.css";
+import "./index.css";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDropdown1Open, setIsDropdown1Open] = useState(false);
   const [isDropdown2Open, setIsDropdown2Open] = useState(false);
-  const [isDropdown3Open, setIsDropdown3Open] = useState(false);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -22,9 +21,7 @@ const Sidebar = () => {
     setIsDropdown2Open(!isDropdown2Open);
   };
 
-  const toggleDropdown3 = () => {
-    setIsDropdown3Open(!isDropdown3Open);
-  };
+
 
   return (
     <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
@@ -244,3 +241,8 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
+
+
+
