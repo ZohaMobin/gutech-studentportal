@@ -251,6 +251,13 @@ const Chat = () => {
                             </div>
                         </div>
                         <div className="chat-messages">
+                        {selectedContact && (
+                            <img
+                               src="/gutechlogo.png"
+                               alt="GUtech Logo"
+                               className="chat-background-logo"
+        />
+                        )}
                             {messages[selectedContact.id] && messages[selectedContact.id].length > 0 ? (
                                 messages[selectedContact.id].map((msg, index) => (
                                     <div
@@ -284,7 +291,7 @@ const Chat = () => {
                 ) : (
                     <div className="no-contact-selected">
                         <p>Select a contact to start chatting.</p>
-                        <img src="/gutechlogo.png" alt="Gutech Logo" style={{ backgroundColor: "black", width: "200px", height: "70px" }} />
+                        <img src="/gutechlogo.png" alt="Gutech Logo" style={{ backgroundColor: "#323232", width: "200px", height: "70px" }} />
                     </div>
                 )}
             </div>
