@@ -1,19 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship'; // Import the ScholarshipPage component
+import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship'; 
 import ApplicationForm from './Pages/Group5-JobOpportunities/ApplicationPage';
+import JobsAndBootcamps from './Pages/Group5-JobOpportunities/JobsAndBootcamps.js';
 
 
 const App = () => {
   return (
     <Router>
       <div>
-        {/* Add your navigation or top bar here if needed */}
         <Routes>
-          {/* Route for the ScholarshipPage */}
-          <Route path="/" element={<ScholarshipPage />} />
+          <Route path="/scholarships" element={<ScholarshipPage />} />
           <Route path="/apply-scholarship" element={<ApplicationForm />} />
-          {/* Add other routes as needed */}
+          <Route path="/jobs-bootcamps" element={<JobsAndBootcamps/>} />
         </Routes>
       </div>
     </Router>
