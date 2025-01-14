@@ -1,18 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Signup from './Pages/Signup/Signup';
-import ForgotPassword from './Pages/Signup/ForgotPassword';
-
-
+import React from 'react'
+import Grading from './Pages/Grading/Grading'
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-      </Routes>
-    </Router>
-  );
-};
+    <div>
+      <Grading/>  
+    </div>
+  )
+}
 
-export default App;
+export default App
