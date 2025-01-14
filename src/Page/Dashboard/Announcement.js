@@ -4,13 +4,13 @@ import './Announcement.css';
 function Announcement() {
   return (
     <div className="announcement-card">
-      <h1>Announcements</h1>
+      <h1>Important Announcements</h1>
       <div className="boxes-container">
         <div className="announcement-box">
-          <p>There will be off on Friday due to inclement weather.</p>
+          <p><strong>Notice:</strong> Classes will be suspended on Friday, January 17, 2025, due to inclement weather. Please plan accordingly.</p>
         </div>
         <div className="announcement-box">
-          <p>Leap Innovation Workshop on Monday</p>
+          <p><strong>Upcoming Event:</strong> The Leap Innovation Workshop will be held on Monday, January 20, 2025. Attendance is highly encouraged.</p>
         </div>
       </div>
     </div>
@@ -18,4 +18,5 @@ function Announcement() {
 }
 
 export default Announcement;
+
 
