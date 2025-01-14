@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Page/Announcement.css';
+import './Announcement.css';
 
 function Announcement() {
   return (

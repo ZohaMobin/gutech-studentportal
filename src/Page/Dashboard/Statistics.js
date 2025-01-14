@@ -1,6 +1,6 @@
-import '../Page/Statistics.css';
+import './Statistics.css';
 
-function Staistics() {
+function Statistics() {
   const OverallAttWidth = 70; 
   const OverallProgressWidth = 85; 
 
@@ -22,4 +22,4 @@ function Staistics() {
   );
 }
 
-export default Staistics;
+export default Statistics;

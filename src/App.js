@@ -1,9 +1,10 @@
 
 import './App.css';
-import Staistics from './Components/Page/Statistics';
-import './Components/Page/Statistics';
-import Announcement from './Components/Page/Announcement';
-import './Components/Page/Announcement';
+import Statistics from './Page/Dashboard/Statistics';
+import './Page/Dashboard/Statistics';
+import Announcement from './Page/Dashboard/Announcement';
+import './Page/Dashboard/Announcement';
+import TodaysTimetable from './Page/Dashboard/Todaystimetable';
 
 
 function App() {
@@ -13,8 +14,9 @@ function App() {
   }
   return (
     <div className="container">
-    <Staistics Statistics_Data={Statistics_Data1}/>
+    <Statistics Statistics_Data={Statistics_Data1}/>
     <Announcement/>
+    <TodaysTimetable/>
     </div>
   );
 }
