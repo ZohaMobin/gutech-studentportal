@@ -1,11 +1,11 @@
 import React from "react";
-import ExamSchedual from "./Components/Exam Schedual/ExamSchedual";
-import "./Components/Exam Schedual/ExamSchedual.css";
+import ExamSchedule from "./Components/Exam Schedual/ExamSchedule";
+import "./Components/Exam Schedual/ExamSchedule.css";
 
 function App() {
   return (
     <div>
-      <ExamSchedual />
+      <ExamSchedule/>
     </div>
   );
 }

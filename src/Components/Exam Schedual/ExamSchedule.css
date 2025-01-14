@@ -1,0 +1,293 @@
+/* General Styling */
+.exam-schedule {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 2px solid #991D20;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  color: #323232;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Header Styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #991D20;
+  padding-bottom: 10px;
+}
+
+.header h1,
+.header h2 {
+  color: #991D20;
+  margin: 0;
+  font-size: 28px;
+}
+
+.month-display {
+  font-size: 20px;
+  font-weight: bold;
+  color: #991D20;
+}
+
+/* Schedule Table */
+.schedule-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.time-row, .day-row {
+  display: table-row;
+}
+
+.time-cell, .day-cell, .slot-cell {
+  display: table-cell;
+  border: 1px solid #323232;
+  text-align: center;
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.time-cell {
+  background-color: #f7f7f7;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #991D20;
+}
+.time-cell:hover {
+  background-color: #991D20;
+  color: #fff;
+}
+
+.day-cell {
+  background-color: #F2F2F2;
+  font-weight: bold;
+  font-size: 16px;
+  color: #991D20;
+}
+.day-cell:hover {
+  background-color: #991D20;
+  color: #ffffff;
+}
+
+.slot-cell {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  word-wrap: break-word;
+  text-align: center;
+  color: #991D20;
+}
+
+.slot-cell.filled {
+  background-color: #FBECEC;
+  border-left: 4px solid #991D20;
+  border-radius: 5px;
+}
+
+.slot-cell input {
+  width: 90%;
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #991D20;
+  border-radius: 5px;
+  color: #323232;
+}
+
+.slot-cell input:focus {
+  outline: none;
+  border-color: #991D20;
+}
+
+.slot-cell input::placeholder {
+  color: #AAA;
+}
+
+/* Highlighted Slots */
+.slot-cell.filled:nth-child(4) {
+  background-color: #FFF5F5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header h1,
+  .header h2,
+  .date-picker {
+    flex: none;
+    margin-bottom: 10px;
+  }
+
+  .time-cell,
+  .day-cell,
+  .slot-cell {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+
+.date-picker select {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #991D20;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.date-picker select:focus {
+  outline: none;
+  border-color: #991D20;
+}
+
+/* Enhanced Style for Headers and Cells */
+.header h1::after, .header h2::after {
+  content: '';
+  display: block;
+  width: 50%;
+  height: 3px;
+  margin: 5px auto;
+  background: #323232;
+}
+.slot-cell.highlight {
+  background-color: #991D20;
+  color: #FFFFFF;
+  font-weight: bold;
+  border: 2px solid #323232;
+  border-radius: 5px;
+}
+
+/* General Styling */
+.exam-schedule {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 2px solid #991D20;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  color: #323232;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Header Styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #991D20;
+  padding-bottom: 10px;
+}
+
+.header h1,
+.header h2 {
+  color: #991D20;
+  margin: 0;
+  font-size: 28px;
+}
+
+.month-display {
+  font-size: 20px;
+  font-weight: bold;
+  color: #991D20;
+}
+
+/* Schedule Table */
+.schedule-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.time-row,
+.day-row {
+  display: table-row;
+}
+
+.time-cell,
+.day-cell,
+.slot-cell {
+  display: table-cell;
+  border: 1px solid #323232;
+  text-align: center;
+  padding: 15px;
+  vertical-align: middle;
+}
+
+/* Time Row and Day Cell Styling */
+.time-cell,
+.day-cell {
+  background-color: #F7F7F7;
+  font-weight: bold;
+}
+
+/* Slot Cell Styling */
+.slot-cell {
+  min-height: 60px;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+/* Filled Slot Styling */
+.slot-cell.filled {
+  background-color: #FFE6E6;
+  border-left: 4px solid #991D20;
+}
+
+/* Highlight Special Exam Slots */
+.slot-cell.filled.highlight {
+  background-color: #991D20;
+  color: #FFFFFF;
+  font-weight: bold;
+  border-left: 4px solid #323232;
+}
+
+/* Hover Effects for Days and Times */
+.day-cell:hover,
+.time-cell:hover {
+  background-color: #991D20;
+  color: #FFFFFF;
+  cursor: default;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header h1,
+  .header h2,
+  .month-display {
+    margin-bottom: 10px;
+    font-size: 22px;
+  }
+
+  .time-cell,
+  .day-cell,
+  .slot-cell {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .slot-cell {
+    min-height: 60px;
+  }
+}
