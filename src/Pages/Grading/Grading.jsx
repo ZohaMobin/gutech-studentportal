@@ -20,6 +20,14 @@ const Gradings = () => {
     { assignmentno: 2, totalmarks: 5, obtainmarks: 2.5 },
 
   ];
+  const mids = [
+    { midno: 1, totalmarks: 25, obtainmarks: 20 },
+
+  ];
+  const final = [
+    { finalno: 1, totalmarks: 25, obtainmarks: 20 },
+
+  ]
 
   return (
     <div className="app">
@@ -57,9 +65,20 @@ const Gradings = () => {
           data={assignments}
           columns={["Assignment no.", "Total marks", "Obtain marks"]}
         />
+        <Table
+          title="Mids"
+          data={mids}
+          columns={["Mid no.", "Total marks", "Obtain marks"]}
+        />
+        <Table
+          title="Finals"
+          data={final}
+          columns={["Final no.", "Total marks", "Obtain marks"]}
+        />
       </main>
     </div>
   );
 };
+
 
 export default Gradings;
