@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    align-items: self-start;
 }
 
 .card2 {
@@ -14,13 +15,11 @@ body {
     text-align: center;
     margin-top: 5px;
     transition: transform 0.3s ease;
-    left: 25px; 
-    bottom: 5%;
+    right: 25px; /* Change from 'left' to 'right' */
+    bottom: 5%; /* Position vertically at 5% from the bottom */
     position: fixed;
     border: 1px solid #ccc;
-    margin-left: 0; 
 }
-
 
 .card2 h3 {
     font-size: 1.5rem;
