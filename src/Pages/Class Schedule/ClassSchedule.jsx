@@ -8,7 +8,7 @@ const ClassSchedule= () => {
         { time: '09:00 - 10:15 AM', subject: 'Problem Solving & Programming Fundamentals', teacher: 'Sir Twaha Minai', classColor: 'yellow-cell' },
         { time: '10:25 - 11:40 AM', subject: 'Web Technologies', teacher: 'Dr. Khubaib Ahmed', classColor: 'blue-cell' },
         { time: '11:50 - 01:20 PM', subject: 'Discrete Structures', teacher: 'Dr. Shehzad', classColor: 'purple-cell' },
-        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK', teacher: '', classColor: 'green-cell' },
+        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK',classColor: 'green-cell' },
         { time: '01:45 - 03:00 PM', subject: 'Design Thinking', teacher: 'Dr. Rauf Malik & Dr. Javaid Ghani', classColor: 'orange-cell' }
       ]
     },
@@ -28,7 +28,7 @@ const ClassSchedule= () => {
         { time: '09:00 - 10:15 AM', subject: 'Problem Solving & Programming Fundamentals', teacher: 'Sir Twaha Minai', classColor: 'yellow-cell' },
         { time: '10:25 - 11:40 AM', subject: 'Web Technologies', teacher: 'Dr. Khubaib Ahmed', classColor: 'blue-cell' },
         { time: '11:50 - 01:20 PM', subject: 'Web Technologies Lab', teacher: 'Ms. Zoha Mobin', classColor: 'dark-blue-cell' },
-        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK', teacher: '', classColor: 'green-cell' },
+        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK',classColor: 'green-cell' },
         { time: '01:45 - 03:00 PM', subject: 'Web Technologies Lab', teacher: 'Ms. Zoha Mobin', classColor: 'dark-blue-cell' }
       ]
     },
@@ -38,7 +38,7 @@ const ClassSchedule= () => {
         { time: '09:00 - 10:15 AM', subject: 'Problem Solving & Programming Fundamentals Lab', teacher: 'Ms. Zoha Mobin', classColor: 'dark-yellow-cell' },
         { time: '10:25 - 11:40 AM', subject: 'Problem Solving & Programming Fundamentals Lab', teacher: 'Ms. Zoha Mobin', classColor: 'dark-yellow-cell' },
         { time: '11:50 - 01:20 PM', subject: 'Discrete Structures', teacher: 'Dr. Shehzad', classColor: 'purple-cell' },
-        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK', teacher: '', classColor: 'green-cell' },
+        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK',classColor: 'green-cell' },
         { time: '01:45 - 03:00 PM', subject: 'Design Thinking', teacher: 'Dr. Rauf Malik & Dr. Javaid Ghani', classColor: 'orange-cell' }
       ]
     },
@@ -69,18 +69,25 @@ const ClassSchedule= () => {
           </tr>
         </thead>
         <tbody>
-          {schedule.map((day, index) => (
-            <tr key={index}>
-              <td className='days'>{day.day}</td>
-              {day.slots.map((slot, idx) => (
-                <td key={idx} className={slot.classColor}>
-                  {slot.subject && <>{slot.subject} <br /> by {slot.teacher}</>}
-                  {!slot.subject && <>{slot.subject}</>}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
+  {schedule.map((day, index) => (
+    <tr key={index}>
+      <td className="days">{day.day}</td>
+      {day.slots.map((slot, idx) => (
+        <td key={idx} className={slot.classColor}>
+          {slot.subject === 'NAMAZ BREAK' ? (
+            <>{slot.subject}</>
+          ) : slot.subject ? (
+            <>
+              {slot.subject} <br /> by {slot.teacher}
+            </>
+          ) : (
+            <>{slot.subject}</>
+          )}
+        </td>
+      ))}
+    </tr>
+  ))}
+</tbody>
       </table>
     </div>
   );

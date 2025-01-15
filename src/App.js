@@ -21,7 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/assignments" element={<Assignments />} />
-            <Route path="/schedules" element={ <ClassSchedule />} />
+            <Route path="/timetable" element={ <ClassSchedule />} />
           </Routes>
         </div>
       </div>
