@@ -1,11 +1,12 @@
 
-import './App.css';
+
 import Statistics from './Page/Dashboard/Statistics';
 import './Page/Dashboard/Statistics';
 import Announcement from './Page/Dashboard/Announcement';
 import './Page/Dashboard/Announcement';
 import TodaysTimetable from './Page/Dashboard/Todaystimetable';
-
+import Attendance from './Page/Dashboard/Attendancebargraph';
+import BarChart from './Page/Dashboard/Attendancebargraph';
 
 function App() {
   const Statistics_Data1 = {
@@ -17,6 +18,7 @@ function App() {
     <Statistics Statistics_Data={Statistics_Data1}/>
     <Announcement/>
     <TodaysTimetable/>
+    <BarChart />
     </div>
   );
 }
