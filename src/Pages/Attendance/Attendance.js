@@ -1,49 +1,98 @@
-import React from 'react';
-import './Attendance.css';
-
-const attendanceData = [
-  { day: 'Monday', date: '15-January-2024', group: 'Discrete Structures', teacher: 'Dr. Shahzad', room: 'B101' },
-  { day: 'Tuesday', date: '16-January-2024', group: 'Web Technologies', teacher: 'Dr. Khubaib', room: 'C202' },
-  { day: 'Wednesday', date: '17-January-2024', group: 'Web Technologies Lab', teacher: 'Ms. Zoha Mobin', room: 'Lab A' },
-  { day: 'Thursday', date: '18-January-2024', group: 'PSPF', teacher: 'Dr. Twaha Minai', room: 'D303' },
-  { day: 'Friday', date: '19-January-2024', group: 'PSPF Lab', teacher: 'Ms. Zoha Mobin', room: 'Lab B' },
-  { day: 'Monday', date: '22-January-2024', group: 'Design Thinking', teacher: 'Dr. Rauf, Dr. Jawaid abdul ghani', room: 'E404' },
-  { day: 'Tuesday', date: '23-January-2024', group: 'English Language', teacher: 'Mr. Ali Dossa', room: 'F505' }
-];
+import React, { useState, useEffect } from "react";
+import "./Attendance.css";
 
 const Attendance = () => {
+  const attendanceData = [
+    { date: "2025-01-03", remarks: "-", status: "Present", submit: "Submitted" },
+    { date: "2025-01-02", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
+    { date: "2025-01-01", remarks: "Arrived late", status: "Late", submit: "Upload" },
+    { date: "2024-12-27", remarks: "Arrived late", status: "Late", submit: "Upload" },
+    { date: "2024-12-25", remarks: "-", status: "Present", submit: "Submitted" },
+    { date: "2024-12-23", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
+  ];
+
+  // Calculate attendance percentage
+  const calculatePercentage = () => {
+    const totalDays = attendanceData.length;
+    const presentDays = attendanceData.filter(item => item.status === "Present").length;
+    return Math.round((presentDays / totalDays) * 100);
+  };
+
+  const [percentage, setPercentage] = useState(calculatePercentage());
+
+  useEffect(() => {
+    setPercentage(calculatePercentage());
+  }, [attendanceData]);
+
   return (
     <div className="attendance-container">
-      <header className="attendance-header">
-        <img src="path_to_profile_picture.jpg" alt="Profile" className="profile-picture" />
-        <div className="student-info">
-          <h3>Student</h3>
-          <h4>ATTENDANCE</h4>
-        </div>
+      <header className="header">
+        <h1>Attendance</h1>
+        <p>View your attendance</p>
       </header>
-      <input type="text" placeholder="Search..." className="search-bar" />
-      <table>
-        <thead>
-          <tr>
-            <th>Day</th>
-            <th>Date</th>
-            <th>Group</th>
-            <th>Teacher</th>
-            <th>Room</th>
-          </tr>
-        </thead>
-        <tbody>
-          {attendanceData.map((item, index) => (
-            <tr key={index}>
-              <td>{item.day}</td>
-              <td>{item.date}</td>
-              <td>{item.group}</td>
-              <td>{item.teacher}</td>
-              <td>{item.room}</td>
+
+      <section className="attendance-summary">
+        <h2>Semester 1 Percentage</h2>
+        <div className="circle">
+          <svg width="150" height="150">
+            <circle
+              cx="75"
+              cy="75"
+              r="65"
+              stroke="#e6e6e6"
+              strokeWidth="10"
+              fill="none"
+            />
+            <circle
+              cx="75"
+              cy="75"
+              r="65"
+              stroke="#991D20"
+              strokeWidth="10"
+              fill="none"
+              strokeDasharray="408"
+              strokeDashoffset={408 - (408 * percentage) / 100}
+              strokeLinecap="round"
+              style={{ transition: "stroke-dashoffset 0.5s ease" }}
+            />
+          </svg>
+          <span>{percentage}%</span>
+          <p>Attendance Completed</p>
+        </div>
+      </section>
+
+      <section className="attendance-table-container">
+        <table className="attendance-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Remarks</th>
+              <th>Status</th>
+              <th>Submit</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {attendanceData.map((item, index) => (
+              <tr key={index}>
+                <td>{item.date}</td>
+                <td>{item.remarks}</td>
+                <td className={`status ${item.status.toLowerCase()}`}>{item.status}</td>
+                <td>
+                  <button type="button" className="submit-btn">{item.submit}</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="pagination">
+          <button type="button" className="page-btn">&lt;</button>
+          <button type="button" className="page-btn active">1</button>
+          <button type="button" className="page-btn">2</button>
+          <button type="button" className="page-btn">3</button>
+          <button type="button" className="page-btn">&gt;</button>
+        </div>
+      </section>
     </div>
   );
 };
