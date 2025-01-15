@@ -9,8 +9,7 @@ const ExamSchedule = () => {
         day: "Monday",
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "PSPF (Twaha Minai)", date: "4th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "PSPF (Twaha Minai)", date: "4th September" },
-          { time: "01:45 PM - 3:00 PM", subject: "General Aptitude", date: "4th September" },
+          { time: "11:30 AM - 1:30 PM", subject: "PSPF (Zoha mobin)", date: "4th September" },
           { time: "", subject: "", date: "" },
         ],
       },
@@ -19,7 +18,7 @@ const ExamSchedule = () => {
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "English (Dr. Samra Javed & Mr. Ali Dossa)", date: "5th September" },
           { time: "11:30 AM - 1:30 PM", subject: "", date: "" },
-          { time: "01:45 PM - 3:00 PM", subject: "Web Lab (Miss Zoha)", date: "5th September" },
+    
           { time: "", subject: "", date: "" },
         ],
       },
@@ -27,8 +26,8 @@ const ExamSchedule = () => {
         day: "Wednesday",
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "Web Tech (Dr Khubaib)", date: "6th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "Math II", date: "6th September" },
-          { time: "01:45 PM - 3:00 PM", subject: "", date: "" },
+          { time: "01:45 PM - 3:00 PM", subject: "Web Lab (Miss Zoha)", date: "5th September" },
+          { time: "", subject: "", date: "" },
           { time: "", subject: "", date: "" },
         ],
       },
@@ -36,7 +35,6 @@ const ExamSchedule = () => {
         day: "Thursday",
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "Discrete Structure", date: "7th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "Physics Lab", date: "7th September" },
           { time: "01:45 PM - 3:00 PM", subject: "Design Thinking (Dr. JG/Dr. RM)", date: "7th September" },
           { time: "", subject: "", date: "" },
         ],
@@ -44,9 +42,9 @@ const ExamSchedule = () => {
       {
         day: "Friday",
         slots: [
-          { time: "09:00 AM - 11:00 AM", subject: "Linear Algebra", date: "8th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "Statistics", date: "8th September" },
-          { time: "01:45 PM - 3:00 PM", subject: "Environmental Science", date: "8th September" },
+       
+          { time: "", subject: "", date: "" },   
+          { time: "", subject: "", date: "" },
           { time: "", subject: "", date: "" },
         ],
       },
