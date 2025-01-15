@@ -82,3 +82,8 @@ button:active {
   transform: translateY(0); /* Reset lift on click */
   opacity: 0.8; /* Slightly dim on active click */
 }
+button .fa-play {
+  margin-right: 8px;
+  font-size: 1em; /* Adjust size as needed */
+  vertical-align: middle;
+}
