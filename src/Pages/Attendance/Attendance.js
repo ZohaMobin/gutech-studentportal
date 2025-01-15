@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Calendar, Filter, Clock } from "lucide-react";
 import "./Attendance.css";
 
 const Attendance = () => {
   const subjects = {
-    "PSPF": [
+    PSPF: [
       { date: "2025-01-10", day: "Monday", status: "Present", remarks: "-" },
       { date: "2025-01-09", day: "Sunday", status: "Absent", remarks: "Sick Leave" },
       { date: "2025-01-08", day: "Saturday", status: "Late", remarks: "Arrived late" },
@@ -23,7 +24,7 @@ const Attendance = () => {
       { date: "2025-01-10", day: "Monday", status: "Late", remarks: "Arrived late" },
       { date: "2025-01-09", day: "Sunday", status: "Absent", remarks: "Sick Leave" },
     ],
-    "WebTech": [
+    WebTech: [
       { date: "2025-01-12", day: "Wednesday", status: "Present", remarks: "-" },
       { date: "2025-01-11", day: "Tuesday", status: "Late", remarks: "Arrived late" },
       { date: "2025-01-10", day: "Monday", status: "Absent", remarks: "Sick Leave" },
@@ -37,99 +38,157 @@ const Attendance = () => {
       { date: "2025-01-14", day: "Friday", status: "Present", remarks: "-" },
       { date: "2025-01-13", day: "Thursday", status: "Late", remarks: "Arrived late" },
       { date: "2025-01-12", day: "Wednesday", status: "Absent", remarks: "Sick Leave" },
-    ]
+    ],
   };
 
   const [selectedSubject, setSelectedSubject] = useState("PSPF");
+  const [filterDate, setFilterDate] = useState("");
+  const [filterType, setFilterType] = useState("all");
+  const [filteredAttendance, setFilteredAttendance] = useState(subjects[selectedSubject]);
+  const [percentage, setPercentage] = useState(0);
 
-  const calculatePercentage = () => {
-    const totalDays = subjects[selectedSubject].length;
-    const presentDays = subjects[selectedSubject].filter(
-      (item) => item.status === "Present"
-    ).length;
+  const calculatePercentage = (subjectData) => {
+    const totalDays = subjectData.length;
+    const presentDays = subjectData.filter((item) => item.status === "Present").length;
     return Math.round((presentDays / totalDays) * 100);
   };
 
-  const [percentage, setPercentage] = useState(calculatePercentage());
+  useEffect(() => {
+    let filtered = subjects[selectedSubject];
 
-  const handleTabChange = (subject) => {
-    setSelectedSubject(subject);
-    setPercentage(calculatePercentage());
-  };
+    if (filterType === "date" && filterDate) {
+      filtered = filtered.filter((item) => item.date === filterDate);
+    } else if (filterType === "month" && filterDate) {
+      const [year, month] = filterDate.split("-");
+      filtered = filtered.filter((item) => item.date.startsWith(`${year}-${month}`));
+    } else if (filterType === "week" && filterDate) {
+      const selectedDate = new Date(filterDate);
+      const weekStart = new Date(selectedDate);
+      weekStart.setDate(selectedDate.getDate() - selectedDate.getDay());
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+
+      filtered = filtered.filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate >= weekStart && itemDate <= weekEnd;
+      });
+    }
+
+    setFilteredAttendance(filtered);
+    setPercentage(calculatePercentage(filtered));
+  }, [selectedSubject, filterDate, filterType]);
 
   return (
     <div className="attendance-container">
       <header className="header">
-        <h1>Attendance</h1>
-        <p>View your attendance by subject</p>
+        <div className="header-content">
+          <h1>Attendance Dashboard</h1>
+          <div className="subject-info">
+            <span className="subject-label">Current Subject:</span>
+            <span className="selected-subject">{selectedSubject}</span>
+          </div>
+        </div>
       </header>
 
-      <section className="tabs">
-        <select
-          className="dropdown"
-          value={selectedSubject}
-          onChange={(e) => handleTabChange(e.target.value)}
-        >
-          {Object.keys(subjects).map((subject) => (
-            <option key={subject} value={subject}>
-              {subject}
-            </option>
-          ))}
-        </select>
-      </section>
-
-      <section className="attendance-summary">
-        <h2>{selectedSubject} Attendance Percentage</h2>
-        <div className="circle">
-          <svg width="150" height="150">
-            <circle
-              cx="75"
-              cy="75"
-              r="65"
-              stroke="#e6e6e6"
-              strokeWidth="10"
-              fill="none"
-            />
-            <circle
-              cx="75"
-              cy="75"
-              r="65"
-              stroke="#991D20"
-              strokeWidth="10"
-              fill="none"
-              strokeDasharray="408"
-              strokeDashoffset={408 - (408 * percentage) / 100}
-              strokeLinecap="round"
-              style={{ transition: "stroke-dashoffset 0.5s ease" }}
-            />
-          </svg>
-          <span>{percentage}%</span>
-          <p>Attendance Completed</p>
-        </div>
-      </section>
-
-      <section className="attendance-table-container">
-        <table className="attendance-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Day</th>
-              <th>Status</th>
-              <th>Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {subjects[selectedSubject].map((item, index) => (
-              <tr key={index}>
-                <td>{item.date}</td>
-                <td>{item.day}</td>
-                <td className={`status ${item.status.toLowerCase()}`}>{item.status}</td>
-                <td>{item.remarks}</td>
-              </tr>
+      <div className="main-content">
+        <div className="sidebar">
+          <nav className="subject-tabs">
+            {Object.keys(subjects).map((subject) => (
+              <button
+                key={subject}
+                className={`tab ${selectedSubject === subject ? "active" : ""}`}
+                onClick={() => setSelectedSubject(subject)}
+              >
+                {subject}
+              </button>
             ))}
-          </tbody>
-        </table>
-      </section>
+          </nav>
+        </div>
+
+        <div className="content-area">
+          <div className="stats-cards">
+            <div className="stat-card attendance-circle">
+              <div className="circle-wrapper">
+                <svg viewBox="0 0 150 150">
+                  <circle cx="75" cy="75" r="65" className="circle-bg" />
+                  <circle
+                    cx="75"
+                    cy="75"
+                    r="65"
+                    className="circle-progress"
+                    style={{
+                      strokeDashoffset: `${408 - (408 * percentage) / 100}px`,
+                    }}
+                  />
+                </svg>
+                <div className="circle-content">
+                  <span className="percentage">{percentage}%</span>
+                  <span className="label">Present</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="filter-container">
+            <div className="filter-header">
+              <Filter size={20} />
+              <h3>Filter Records</h3>
+            </div>
+            <div className="filter-controls">
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="filter-select"
+              >
+                <option value="all">All Records</option>
+                <option value="date">By Date</option>
+                <option value="month">By Month</option>
+                <option value="week">By Week</option>
+              </select>
+
+              {filterType !== "all" && (
+                <input
+                  type={filterType === "date" ? "date" : "month"}
+                  value={filterDate}
+                  onChange={(e) => setFilterDate(e.target.value)}
+                  className="filter-input"
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="table-container">
+            <table className="attendance-table">
+              <thead>
+                <tr>
+                  <th>
+                    <Calendar size={16} /> Date
+                  </th>
+                  <th>
+                    <Clock size={16} /> Day
+                  </th>
+                  <th>Status</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAttendance.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.date}</td>
+                    <td>{item.day}</td>
+                    <td>
+                      <span className={`status-badge ${item.status.toLowerCase()}`}>
+                        {item.status}
+                      </span>
+                    </td>
+                    <td>{item.remarks}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
