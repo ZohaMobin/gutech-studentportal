@@ -18,7 +18,8 @@ body {
     right: 25px; /* Change from 'left' to 'right' */
     bottom: 5%; /* Position vertically at 5% from the bottom */
     position: fixed;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
+    margin-left: 0; 
 }
 
 .card2 h3 {

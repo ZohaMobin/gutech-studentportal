@@ -4,33 +4,43 @@
   right: 0;
   transform: translateY(-50%);
   background-color: #fff;
-  border: 1px solid #ccc; 
+  border: 2px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 500px;
-  height: 250px; 
+  height: auto;
   margin-right: 25px;
 }
-h1{
+
+h1 {
   text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
 }
 
 .boxes-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .announcement-box {
   background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  border: 2px solid #ccc; 
   border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-.announcement-box p {
-  font-size: 16px;
-  margin-bottom: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+.announcement-box p {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.announcement-box p strong {
+  color: #0056b3;
+}
