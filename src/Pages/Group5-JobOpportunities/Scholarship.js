@@ -17,8 +17,8 @@ const ScholarshipPage = () => {
   };
 
   const scholarships = [
-    { type: 'Need-Based' },
-    { type: 'Merit-Based' },
+    { type: 'AGU Scholarship Form' },
+   
   ];
 
   return (
@@ -41,7 +41,7 @@ const ScholarshipPage = () => {
       </div>
 
       <div>
-        <h3 className="available-scholarships">Available Scholarships</h3>
+        <h3 className="available-scholarships">Available Scholarship</h3>
         {scholarships.map((scholarship, index) => (
           <div key={index} className="scholarship-card">
             <span className="scholarship-type">{scholarship.type}</span>
