@@ -1,62 +1,49 @@
-
 .pie-chart-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: fixed; 
-  top: 20px; 
-  right: 400px; 
-  padding: 15px; 
-  border-radius: 15px;
+  position: fixed;
+  top: 20px;
+  right: 400px;
+  padding: 20px;
+  border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #f4f4f9; 
-  width: 250px;
-  height: auto;
-  max-width: 60%; 
-  border: 1px solid #ccc;
+  background-color: white;
+  width: 300px;
+  height: 60%;
+  max-width: 60%;
+  border: 1px solid white;
 }
 
-  
-  
-  .pie-chart-container h3 {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px; 
-    text-align: center;
-  }
-  
-  
-  .pie-chart-container canvas {
-    width: 100% !important; 
-    height: 180px; 
-  }
-  
-  
-  .legend {
-    display: flex;
-    justify-content: flex-start; 
-    flex-wrap: wrap; 
-    gap: 15px; 
-    margin-top: 15px; 
-    width: 100%;
-  }
-  
-  
-  .legend-item {
-    display: flex;
-    align-items: center;
-    font-size: 14px; 
-    color: #333;
-  }
+.pie-chart-container h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
 
-  
-  .legend-color-box {
-    width: 20px; 
-    height: 20px;
-    margin-right: 10px; 
-    border-radius: 50%; 
-  }
-  
-  
+.pie-chart-container canvas {
+  width: 100% !important;
+  height: 180px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+  position: relative;
+}
+
+.legend-item span {
+  margin-left: 10px;
+}
+
+.legend-color-box {
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+  border-radius: 50%; /* Makes the box circular */
+}
