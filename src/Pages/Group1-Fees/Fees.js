@@ -15,21 +15,18 @@ function Fees() {
   const initialFees = [
     {
       Date: "11/01/2025",
-      amount: "12345",
       statusfee: "paid",
       semesterfee: "1st (Installment 1)",
       receipt: "Not Uploaded"
     },
     {
       Date: "05/07/2024",
-      amount: "12000",
       statusfee: "paid",
       semesterfee: "2nd (Installment 2)",
       receipt: "Not Uploaded"
     },
     {
       Date: "20/12/2023",
-      amount: "15000",
       statusfee: "pending",
       semesterfee: "3rd (Installment 1)",
       receipt: "Not Uploaded"
