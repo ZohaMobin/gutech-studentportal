@@ -31,28 +31,31 @@ body {
   color: #f9f9f9;
 }
 
+/* Tabs Section */
 .tabs {
+  margin: 20px 0;
   display: flex;
   justify-content: center;
-  margin: 20px 0;
 }
 
-.tab-button {
-  background-color: #fff;
+.dropdown {
+  padding: 10px 15px;
   border: 1px solid #991D20;
-  color: #991D20;
-  padding: 10px 20px;
   border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+  background-color: white;
   cursor: pointer;
-  margin: 0 10px;
+  outline: none;
   transition: all 0.3s ease;
 }
 
-.tab-button.active, .tab-button:hover {
-  background-color: #991D20;
-  color: #fff;
+.dropdown:focus,
+.dropdown:hover {
+  border-color: #b73133;
 }
 
+/* Attendance Summary Section */
 .attendance-summary {
   margin: 30px 0;
   text-align: center;
@@ -90,6 +93,7 @@ body {
   color: #555;
 }
 
+/* Attendance Table Section */
 .attendance-table-container {
   background-color: white;
   padding: 20px;
@@ -115,6 +119,30 @@ body {
   border-bottom: 1px solid #f1f1f1;
 }
 
+.attendance-table td:first-child,
+.attendance-table th:first-child {
+  text-align: left;
+  width: 25%;
+}
+
+.attendance-table td:nth-child(2),
+.attendance-table th:nth-child(2) {
+  text-align: left;
+  width: 20%;
+}
+
+.attendance-table td:nth-child(3),
+.attendance-table th:nth-child(3) {
+  text-align: center;
+  width: 20%;
+}
+
+.attendance-table td:last-child,
+.attendance-table th:last-child {
+  text-align: left;
+  width: 35%;
+}
+
 .status.present {
   color: green;
   font-weight: bold;
@@ -130,16 +158,32 @@ body {
   font-weight: bold;
 }
 
-.submit-btn {
-  background-color: #991D20;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .attendance-container {
+    padding: 10px;
+  }
 
-.submit-btn:hover {
-  background-color: #b73133;
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .dropdown {
+    width: 100%;
+    padding: 8px 10px;
+  }
+
+  .circle span {
+    font-size: 28px;
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    font-size: 14px;
+    padding: 8px;
+  }
 }

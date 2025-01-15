@@ -3,24 +3,44 @@ import "./Attendance.css";
 
 const Attendance = () => {
   const subjects = {
-    Math: [
-      { date: "2025-01-05", remarks: "-", status: "Present", submit: "Submitted" },
-      { date: "2025-01-04", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
-      { date: "2025-01-03", remarks: "Arrived late", status: "Late", submit: "Upload" },
+    "PSPF": [
+      { date: "2025-01-10", day: "Monday", status: "Present", remarks: "-" },
+      { date: "2025-01-09", day: "Sunday", status: "Absent", remarks: "Sick Leave" },
+      { date: "2025-01-08", day: "Saturday", status: "Late", remarks: "Arrived late" },
     ],
-    Science: [
-      { date: "2025-01-06", remarks: "-", status: "Present", submit: "Submitted" },
-      { date: "2025-01-05", remarks: "Arrived late", status: "Late", submit: "Upload" },
-      { date: "2025-01-04", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
+    "Design Thinking": [
+      { date: "2025-01-10", day: "Monday", status: "Present", remarks: "-" },
+      { date: "2025-01-09", day: "Sunday", status: "Late", remarks: "Arrived late" },
+      { date: "2025-01-08", day: "Saturday", status: "Absent", remarks: "Sick Leave" },
     ],
-    English: [
-      { date: "2025-01-07", remarks: "-", status: "Present", submit: "Submitted" },
-      { date: "2025-01-06", remarks: "Arrived late", status: "Late", submit: "Upload" },
-      { date: "2025-01-05", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
+    "Functional English": [
+      { date: "2025-01-11", day: "Tuesday", status: "Present", remarks: "-" },
+      { date: "2025-01-10", day: "Monday", status: "Absent", remarks: "Sick Leave" },
+      { date: "2025-01-09", day: "Sunday", status: "Late", remarks: "Arrived late" },
     ],
+    "Discrete Maths": [
+      { date: "2025-01-11", day: "Tuesday", status: "Present", remarks: "-" },
+      { date: "2025-01-10", day: "Monday", status: "Late", remarks: "Arrived late" },
+      { date: "2025-01-09", day: "Sunday", status: "Absent", remarks: "Sick Leave" },
+    ],
+    "WebTech": [
+      { date: "2025-01-12", day: "Wednesday", status: "Present", remarks: "-" },
+      { date: "2025-01-11", day: "Tuesday", status: "Late", remarks: "Arrived late" },
+      { date: "2025-01-10", day: "Monday", status: "Absent", remarks: "Sick Leave" },
+    ],
+    "PSPF Lab": [
+      { date: "2025-01-13", day: "Thursday", status: "Present", remarks: "-" },
+      { date: "2025-01-12", day: "Wednesday", status: "Late", remarks: "Arrived late" },
+      { date: "2025-01-11", day: "Tuesday", status: "Absent", remarks: "Sick Leave" },
+    ],
+    "WebTech Lab": [
+      { date: "2025-01-14", day: "Friday", status: "Present", remarks: "-" },
+      { date: "2025-01-13", day: "Thursday", status: "Late", remarks: "Arrived late" },
+      { date: "2025-01-12", day: "Wednesday", status: "Absent", remarks: "Sick Leave" },
+    ]
   };
 
-  const [selectedSubject, setSelectedSubject] = useState("Math");
+  const [selectedSubject, setSelectedSubject] = useState("PSPF");
 
   const calculatePercentage = () => {
     const totalDays = subjects[selectedSubject].length;
@@ -45,17 +65,17 @@ const Attendance = () => {
       </header>
 
       <section className="tabs">
-        {Object.keys(subjects).map((subject) => (
-          <button
-            key={subject}
-            className={`tab-button ${
-              selectedSubject === subject ? "active" : ""
-            }`}
-            onClick={() => handleTabChange(subject)}
-          >
-            {subject}
-          </button>
-        ))}
+        <select
+          className="dropdown"
+          value={selectedSubject}
+          onChange={(e) => handleTabChange(e.target.value)}
+        >
+          {Object.keys(subjects).map((subject) => (
+            <option key={subject} value={subject}>
+              {subject}
+            </option>
+          ))}
+        </select>
       </section>
 
       <section className="attendance-summary">
@@ -93,22 +113,18 @@ const Attendance = () => {
           <thead>
             <tr>
               <th>Date</th>
-              <th>Remarks</th>
+              <th>Day</th>
               <th>Status</th>
-              <th>Submit</th>
+              <th>Remarks</th>
             </tr>
           </thead>
           <tbody>
             {subjects[selectedSubject].map((item, index) => (
               <tr key={index}>
                 <td>{item.date}</td>
-                <td>{item.remarks}</td>
+                <td>{item.day}</td>
                 <td className={`status ${item.status.toLowerCase()}`}>{item.status}</td>
-                <td>
-                  <button type="button" className="submit-btn">
-                    {item.submit}
-                  </button>
-                </td>
+                <td>{item.remarks}</td>
               </tr>
             ))}
           </tbody>
