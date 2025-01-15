@@ -1,12 +1,10 @@
-import React from 'react';
-import Statistics from './Page/Dashboard/Statistics';
-import './Page/Dashboard/Statistics';
-import Announcement from './Page/Dashboard/Announcement';
-import './Page/Dashboard/Announcement';
-import TodaysTimetable from './Page/Dashboard/Todaystimetable';
-import BarChart from './Page/Dashboard/Attendancebargraph';
-import PieChart from './Page/Dashboard/PieChart';
-import Calendar from './Page/Dashboard/Calendar';
+import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from "../src/Pages/Sidebar/sidebar/index";
+import Assignments from './Pages/assignments/assignments';
+
+import Dashboard from './Pages/dashboard/dashboard';
+import { Topbar } from './Pages/topbar/topbar';
 
 function App() {
 
@@ -51,18 +49,26 @@ function App() {
     );
   }
   return (
-    <div className="container">
-     <Header name="Safiya" />
-       {/* the css of header is with announcement.css */}
-    <Statistics Statistics_Data={Statistics_Data1}/>
-    <Announcement/>
-    <PieChart/>
-    <Calendar/>
-    <TodaysTimetable/>
-    <BarChart />
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
     </div>
-  
   );
 }
 
 export default App;
+
+
+
