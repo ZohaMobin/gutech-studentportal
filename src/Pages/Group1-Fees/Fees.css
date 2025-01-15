@@ -168,4 +168,60 @@ span{
     color: #ddd;
 }
 
-
+/* Styles for the Semester Dropdown */
+.semester-select {
+    margin: 20px 0;
+  }
+  
+  .semester-select label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  
+  .semester-select select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+  
+  .semester-select select:hover {
+    border-color: #3f3f3f;
+    background-color: #f0f0f0;
+  }
+  
+  .semester-select select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #fff;
+  }
+  
+  .file-info {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  .upload-button {
+    background-color: #991D20;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .upload-button:hover {
+    background-color: #8a1b1e;
+  }
+  
+  .file-info {
+    color: #333;
+    margin-top: 10px;
+  }
+  
