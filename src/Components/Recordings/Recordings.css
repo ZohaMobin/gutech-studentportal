@@ -5,6 +5,7 @@
   margin: 20px;
   font-family: Arial, sans-serif;
   color: #323232; /* Main text color */
+  font-weight: bold;
 }
 
 .recordings-grid {

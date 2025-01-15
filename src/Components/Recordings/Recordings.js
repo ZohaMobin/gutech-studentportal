@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable */
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Recordings.css";
@@ -6,8 +5,9 @@ import "./Recordings.css";
 // Your recordings data
 const recordingsData = [
   {
-    title: "PSPF - Problem solving and fundamentals By Sir Twaha Minai",
-    duration: "10:12:09",
+    title: "PSPF - Problem Solving and Fundamentals",
+    instructor: "Sir Twaha Minai",
+
     lessons: 4,
     description: "Coding like poetry should be short and concise.",
     links: [
@@ -18,8 +18,8 @@ const recordingsData = [
     ],
   },
   {
-    title: "Design Thinking By Sir Rauf",
-    duration: "3:50:05",
+    title: "Design Thinking",
+    instructor: "Sir Rauf",
     lessons: 4,
     description: "A process for solving problems by prioritizing the consumer's needs above all else.",
     links: [
@@ -30,8 +30,8 @@ const recordingsData = [
     ],
   },
   {
-    title: "Web Technologies By Sir Khubaib",
-    duration: "5:30:05",
+    title: "Web Technologies",
+    instructor: "Sir Khubaib",
     lessons: 5,
     description: "The means by which computers communicate with each other using markup languages and multimedia packages.",
     links: [
@@ -43,8 +43,8 @@ const recordingsData = [
     ],
   },
   {
-    title: "Functional English By Sir Ali Dossa",
-    duration: "4:00:00",
+    title: "Functional English",
+    instructor: "Sir Ali Dossa",
     lessons: 2,
     description: "Usage of the English language required to perform a specific function like academic study or career progression.",
     links: [
@@ -53,8 +53,8 @@ const recordingsData = [
     ],
   },
   {
-    title: "Web Tech Lab By Miss Zoha Mobin",
-    duration: "2:50:00",
+    title: "Web Tech Lab",
+    instructor: "Miss Zoha Mobin",
     lessons: 2,
     description: "Let's learn about colors, color contrast, and color styles.",
     links: [
@@ -63,8 +63,9 @@ const recordingsData = [
     ],
   },
   {
-    title: "Discrete Structures By Sir Shahzad",
-    duration: "2:50:00",
+    title: "Discrete Structures",
+    instructor: "Sir Shahzad",
+
     lessons: 3,
     description: "Deals with the study of mathematical structures.",
     links: [
@@ -74,8 +75,8 @@ const recordingsData = [
     ],
   },
   {
-    title: "PSPF-Lab By Miss Zoha Mobin",
-    duration: "3:00:00",
+    title: "PSPF-Lab",
+    instructor: "Miss Zoha Mobin",
     lessons: 2,
     description: "Lab sessions focused on applying problem-solving techniques.",
     links: [
@@ -85,11 +86,9 @@ const recordingsData = [
   },
 ];
 
-
 const RecordingsPage = () => {
   const navigate = useNavigate();
 
-  // Navigate to the RecordingLinksPage with selected recording data
   const handleWatchNow = (recording) => {
     navigate("/recording-links", { state: { recording } });
   };
@@ -104,7 +103,7 @@ const RecordingsPage = () => {
             <h3>{recording.title}</h3>
             <p>{recording.description}</p>
             <p>
-              <strong>{recording.duration}</strong> | {recording.lessons} Lessons
+              <strong>{recording.duration}</strong> | {recording.lessons} | Lessons 
             </p>
             <div className="recording-actions">
               <button

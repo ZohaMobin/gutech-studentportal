@@ -1,349 +1,203 @@
-/* General Container for Page */
+/* General Container */
 .recording-links-container {
-    padding: 40px 60px;
+    padding: 40px 20px;
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    animation: fade-in 0.5s ease-in-out;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 /* Header Section */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #991D20;
-    padding-bottom: 10px;
-}
-
 h1 {
-    color: #991D20;
+    color: #000000; /* Changed to black */
     font-size: 2.5rem;
-    font-weight: bold;
+    font-weight: bold; /* Kept bold */
     margin: 0;
+    text-align: center;
 }
 
-/* Search Bar Container */
+h3 {
+    color: #555;
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin: 10px 0 30px;
+    text-align: center;
+}
+
+/* Filter Section */
+.filter-container {
+    margin-bottom: 20px;
+}
+
 .search-bar-container {
     display: flex;
-    align-items: center; /* Align search box and button vertically centered */
-    gap: 15px; /* Add spacing between search box and buttons */
-    flex-wrap: nowrap; /* Prevent wrapping */
-    justify-content: flex-start; /* Align items to the left */
+    align-items: center;
+    gap: 15px;
+    justify-content: space-between;
 }
 
-/* Input with Icon */
 .input-with-icon {
     position: relative;
-    flex-grow: 1; /* Allow search box to take available space */
-    max-width: 450px; /* Set a maximum width for the search box */
-    margin-right: 100px; /* Push search box to the left */
-    
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
 
-.input-with-icon .search-bar {
-    width: 100%; /* Use full width of the container */
-    padding: 8px 12px; /* Adjust padding for height consistency */
-    padding-right: 45px; /* Space for calendar icon */
+.search-bar {
+    flex: 1;
+    padding: 10px 40px; /* Adjust padding for icons */
+    font-size: 1rem;
     border: 2px solid #991D20;
-    border-radius: 30px;
-    font-size: 0.95rem;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
-    height: 30px; /* Reduced height */
-    margin-top: 20px;
+    border-radius: 5px;
+    height: 44px; /* Match height with button */
+    position: relative;
 }
 
-.input-with-icon .search-bar:focus {
-    outline: none;
-    border-color: #6b0000;
-    box-shadow: 0 4px 10px rgba(153, 29, 32, 0.4);
-}
-
-.input-with-icon .search-bar::placeholder {
-    color: #888;
-    font-style: italic;
-    font-size: 0.85rem;
-}
-
-/* Interactive Calendar Icon */
-.input-with-icon .calendar-icon {
+.search-icon {
     position: absolute;
-    top: 50%; /* Center vertically within the search bar */
-    right: 1px; /* Fixed distance from the right edge of the search bar */
-    transform: translateY(-50%); /* Perfect vertical centering */
-    font-size: 1.1rem;
-    color: #888;
-    cursor: pointer; /* Make the icon clickable */
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #991D20;
 }
 
-.input-with-icon .calendar-icon::before {
-    content: "\1F4C5"; /* Unicode for calendar emoji */
-}
-
-/* Hidden Date Picker */
-.input-with-icon .date-picker-inline {
+.calendar-icon {
     position: absolute;
-    opacity: 0; /* Hidden by default */
-    pointer-events: all; /* Allow interaction with the date picker */
-}
-
-/* Search Button */
-.search-button {
-    padding: 8px 18px; /* Adjust padding for height consistency */
-    color: white;
-    background-color: #991D20;
-    border: none;
-    border-radius: 30px;
-    font-size: 0.95rem;
-    font-weight: bold;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #991D20;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height: 38px; /* Match height with the search bar */
-    flex-shrink: 0; /* Prevent the button from shrinking */
 }
 
-.search-button:hover {
-    background-color: #6b0000;
-    transform: scale(1.05);
+.date-picker-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
-.search-button:active {
-    background-color: #6b0000;
-    transform: scale(0.95);
-}
-
-/* Clear Button */
+/* Clear Filters Button */
 .clear-button {
-    padding: 8px 18px; /* Adjust padding for height consistency */
+    padding: 10px 20px;
+    background-color: #991D20;
     color: white;
-    background-color: #888;
     border: none;
-    border-radius: 30px;
-    font-size: 0.95rem;
-    font-weight: bold;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height: 38px; /* Match height with search bar and button */
+    font-size: 1rem;
+    height: 44px; /* Match height with search bar */
 }
 
 .clear-button:hover {
-    background-color: #555;
+    background-color: #6b0000;
+}
+
+/* Recording List */
+.recordings-list {
+    margin-top: 20px;
+}
+
+.recording-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.recording-info {
+    flex: 1;
+}
+
+.recording-info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+
+.recording-date {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.recording-topic {
+    font-weight: bold;
+    color: #991D20;
+    font-size: 1rem;
+}
+
+/* Watch Recording Button with Play Icon */
+.watch-recording-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between icon and text */
+    background-color: #991D20;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.watch-recording-button svg {
+    font-size: 1.2rem; /* Adjust icon size */
+    vertical-align: middle; /* Align icon with text */
+}
+
+.watch-recording-button:hover {
+    background-color: #6b0000;
     transform: scale(1.05);
 }
 
-.clear-button:active {
-    background-color: #444;
+.watch-recording-button:active {
+    background-color: #6b0000;
     transform: scale(0.95);
 }
 
 /* No Results */
 .no-results {
-    color: #991D20;
     text-align: center;
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1.2rem;
+    color: #991D20;
     margin-top: 20px;
-    animation: fade-in 0.3s ease-in-out;
-}
-
-/* Recordings List */
-.recordings-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid layout */
-    gap: 20px;
-}
-
-/* Recording Link Card */
-.recording-link-card {
-    border: 1px solid #323232;
-    border-radius: 12px;
-    padding: 20px;
-    background: linear-gradient(135deg, #f9f9f9, #ffffff);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
-    min-height: 200px;
-}
-
-.recording-link-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    background-color: #fafafa;
-}
-
-.recording-link-card p {
-    margin: 10px 0;
-    color: #333;
-    font-size: 0.95rem;
-    line-height: 1.8;
-}
-
-.recording-link-card strong {
-    color: #991D20;
-    font-size: 1.05rem;
-}
-
-/* Watch Recording Button */
-.watch-recording-button {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 12px 25px;
-    color: white;
-    background-color: #991D20;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    text-align: center;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.watch-recording-button:hover {
-    background-color: #323232;
-    transform: scale(1.03);
-}
-
-.watch-recording-button:active {
-    background-color: #6b0000;
-    transform: scale(0.98);
 }
 
 /* Responsive Adjustments */
 @media screen and (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+    h1 {
+        font-size: 2rem;
     }
 
-    h1 {
-        font-size: 1.8rem;
+    h3 {
+        font-size: 1rem;
     }
 
     .search-bar-container {
-        flex-direction: column; /* Stack search bar and buttons vertically */
-        align-items: stretch;
+        flex-direction: column;
+        gap: 10px;
     }
 
-    .search-button,
     .clear-button {
-        width: 100%; /* Full width for buttons on smaller screens */
+        width: 100%;
+        text-align: center;
     }
 
-    .recordings-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
+    .recording-item {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .watch-recording-button {
-        padding: 10px 20px;
-        font-size: 0.9rem;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
     }
-}
-
-/* Animations */
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-/* Add a play button logo to the Watch Recording button */
-.watch-recording-button {
-    display: flex; /* Use flexbox to align icon and text */
-    align-items: center; /* Center items vertically */
-    justify-content: center; /* Center items horizontally */
-    gap: 8px; /* Add spacing between icon and text */
-    margin-top: 15px;
-    padding: 12px 25px;
-    color: white;
-    background-color: #991D20;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    text-align: center;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.watch-recording-button::before {
-    content: '\25B6'; /* Unicode for play icon */
-    font-size: 1.2rem; /* Slightly larger than text */
-    color: white;
-    display: inline-block;
-}
-
-.watch-recording-button:hover {
-    background-color: #323232;
-    transform: scale(1.03);
-}
-
-.watch-recording-button:active {
-    background-color: #6b0000;
-    transform: scale(0.98);
-}
-
-/* Add a subtle gradient to the header background */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #991D20;
-    padding-bottom: 10px;
-    background: linear-gradient(135deg, #ffffff, #f5f5f5);
-    padding: 20px;
-    border-radius: 10px;
-}
-
-/* Enhance the Recording Link Cards */
-.recording-link-card {
-    border: 1px solid #991D20;
-    border-radius: 12px;
-    padding: 20px;
-    background: linear-gradient(135deg, #ffffff, #f9f9f9);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
-    min-height: 200px;
-    position: relative;
-}
-
-.recording-link-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    background-color: #f0f0f0;
-}
-
-.recording-link-card p {
-    margin: 10px 0;
-    color: #333;
-    font-size: 0.95rem;
-    line-height: 1.8;
-}
-
-.recording-link-card strong {
-    color: #991D20;
-    font-size: 1.05rem;
-}
-
-/* Add hover effect to Search Bar */
-.input-with-icon .search-bar:hover {
-    border-color: #991D20;
-    box-shadow: 0 5px 15px rgba(153, 29, 32, 0.2);
-}
-
-/* Add subtle hover effect to the Clear Button */
-.clear-button:hover {
-    background-color: #991D20;
-    color: white;
-    transform: scale(1.05);
 }

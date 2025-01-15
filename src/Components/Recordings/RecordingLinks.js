@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCirclePlay } from "react-icons/fa6";
 import "./RecordingLinks.css";
 
 const RecordingLinksPage = () => {
@@ -23,21 +25,12 @@ const RecordingLinksPage = () => {
 
         return (
           (!selectedDate || isDateMatch) &&
-          linkTopic.includes(searchTermLower)
+          (linkTopic.includes(searchTermLower) || searchTerm === "")
         );
       })
     : [];
 
-  const handleSearch = () => {
-    console.log(
-      "Search button clicked with term:",
-      searchTerm,
-      "and date:",
-      selectedDate
-    );
-  };
-
-  const handleClear = () => {
+  const handleClearFilters = () => {
     setSearchTerm("");
     setSelectedDate(null);
   };
@@ -48,11 +41,12 @@ const RecordingLinksPage = () => {
 
   return (
     <div className="recording-links-container">
-      <div className="header">
-        <h1>{recording.title}</h1>
+      <h1>{recording.title}</h1>
+      <h3>by {recording.instructor || "Unknown Instructor"}</h3>
+      <div className="filter-container">
         <div className="search-bar-container">
-          {/* Single Search Box */}
           <div className="input-with-icon">
+            <FaSearch className="search-icon" />
             <input
               type="text"
               placeholder="Search by topic or pick a date..."
@@ -60,53 +54,51 @@ const RecordingLinksPage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-bar"
             />
+            <FaRegCalendarAlt
+              className="calendar-icon"
+              onClick={() => document.querySelector(".date-picker-input").focus()}
+            />
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
               placeholderText=""
-              className="date-picker-inline"
-              calendarClassName="calendar-dropdown"
+              className="date-picker-input"
             />
-            <i
-              className="calendar-icon"
-              onClick={() => document.querySelector(".date-picker-inline").focus()}
-            ></i>
           </div>
-
-          {/* Search Button */}
-          <button onClick={handleSearch} className="search-button">
-            Search
-          </button>
-
-          {/* Clear Button */}
-          <button onClick={handleClear} className="clear-button">
-            Clear
+          <button onClick={handleClearFilters} className="clear-button">
+            Clear Filters
           </button>
         </div>
       </div>
-      <p>{recording.description}</p>
       <div className="recordings-list">
         {filteredLinks.length > 0 ? (
           filteredLinks.map((link, index) => (
-            <div className="recording-link-card" key={index}>
-              <p>
-                <strong>Date:</strong> {link.date || "Unknown"}
-              </p>
-              <p>
-                <strong>Topic:</strong> {link.topic || "No Topic"}
-              </p>
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="watch-recording-button"
-              >
-                Watch Recording
-              </a>
+            <div className="recording-item" key={index}>
+              <div className="recording-info">
+                <p className="recording-date">
+                  {new Date(link.date).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+                <p className="recording-topic">{link.topic || "No Topic"}</p>
+              </div>
+              <div className="recording-actions">
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="watch-recording-button"
+                >
+                  <FaRegCirclePlay />
+                  Watch Recording
+                </a>
+              </div>
             </div>
           ))
         ) : (
-          <p className="no-results">No recordings found matching your search.</p>
+          <p className="no-results">No recordings found matching your search or filters.</p>
         )}
       </div>
     </div>
