@@ -7,6 +7,7 @@ const ExamSchedule = () => {
     September: [
       {
         day: "Monday",
+        date: "4th September",
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "PSPF (Twaha Minai)", date: "4th September" },
           { time: "11:30 AM - 1:30 PM", subject: "PSPF (Zoha mobin)", date: "4th September" },
@@ -15,35 +16,36 @@ const ExamSchedule = () => {
       },
       {
         day: "Tuesday",
+        date: "5th September",
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "English (Dr. Samra Javed & Mr. Ali Dossa)", date: "5th September" },
           { time: "11:30 AM - 1:30 PM", subject: "", date: "" },
-    
           { time: "", subject: "", date: "" },
         ],
       },
       {
         day: "Wednesday",
+        date: "6th September",
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "Web Tech (Dr Khubaib)", date: "6th September" },
-          { time: "01:45 PM - 3:00 PM", subject: "Web Lab (Miss Zoha)", date: "5th September" },
-          { time: "", subject: "", date: "" },
-          { time: "", subject: "", date: "" },
+          { time: "11:30 AM - 1:30 PM", subject: "", date: "" },
+          { time: "01:45 PM - 3:00 PM", subject: "Web Lab (Miss Zoha)", date: "6th September" },
         ],
       },
       {
         day: "Thursday",
+        date: "7th September",
         slots: [
           { time: "09:00 AM - 11:00 AM", subject: "Discrete Structure", date: "7th September" },
+          { time: "11:30 AM - 1:30 PM", subject: "", date: "" },
           { time: "01:45 PM - 3:00 PM", subject: "Design Thinking (Dr. JG/Dr. RM)", date: "7th September" },
-          { time: "", subject: "", date: "" },
         ],
       },
       {
         day: "Friday",
+        date: "8th September",
         slots: [
-       
-          { time: "", subject: "", date: "" },   
+          { time: "", subject: "", date: "" },
           { time: "", subject: "", date: "" },
           { time: "", subject: "", date: "" },
         ],
@@ -75,7 +77,11 @@ const ExamSchedule = () => {
 
         {schedule.map((day, index) => (
           <div className="day-row" key={index}>
-            <div className="day-cell">{day.day}</div>
+            <div className="day-cell">
+              {day.day}
+              <br />
+              <span className="day-date">{day.date}</span>
+            </div>
             {day.slots.map((slot, i) => (
               <div className={`slot-cell ${slot.subject ? "filled" : ""}`} key={i}>
                 {slot.subject && (
