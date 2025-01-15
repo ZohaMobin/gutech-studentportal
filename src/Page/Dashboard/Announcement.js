@@ -4,10 +4,7 @@ import './Announcement.css';
 function Announcement() {
   return (
     <div>
-  <h1 className='Title'>
-        Hello Zeenat <img src='hi_emoji.png' alt="emoji" className="hello-image" />
-      </h1>
-      <p>Learn Something new today</p>
+ 
     <div className="announcement-card">
       <h2>Important Announcements</h2>
       <div className="boxes-container">

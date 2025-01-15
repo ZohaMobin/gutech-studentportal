@@ -16,6 +16,13 @@ function App() {
   }
   return (
     <div className="container">
+      <div className='header'>
+      <h1 className='Title'>
+        Hello Zeenat <img src='hi_emoji.png' alt="emoji" className="hello-image" />
+      </h1>
+      <p>Learn Something new today</p>
+      </div>
+       
     <Statistics Statistics_Data={Statistics_Data1}/>
     <Announcement/>
     <PieChart/>
@@ -23,6 +30,7 @@ function App() {
     <TodaysTimetable/>
     <BarChart />
     </div>
+  
   );
 }
 

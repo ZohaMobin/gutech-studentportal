@@ -10,12 +10,16 @@
   padding: 20px;
   width: 500px;
   height: auto;
-  margin-right: 25px;
+  margin-right: 500px;
 }
 .Title{
-  text-align: left;
-  display: flex;
-  align-items: center;
+   text-align: left;
+
+  font-family: 'Montserrat', sans-serif;
+  font-size: 34px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
 }
 .hello-image {
   width: 25px;
