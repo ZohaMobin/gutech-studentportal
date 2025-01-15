@@ -12,7 +12,15 @@
   height: auto;
   margin-right: 25px;
 }
-
+.Title{
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+.hello-image {
+  width: 25px;
+  margin-left: 10px;
+}
 h1 {
   text-align: center;
   font-size: 24px;

@@ -9,6 +9,7 @@ import PieChart from './Page/Dashboard/PieChart';
 import Calendar from './Page/Dashboard/Calendar';
 
 function App() {
+
   const Statistics_Data1 = {
     Overall_Attendance: "125",
     Overall_Progress: Math.round((100/125) *100)
