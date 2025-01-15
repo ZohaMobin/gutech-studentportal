@@ -2,7 +2,7 @@ import React from 'react';
 import './Scholarship.css';
 
 const ScholarshipPage = () => {
-  const formDownloadLink = 'https://example.com/scholarship-form.pdf'; // Replace with the actual form link
+  const formDownloadLink = 'https://mail.google.com/mail/u/0?ui=2&ik=c7da901a06&attid=0.1&permmsgid=msg-f:1820675278562243377&th=19445684fe09b331&view=att&disp=inline&realattid=f_m5nqs0k60&zw'; // Replace with the actual form link
 
   const handleApplyClick = () => {
     // Trigger the download of the form
@@ -27,11 +27,17 @@ const ScholarshipPage = () => {
 
       <div className="current-scholarship">
         <h3>
-          Current Scholarship:{' '}
-          {currentScholarship.isOnScholarship
-            ? 'You are currently on scholarship/financial aid.'
-            : 'You are not currently on scholarship/financial aid.'}
+          Current Scholarship:  {' '}
+         
         </h3>
+        </div>
+        <div className='status'>
+        <p>
+          
+          {currentScholarship.isOnScholarship
+            ? 'You are currently on scholarship/FA.'
+            : 'None.'}
+        </p>
       </div>
 
       <div>

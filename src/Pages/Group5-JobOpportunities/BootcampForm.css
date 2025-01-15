@@ -1,0 +1,47 @@
+.bootcamp-form {
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 600px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .bootcamp-form h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .bootcamp-form form div {
+    margin-bottom: 1rem;
+  }
+  
+  .bootcamp-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .bootcamp-form input,
+  .bootcamp-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .bootcamp-form button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #800000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .bootcamp-form button:hover {
+    background-color: #800000;
+  }
+  

@@ -31,6 +31,14 @@ body {
     color: #070707;
     font-size: 1.1rem;
   }
+
+  .status{
+    margin-bottom: 40px;
+    text-align: center;
+    color: #414141;
+    font-size: 1.0rem;
+    font-style: italic;
+  }
   
   .available-scholarships {
     text-align: center;
@@ -59,7 +67,7 @@ body {
   }
   
   .scholarship-type {
-    font-weight: bold;
+    font-weight: 200px;
     color: #800000;
     font-size: 1.2rem;
   }
@@ -81,3 +89,5 @@ body {
     background-color: #660000;
     transform: translateY(-2px);
   }
+
+  

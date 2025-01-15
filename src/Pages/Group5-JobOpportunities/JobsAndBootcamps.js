@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./JobsAndBootcamps.css";
 
 const JobsAndBootcamps = () => {
+  const navigate = useNavigate();
+
   const bootcamps = [
     {
       title: "Technical Support Specialist",
@@ -40,10 +43,15 @@ const JobsAndBootcamps = () => {
     },
   ];
 
+  const handleBootcampApply = (bootcamp) => {
+    navigate("/apply", { state: { bootcamp } }); // Pass bootcamp data as state
+  };
+  
+
   return (
     <div className="jobs-and-bootcamps">
       <h1>Job Opportunities & Bootcamps</h1>
-      
+
       <section className="bootcamps-section">
         <h2>Bootcamps</h2>
         <div className="bootcamp-cards">
@@ -54,7 +62,9 @@ const JobsAndBootcamps = () => {
               <p className="salary">Fee: {bootcamp.salary}</p>
               <p className="company">{bootcamp.company}</p>
               <p className="location">{bootcamp.location}</p>
-              <button className="apply-button">Apply</button>
+              <button className="apply-button" onClick={() => handleBootcampApply(bootcamp)}>
+                Apply
+              </button>
             </div>
           ))}
         </div>
@@ -69,7 +79,7 @@ const JobsAndBootcamps = () => {
               <p className="company">{job.company}</p>
               <p className="salary">Salary: {job.salary}</p>
               <p className="location">{job.location}</p>
-              <button className="apply-button"  onClick={() => window.open(job.linkedin, "_blank")}>Apply</button>
+              <button className="apply-button">Apply</button>
             </div>
           ))}
         </div>
@@ -77,5 +87,5 @@ const JobsAndBootcamps = () => {
     </div>
   );
 };
+ export default JobsAndBootcamps;
 
-export default JobsAndBootcamps;
