@@ -1,5 +1,6 @@
 .heading{
   color: #991D20;
+  text-align: center;
 }
 .schedule-container {
   margin: 0 auto;
@@ -170,4 +171,8 @@ table td, table th {
   display: block;
   font-size: 12px;
   margin-top: 5px; 
+}
+
+.timetable{
+  margin-left: 300px;
 }

@@ -1,6 +1,6 @@
 import './Class Schedule.css';
 
-const SimpleTable = () => {
+const ClassSchedule= () => {
   const schedule = [
     {
       day: 'Monday',
@@ -55,7 +55,7 @@ const SimpleTable = () => {
   ];
 
   return (
-    <div>
+    <div className='timetable'>
       <h1 className='heading'>CLASS SCHEDULE (BSCS SEM 01)</h1>
       <table>
         <thead>
@@ -86,4 +86,4 @@ const SimpleTable = () => {
   );
 };
 
-export default SimpleTable;
+export default ClassSchedule;
