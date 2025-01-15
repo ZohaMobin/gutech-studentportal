@@ -6,14 +6,14 @@ const JobsAndBootcamps = () => {
     {
       title: "Technical Support Specialist",
       type: "PART-TIME",
-      salary: "$20,000 - $25,000",
+      salary: "$0",
       company: "Google Inc.",
       location: "Karachi, Pakistan",
     },
     {
       title: "Full Stack Developer Bootcamp",
       type: "FULL-TIME",
-      salary: "$30,000 - $40,000",
+      salary: "$0",
       company: "Meta Inc.",
       location: "Lahore, Pakistan",
     },
@@ -51,7 +51,7 @@ const JobsAndBootcamps = () => {
             <div key={index} className="card">
               <h3>{bootcamp.title}</h3>
               <p className="type">{bootcamp.type}</p>
-              <p className="salary">Salary: {bootcamp.salary}</p>
+              <p className="salary">Fee: {bootcamp.salary}</p>
               <p className="company">{bootcamp.company}</p>
               <p className="location">{bootcamp.location}</p>
               <button className="apply-button">Apply</button>

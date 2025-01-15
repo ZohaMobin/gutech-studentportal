@@ -1,12 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import './Scholarship.css';
 
 const ScholarshipPage = () => {
-  const navigate = useNavigate();
+  const formDownloadLink = 'https://example.com/scholarship-form.pdf'; // Replace with the actual form link
 
   const handleApplyClick = () => {
-    navigate('/apply-scholarship');
+    // Trigger the download of the form
+    const link = document.createElement('a');
+    link.href = formDownloadLink;
+    link.download = 'Scholarship_Form.pdf'; // Suggest a file name for the downloaded file
+    link.click();
   };
 
   const currentScholarship = {
@@ -14,8 +17,8 @@ const ScholarshipPage = () => {
   };
 
   const scholarships = [
-    { type: 'Need-Based'},
-    { type: 'Merit-Based'},
+    { type: 'Need-Based' },
+    { type: 'Merit-Based' },
   ];
 
   return (
@@ -40,7 +43,7 @@ const ScholarshipPage = () => {
               onClick={handleApplyClick}
               className="apply-button"
             >
-              Apply
+              Download Form
             </button>
           </div>
         ))}
