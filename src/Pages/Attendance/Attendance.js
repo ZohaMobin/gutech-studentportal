@@ -1,38 +1,65 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Attendance.css";
 
 const Attendance = () => {
-  const attendanceData = [
-    { date: "2025-01-03", remarks: "-", status: "Present", submit: "Submitted" },
-    { date: "2025-01-02", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
-    { date: "2025-01-01", remarks: "Arrived late", status: "Late", submit: "Upload" },
-    { date: "2024-12-27", remarks: "Arrived late", status: "Late", submit: "Upload" },
-    { date: "2024-12-25", remarks: "-", status: "Present", submit: "Submitted" },
-    { date: "2024-12-23", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
-  ];
+  const subjects = {
+    Math: [
+      { date: "2025-01-05", remarks: "-", status: "Present", submit: "Submitted" },
+      { date: "2025-01-04", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
+      { date: "2025-01-03", remarks: "Arrived late", status: "Late", submit: "Upload" },
+    ],
+    Science: [
+      { date: "2025-01-06", remarks: "-", status: "Present", submit: "Submitted" },
+      { date: "2025-01-05", remarks: "Arrived late", status: "Late", submit: "Upload" },
+      { date: "2025-01-04", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
+    ],
+    English: [
+      { date: "2025-01-07", remarks: "-", status: "Present", submit: "Submitted" },
+      { date: "2025-01-06", remarks: "Arrived late", status: "Late", submit: "Upload" },
+      { date: "2025-01-05", remarks: "Sick Leave", status: "Absent", submit: "Upload" },
+    ],
+  };
 
-  // Calculate attendance percentage
+  const [selectedSubject, setSelectedSubject] = useState("Math");
+
   const calculatePercentage = () => {
-    const totalDays = attendanceData.length;
-    const presentDays = attendanceData.filter(item => item.status === "Present").length;
+    const totalDays = subjects[selectedSubject].length;
+    const presentDays = subjects[selectedSubject].filter(
+      (item) => item.status === "Present"
+    ).length;
     return Math.round((presentDays / totalDays) * 100);
   };
 
   const [percentage, setPercentage] = useState(calculatePercentage());
 
-  useEffect(() => {
+  const handleTabChange = (subject) => {
+    setSelectedSubject(subject);
     setPercentage(calculatePercentage());
-  }, [attendanceData]);
+  };
 
   return (
     <div className="attendance-container">
       <header className="header">
         <h1>Attendance</h1>
-        <p>View your attendance</p>
+        <p>View your attendance by subject</p>
       </header>
 
+      <section className="tabs">
+        {Object.keys(subjects).map((subject) => (
+          <button
+            key={subject}
+            className={`tab-button ${
+              selectedSubject === subject ? "active" : ""
+            }`}
+            onClick={() => handleTabChange(subject)}
+          >
+            {subject}
+          </button>
+        ))}
+      </section>
+
       <section className="attendance-summary">
-        <h2>Semester 1 Percentage</h2>
+        <h2>{selectedSubject} Attendance Percentage</h2>
         <div className="circle">
           <svg width="150" height="150">
             <circle
@@ -72,26 +99,20 @@ const Attendance = () => {
             </tr>
           </thead>
           <tbody>
-            {attendanceData.map((item, index) => (
+            {subjects[selectedSubject].map((item, index) => (
               <tr key={index}>
                 <td>{item.date}</td>
                 <td>{item.remarks}</td>
                 <td className={`status ${item.status.toLowerCase()}`}>{item.status}</td>
                 <td>
-                  <button type="button" className="submit-btn">{item.submit}</button>
+                  <button type="button" className="submit-btn">
+                    {item.submit}
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-
-        <div className="pagination">
-          <button type="button" className="page-btn">&lt;</button>
-          <button type="button" className="page-btn active">1</button>
-          <button type="button" className="page-btn">2</button>
-          <button type="button" className="page-btn">3</button>
-          <button type="button" className="page-btn">&gt;</button>
-        </div>
       </section>
     </div>
   );
