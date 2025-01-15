@@ -5,6 +5,7 @@ import Assignments from './Pages/assignments/assignments';
 
 import Dashboard from './Pages/dashboard/dashboard';
 import { Topbar } from './Pages/topbar/topbar';
+import Attendance from './Pages/Attendance/Attendance';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
 
           <Route path="/" element={<Dashboard/>} /> 
           <Route path="/assignments" element={<Assignments />} />
-      
+          <Route path="/Attendance" element={<Attendance />} />
+
         </Routes>
         </div>
       </div>
