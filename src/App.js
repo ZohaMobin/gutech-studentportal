@@ -5,10 +5,10 @@ import './Page/Dashboard/Statistics';
 import Announcement from './Page/Dashboard/Announcement';
 import './Page/Dashboard/Announcement';
 import TodaysTimetable from './Page/Dashboard/Todaystimetable';
-import Attendance from './Page/Dashboard/Attendancebargraph';
 import BarChart from './Page/Dashboard/Attendancebargraph';
 
 function App() {
+
   const Statistics_Data1 = {
     Overall_Attendance: "125",
     Overall_Progress: Math.round((100/125) *100)
