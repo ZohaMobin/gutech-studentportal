@@ -10,7 +10,7 @@ function PieChart() {
     labels: ['PSPF', 'Web Tech', 'Discrete Structure', 'PSPF Lab', 'Web Tech Lab', 'Design Thinking', 'English'],
     datasets: [
       {
-        label: 'Score',
+        label: '%',
         data: [50, 65, 70, 80, 75, 65, 80],
         backgroundColor: [
           '#FF8C94',  // Darker Light Pink

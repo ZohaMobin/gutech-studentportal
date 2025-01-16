@@ -21,7 +21,7 @@ const BarChart = () => {
     datasets: [
       {
         label: "Attendance",
-        data: [300, 500, 400, 700, 600, 500],
+        data: [85, 72, 90, 65, 88, 77],
         backgroundColor: "rgba(75, 192, 192, 0.5)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
