@@ -95,7 +95,7 @@ const ForgotPassword = () => {
               onChange={(e) => setPass(e.target.value)}
             />
             <span
-              className="eye-icon"
+              className="eyess"
               onClick={() => setShowPass(!showPass)}
             >
               {showPass ? (
@@ -114,7 +114,7 @@ const ForgotPassword = () => {
               onChange={(e) => setConfirm(e.target.value)}
             />
             <span
-              className="eye-icon"
+              className="eyess"
               onClick={() => setShowConfirmPass(!showConfirmPass)}
             >
               {showConfirmPass ? (
