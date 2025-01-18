@@ -9,32 +9,34 @@ const ForgotPassword = () => {
   const [otp, setOtp] = useState("");
   const [pass, setPass] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [showPass, setShowPass] = useState(false); // Toggle for new password
+  const [showConfirmPass, setShowConfirmPass] = useState(false); // Toggle for confirm password
   const navigate = useNavigate();
 
   const handleEmailSubmit = () => {
-    if (email.includes("@student.agu.edu.pk")) {
-      setErrorMessage(" ")
-      setStep(2); 
-    }else{
-      setErrorMessage("ERROR ! Enter your agu email!")
+    if (email.includes("@agu.edu.pk")) {
+      setErrorMessage(" ");
+      setStep(2);
+    } else {
+      setErrorMessage("ERROR ! Enter your agu email!");
     }
   };
 
-  const handleCodeSubmit = () => { 
-    if (otp == "1234") {
+  const handleCodeSubmit = () => {
+    if (otp === "1234") {
       setErrorMessage("");
-      setStep(3); 
-    }else{
-      setErrorMessage("ERROR ! Incorrect code")
+      setStep(3);
+    } else {
+      setErrorMessage("ERROR ! Incorrect code");
     }
   };
 
   const handlePasswordSubmit = () => {
-    if ( pass === confirm) {
+    if (pass === confirm) {
       alert("Password reset successfully!");
       navigate("/");
-    }else{
-      setErrorMessage("ERROR ! Passwords do not match")
+    } else {
+      setErrorMessage("ERROR ! Passwords do not match");
     }
   };
 
@@ -84,20 +86,44 @@ const ForgotPassword = () => {
       {step === 3 && (
         <div className="step step-active">
           <p>Enter your new password.</p>
-          <input
-            type="password"
-            className="otp"
-            placeholder="New Password"
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
-          />
-          <input
-            type="password"
-            className="otp"
-            placeholder="Confirm Password"
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-          />
+          <div className="password-container">
+            <input
+              type={showPass ? "text" : "password"}
+              className="otp"
+              placeholder="New Password"
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setShowPass(!showPass)}
+            >
+              {showPass ? (
+                <i className="fas fa-eye-slash"></i>
+              ) : (
+                <i className="fas fa-eye"></i>
+              )}
+            </span>
+          </div>
+          <div className="password-container">
+            <input
+              type={showConfirmPass ? "text" : "password"}
+              className="otp"
+              placeholder="Confirm Password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setShowConfirmPass(!showConfirmPass)}
+            >
+              {showConfirmPass ? (
+                <i className="fas fa-eye-slash"></i>
+              ) : (
+                <i className="fas fa-eye"></i>
+              )}
+            </span>
+          </div>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button type="button" onClick={handlePasswordSubmit}>
             Submit

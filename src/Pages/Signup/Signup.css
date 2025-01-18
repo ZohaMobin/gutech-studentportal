@@ -82,6 +82,32 @@ body {
   height: 100%;
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px; /* Space for the eye icon */
+}
+
+.eye-icon {
+  position: absolute;
+  right: 0px;
+  padding: 10px;
+  margin-top: 15px;
+  cursor: pointer;
+  font-size: 14px; /* Icon size */
+  color: #991D20; /* Match the theme color */
+}
+
+.eye-icon:hover {
+  color: #b52427; /* Slightly darker on hover */
+}
+
 .container input {
   background-color: #f9ecee; /* Subtle red tint */
   border: 1px solid #991D20;
