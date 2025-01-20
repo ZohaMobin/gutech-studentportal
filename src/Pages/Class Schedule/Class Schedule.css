@@ -19,8 +19,8 @@
 }
 
 thead th, .days {
-  background-color: #991D20;
-  color: white;
+  background-color: rgb(229, 220, 220);
+  color: #991D20;
   font-weight: bold;
   text-align: center;
 }
@@ -31,7 +31,7 @@ td, th {
   text-align: center;
 }
 td:empty {
-  background-color: rgb(229, 220, 220);
+  background-color: white;
 }
 .schedule-table tbody td {
   padding: 10px;
@@ -39,8 +39,8 @@ td:empty {
 }
 
 .days, td:first-child {
-  background-color:#991D20 ;
-  color: white;
+  background-color:rgb(229, 220, 220) ;
+  color: #991D20;
   font-weight: bold;
 }
 
