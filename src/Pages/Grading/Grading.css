@@ -1,214 +1,169 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-  
-  * {
-    font-family: 'Montserrat', sans-serif;
-    padding: 5px 10px 5px 10px ;
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+.portal-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
 }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-button {
-  background-color: #991D20;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #991D20;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  color: white;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #ac0c0e;
-}
-
-h1 {
-  color: #991D20;
-}
-
-.table-container {
-  margin-top: 20px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.heading{
-  text-align: center;
-}
-th, td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-th {
-  background-color: #f8f8f8;
-}
-
-.total-marks {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-}
-/* App.css */
-/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
-* {
-  font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  padding: 20px;
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #991D20;
-  border-radius: 8px;
-  color: white;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-button {
-  background-color: #991D20;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-button:hover {
-  background-color: #ac0c0e;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #fff;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  border-radius: 4px;
-  overflow: hidden;
-  min-width: 160px;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  color: #991D20;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-h1 {
-  color: #991D20;
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-.table-container {
-  margin-top: 20px;
-  border: 1px solid #ccc;
-  padding: 20px;
-  border-radius: 8px;
+.filters-section {
   background-color: white;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  padding: 1.5rem;
 }
 
-.heading {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: center;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.tab-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 12px;
-  text-align: left;
-  font-size: 16px;
+.tab-header {
+  display: flex;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-th {
-  background-color: #f8f8f8;
-  font-weight: 600;
+.tab-button {
+  padding: 1rem 2rem;
+  font-weight: 500;
+  color: #64748b;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-td {
-  background-color: #fff;
+.tab-button.active {
+  color: #991D20;
+  border-bottom: 2px solid #991D20;
 }
 
-tr:nth-child(even) td {
-  background-color: #f9f9f9;
+.tab-button:hover {
+  color: #991D20;
 }
 
-.total-marks {
-  margin-top: 20px;
+.table-section {
+  margin-top: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table th,
+.data-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.data-table th {
+  background-color: #f8fafc;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-header {
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
   font-weight: 600;
-  padding: 10px 20px;
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-} */
+  color: #1e293b;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .portal-container {
+    padding: 1rem;
+  }
+  
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tab-button {
+    padding: 0.75rem 1rem;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
