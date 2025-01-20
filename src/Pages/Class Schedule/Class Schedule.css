@@ -1,5 +1,5 @@
 .heading {
-  color: #991D20;
+  color: black;
   text-align: center;
 }
 
@@ -19,7 +19,7 @@
 }
 
 thead th, .days {
-  background-color: rgb(229, 220, 220);
+  background-color: rgb(235, 235, 235);
   color: #991D20;
   font-weight: bold;
   text-align: center;
@@ -39,7 +39,7 @@ td:empty {
 }
 
 .days, td:first-child {
-  background-color:rgb(229, 220, 220) ;
+  background-color:rgb(235, 235, 235) ;
   color: #991D20;
   font-weight: bold;
 }
