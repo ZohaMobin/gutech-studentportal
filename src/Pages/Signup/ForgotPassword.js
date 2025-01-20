@@ -50,7 +50,7 @@ const ForgotPassword = () => {
       {step === 1 && (
         <div className="step step-active">
           <h1>Forgot Password</h1>
-          <p>Enter your registered email address to reset your password.</p>
+          <p className="descriptionMail">Enter your registered email address to reset your password.</p>
           <input
             type="email"
             placeholder="GU-Tech E-mail"
