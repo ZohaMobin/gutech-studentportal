@@ -2,9 +2,9 @@ body {
     margin: 0;
     padding: 0;
     align-items: self-start;
-}
-
-.card2 {
+  }
+  
+  .card2 {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     background-color: white;
@@ -13,30 +13,30 @@ body {
     padding: 75px;
     padding-top: 12px;
     text-align: center;
-    margin-top: 5px;
+    margin-top: 40px;
     transition: transform 0.3s ease;
-    
+  
     position: fixed;
     border: 1px solid #dddddd;
-    margin-left: 500px; 
-}
-
-.card2 h3 {
+    margin-left: 500px;
+  }
+  
+  .card2 h3 {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 20px;
     color: #333;
-}
-
-.bar-container {
+  }
+  
+  .bar-container {
     width: 100%;
     background-color: #e0e0e0;
     border-radius: 10px;
     height: 20px;
     margin-bottom: 15px;
-}
-
-.bar {
+  }
+  
+  .bar {
     height: 100%;
     border-radius: 10px;
     text-align: right;
@@ -45,12 +45,38 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-}
-
-.overall-attendance {
-    background-color:#C59BD8;
-}
-
-.overall-progress {
-    background-color:#A4D8C6;
-}
+  }
+  
+  .overall-attendance {
+    background-color: #C59BD8;
+  }
+  
+  .overall-progress {
+    background-color: #A4D8C6;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .card2 {
+      width: 90%; /* Adjust width to fit smaller screens */
+      padding: 20px; /* Reduce padding for smaller screens */
+      margin-left: 5%; /* Center the card */
+      margin-right: 5%; /* Center the card */
+      top: auto;
+      position: static; /* Remove fixed position */
+      margin-top: 20px; /* Add spacing from top */
+    }
+  
+    .card2 h3 {
+      font-size: 1.2rem; /* Adjust heading size */
+    }
+  
+    .bar-container {
+      height: 15px; /* Reduce height of progress bars */
+    }
+  
+    .bar {
+      font-size: 12px; /* Reduce text size in bars */
+    }
+  }
+  

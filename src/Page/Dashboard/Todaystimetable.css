@@ -1,13 +1,3 @@
-.dashboard-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-  padding: 20px;
-  background-color: #f5f5f5;
-  position:fixed;
-}
-
 .timetable-container {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -17,9 +7,8 @@
   max-width: 350px;
   width: 100%;
   height: 300px;
-  margin-left: 8px ;
-  margin-top: 150px;
-  
+  margin-left: 22px;
+  margin-top: 45px;
 }
 
 .timetable-container h2 {
@@ -63,4 +52,23 @@
 .timetable-container li span {
   color: #666;
   font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .timetable-container {
+    width: 90%;
+    height: auto; /* Adjust height for smaller screens */
+    margin-left: auto;
+    margin-right: auto; /* Center it on smaller screens */
+    margin-top: 100px; /* Adjust margin for smaller devices */
+  }
+
+  .timetable-container h2 {
+    font-size: 16px; /* Adjust font size for heading */
+  }
+
+  .timetable-container li {
+    padding: 8px; /* Slightly reduce padding */
+    font-size: 14px; /* Ensure text size is consistent */
+  }
 }

@@ -13,24 +13,48 @@
   margin-right: 20px;
   margin-bottom: 0;
 }
-.Title{
-   text-align: left;
 
+@media (max-width: 768px) {
+  .announcement-card {
+    width: 90%;
+    right: 5%;
+    top: auto;
+    bottom: 20px;
+    transform: none; /* Align it for smaller screens */
+  }
+}
+
+.Title {
+  text-align: left;
   font-family: 'Montserrat', sans-serif;
   font-size: 34px;
   font-weight: bold;
   color: #333;
   margin-bottom: 20px;
 }
+
+@media (max-width: 768px) {
+  .Title {
+    font-size: 28px; /* Slightly smaller for smaller screens */
+  }
+}
+
 .hello-image {
   width: 25px;
   margin-left: 10px;
 }
+
 h1 {
   text-align: center;
   font-size: 24px;
   color: #333;
   margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 20px;
+  }
 }
 
 .boxes-container {
@@ -41,7 +65,7 @@ h1 {
 
 .announcement-box {
   background-color: #f9f9f9;
-  border: 2px solid #ccc; 
+  border: 2px solid #ccc;
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -56,4 +80,10 @@ h1 {
 
 .announcement-box p strong {
   color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .announcement-box p {
+    font-size: 14px;
+  }
 }
