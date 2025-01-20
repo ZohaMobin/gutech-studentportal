@@ -7,8 +7,8 @@
   overflow: hidden;
   text-align: center;
   border: 1px solid #ddd;
-  position: fixed;
-  top: 150px;
+  position: absolute;
+  top: 100px;
   right: 20px;
 }
 
@@ -53,16 +53,69 @@
   height: 30px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .calendar-container {
     width: 80%;
-    top: auto;
-    bottom: 20px;
-    left: 10%; /* Center for mobile */
-    right: auto;
+    top: 50px;
+    right: 10px;
+  }
+
+  .calendar-header {
+    font-size: 0.8rem;
+    padding: 5px;
   }
 
   .calendar-grid {
-    grid-template-columns: repeat(4, 1fr); /* Adjust for mobile */
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .day {
+    width: 25px;
+    height: 25px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
+    width: 60%;
+    top: 80px;
+    right: 15px;
+  }
+
+  .calendar-header {
+    font-size: 0.85rem;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .day {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .calendar-container {
+    width: 17%;
+    top: 100px;
+    right: 20px;
+  }
+
+  .calendar-header {
+    font-size: 0.9rem;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .day {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
   }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import './Attendancebargraph.css';
+import './Marks.css';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -61,7 +61,7 @@ const BarChartmarks = () => {
   };
 
   return (
-    <div className="attendance-bargraph">
+    <div className="marks-bargraph">
       <h2>Marks Overview</h2>
       <Bar data={data} options={options} />
     </div>
