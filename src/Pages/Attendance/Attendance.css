@@ -26,22 +26,9 @@
 
 .subject-info {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.subject-label {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.875rem;
-}
-
-.selected-subject {
-  color: white;
-  font-weight: 600;
-  font-size: 0.875rem;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  align-items: flex-end;
+  flex-direction: column;
+  text-align: right;
 }
 
 .main-content {
@@ -49,7 +36,7 @@
   margin: 0 auto;
   padding: 2rem;
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 280px 1fr;
   gap: 2rem;
 }
 
@@ -70,6 +57,8 @@
 .tab {
   text-align: left;
   padding: 0.75rem 1rem;
+  width: 100%;
+  max-width: none;
   border: none;
   background: transparent;
   color: #64748b;
@@ -77,6 +66,38 @@
   border-radius: 0.5rem;
   font-size: 0.875rem;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;  /* Changed to flex for better text alignment */
+  min-width: 200px;  /* Increased minimum width */
+  margin: 0;
+  box-sizing: border-box;
+  overflow: visible;  /* Ensures text isn't cut off */
+}
+
+.tabs-container {
+  width: 250px;  /* Fixed width for the container */
+  min-width: 250px;  /* Ensures minimum width */
+  flex-shrink: 0;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  overflow: visible;  /* Prevents content from being cut */
+}
+
+/* If the tabs are in a sidebar, add this */
+.sidebar {
+  min-width: 250px;
+  width: 250px;
+  flex-shrink: 0;
+  overflow: visible;
+  padding-left: 1px;
+}
+
+/* For the text inside the tab */
+.tab-text {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  width: 100%;
 }
 
 .tab:hover {
@@ -90,6 +111,19 @@
   font-weight: 500;
 }
 
+.subject-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.professor-name {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  display: block;
+}
+
 .content-area {
   display: flex;
   flex-direction: column;
@@ -98,7 +132,7 @@
 
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
   gap: 1.5rem;
 }
 
@@ -135,6 +169,10 @@
   transition: stroke-dashoffset 0.5s ease;
 }
 
+.circle-progress.class-average {
+  stroke: #2563eb;
+}
+
 .circle-content {
   position: absolute;
   top: 50%;
@@ -151,11 +189,16 @@
   line-height: 1;
 }
 
+.stat-card:nth-child(2) .percentage {
+  color: #2563eb;
+}
+
 .label {
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: #64748b;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
 }
 
 .filter-container {
@@ -166,9 +209,6 @@
 }
 
 .filter-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
@@ -186,19 +226,21 @@
 
 .filter-select,
 .filter-input {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   color: #334155;
   background: white;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  min-width: 150px;
 }
 
 .filter-select:focus,
 .filter-input:focus {
   border-color: #991D20;
+  box-shadow: 0 0 0 2px rgba(153, 29, 32, 0.1);
 }
 
 .table-container {
@@ -219,14 +261,9 @@
   color: #64748b;
   font-weight: 500;
   font-size: 0.875rem;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   text-align: left;
   border-bottom: 1px solid #e2e8f0;
-}
-
-.attendance-table th svg {
-  vertical-align: -4px;
-  margin-right: 0.5rem;
 }
 
 .attendance-table td {
@@ -238,7 +275,7 @@
 
 .status-badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -259,21 +296,19 @@
   color: #92400e;
 }
 
-/* Responsive Design */
+/* Responsive Styles */
 @media (max-width: 1024px) {
   .main-content {
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 240px 1fr;
     padding: 1.5rem;
   }
 
   .header-content {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+    padding: 0 1rem;
   }
 
-  .subject-info {
-    justify-content: center;
+  .stats-cards {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -286,8 +321,49 @@
     padding: 1rem;
   }
 
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .subject-info {
+    align-items: flex-start;
+    text-align: left;
+  }
+
   .filter-controls {
     flex-direction: column;
+  }
+
+  .sidebar {
+    border-radius: 0.5rem;
+  }
+
+  .tab {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .filter-container,
+  .table-container,
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.5rem;
   }
 
   .circle-wrapper {
@@ -298,67 +374,9 @@
   .percentage {
     font-size: 1.5rem;
   }
-
-  .attendance-table th,
-  .attendance-table td {
-    padding: 0.75rem;
-  }
-
-  .sidebar {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    margin-bottom: 1rem;
-  }
-
-  .subject-tabs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.5rem;
-  }
-
-  .tab {
-    text-align: center;
-    padding: 0.5rem;
-  }
 }
 
-@media (max-width: 480px) {
-  .main-content {
-    padding: 1rem;
-  }
-
-  .header h1 {
-    font-size: 1.25rem;
-  }
-
-  .filter-header h3 {
-    font-size: 0.875rem;
-  }
-
-  .table-container {
-    padding: 1rem;
-    margin: 0 -1rem;
-    border-radius: 0;
-  }
-
-  .attendance-table th,
-  .attendance-table td {
-    padding: 0.5rem;
-    font-size: 0.75rem;
-  }
-
-  .status-badge {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.6875rem;
-  }
-
-  .subject-tabs {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Smooth Transitions */
+/* Smooth Animations */
 .tab,
 .filter-select,
 .filter-input,
@@ -367,20 +385,12 @@
 }
 
 /* Focus States */
-.tab:focus,
-.filter-select:focus,
-.filter-input:focus {
+.tab:focus-visible {
   outline: 2px solid rgba(153, 29, 32, 0.5);
   outline-offset: 2px;
 }
 
 /* Hover States */
-.filter-select:hover,
-.filter-input:hover {
-  border-color: #cbd5e1;
-}
-
-/* Table Hover Effect */
 .attendance-table tbody tr:hover {
   background-color: #f8fafc;
 }
