@@ -14,4 +14,24 @@
     position: absolute;
   }
   
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .marks-bargraph {
+      width: 90%; /* Adjust width to fit smaller screens */
+      margin-left: 5%; /* Center the container */
+      top: auto; /* Adjust position */
+      bottom: 20px; /* Keep it towards the bottom for smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .marks-bargraph {
+      width: 95%; /* Further reduce width for mobile screens */
+      margin-left: 2%; /* Center with small margins */
+      top: auto;
+      bottom: 20px; /* Keep it at the bottom for mobile */
+    }
+  }
+  
+  
   
