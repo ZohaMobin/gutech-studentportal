@@ -5,6 +5,7 @@ import Assignments from './Pages/assignments/assignments';
 import Fees from './Pages/Group1-Fees/Fees';
 import Dashboard from './Pages/dashboard/dashboard';
 import { Topbar } from './Pages/topbar/topbar';
+import AddFee from './Pages/Group1-Fees/AddFee';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
   <Topbar/>
         <Routes>
           <Route path="/fees" element={<Fees/>} />
+          <Route path='/add-fee' element={<AddFee/>}/>
           <Route path="/" element={<Dashboard/>} /> 
           <Route path="/assignments" element={<Assignments />} />
       

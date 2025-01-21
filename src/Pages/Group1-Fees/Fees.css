@@ -49,52 +49,67 @@ span{
     color: #991D20;
 }
 
+/* Container for buttons */
 .buttons {
-    display: flex;
-    justify-content: space-between; /* Align buttons to the right */
-    gap: 20px; /* Add space between the buttons */
-    margin-top: 30px;
-    width: 80%; /* Match the width of the container */
-    max-width: 900px; /* Keep alignment consistent */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 900px;
 }
 
-.download-container, .upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* Align text/info to the right */
+/* Add Fee Button */
+.add-button-container {
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  flex: 1; /* Take equal space */
 }
 
-.download-button, .upload-button {
-     /* Larger padding for better appearance */
-    font-size: 16px; /* Larger font size */
-    border: none;
-    border-radius: 6px; /* Rounded corners */
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    font-weight: bold;
+.add-button {
+  background-color: #991D20; /* Red button color */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px; /* Button size */
+  border: none;
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  max-width: 250px; /* Limit button width */
+}
+
+.add-button:hover {
+  background-color: #8a1b1e; /* Darker red on hover */
+}
+
+/* Download Button */
+.download-button-container {
+  display: flex;
+  justify-content: flex-end; /* Align to the right */
+  flex: 1; /* Take equal space */
 }
 
 .download-button {
-    background-color: #991D20; /* Green button for download */
-    color: #fff; /* White text */
-    padding: 11px 20px;
+  background-color: #991D20; /* Red button color */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px; /* Button size */
+  border: none;
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  max-width: 250px; /* Limit button width */
 }
 
 .download-button:hover {
-    background-color: #8a1b1e; /* Slightly darker green on hover */
+  background-color: #8a1b1e; /* Darker red on hover */
 }
 
-.upload-button {
-    background-color: #991D20; /* Match red theme for upload button */
-    color: #fff; /* White text */
-    text-align: center;
-    display: inline-block;
-    padding: 9px 20px;
-}
 
-.upload-button:hover {
-    background-color: #8a1b1e; /* Slightly darker red on hover */
-}
 
 .file-info {
     margin-top: 10px;
@@ -223,5 +238,77 @@ span{
   .file-info {
     color: #333;
     margin-top: 10px;
+  }
+  
+/* Input Fields Styles */
+input[type="text"], input[type="date"], select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%; /* Make the inputs full-width */
+    background-color: #f9f9f9;
+    margin: 8px 0;
+    transition: all 0.3s ease;
+  }
+  
+  /* Focus Effect on Input Fields */
+  input[type="text"]:focus, input[type="date"]:focus, select:focus {
+    outline: none;
+    border-color: #991D20;
+    background-color: #fff;
+  }
+  
+  /* Hover Effect on Input Fields */
+  input[type="text"]:hover, input[type="date"]:hover, select:hover {
+    border-color: #8a1b1e;
+    background-color: #f0f0f0;
+  }
+  
+  /* Styling for the file input */
+  input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    margin: 8px 0;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  input[type="file"]:hover {
+    background-color: #f0f0f0;
+    border-color: #8a1b1e;
+  }
+  
+  /* Styling for the buttons (Submit and Upload buttons) */
+  button {
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #991D20;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    width: 100%; /* Make buttons full-width */
+  }
+  
+  button:hover {
+    background-color: #8a1b1e; /* Darker red on hover */
+  }
+  
+  button:focus {
+    outline: none;
+    border: 1px solid #8a1b1e;
+  }
+  
+  /* Optional: Adding a margin to the form labels to space out the fields */
+  form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #323232;
   }
   
