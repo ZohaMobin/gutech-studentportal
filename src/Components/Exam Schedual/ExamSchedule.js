@@ -9,45 +9,45 @@ const ExamSchedule = () => {
         day: "Monday",
         date: "4th September",
         slots: [
-          { time: "09:00 AM - 11:00 AM", subject: "PSPF (Twaha Minai)", date: "4th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "PSPF (Zoha mobin)", date: "4th September" },
-          { time: "", subject: "", date: "" },
+          { time: "09:00 AM - 11:00 AM", subject: "PSPF (Twaha Minai)" },
+          { time: "11:30 AM - 1:30 PM", subject: "PSPF (Zoha mobin)" },
+          { time: "", subject: "" },
         ],
       },
       {
         day: "Tuesday",
         date: "5th September",
         slots: [
-          { time: "09:00 AM - 11:00 AM", subject: "English (Dr. Samra Javed & Mr. Ali Dossa)", date: "5th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "", date: "" },
-          { time: "", subject: "", date: "" },
+          { time: "09:00 AM - 11:00 AM", subject: "English (Dr. Samra Javed & Mr. Ali Dossa)" },
+          { time: "11:30 AM - 1:30 PM", subject: "" },
+          { time: "", subject: "" },
         ],
       },
       {
         day: "Wednesday",
         date: "6th September",
         slots: [
-          { time: "09:00 AM - 11:00 AM", subject: "Web Tech (Dr Khubaib)", date: "6th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "", date: "" },
-          { time: "01:45 PM - 3:00 PM", subject: "Web Lab (Miss Zoha)", date: "6th September" },
+          { time: "09:00 AM - 11:00 AM", subject: "Web Tech (Dr Khubaib)" },
+          { time: "11:30 AM - 1:30 PM", subject: "" },
+          { time: "01:45 PM - 3:00 PM", subject: "Web Lab (Miss Zoha)" },
         ],
       },
       {
         day: "Thursday",
         date: "7th September",
         slots: [
-          { time: "09:00 AM - 11:00 AM", subject: "Discrete Structure", date: "7th September" },
-          { time: "11:30 AM - 1:30 PM", subject: "", date: "" },
-          { time: "01:45 PM - 3:00 PM", subject: "Design Thinking (Dr. JG/Dr. RM)", date: "7th September" },
+          { time: "09:00 AM - 11:00 AM", subject: "Discrete Structure" },
+          { time: "11:30 AM - 1:30 PM", subject: "" },
+          { time: "01:45 PM - 3:00 PM", subject: "Design Thinking (Dr. JG/Dr. RM)" },
         ],
       },
       {
         day: "Friday",
         date: "8th September",
         slots: [
-          { time: "", subject: "", date: "" },
-          { time: "", subject: "", date: "" },
-          { time: "", subject: "", date: "" },
+          { time: "", subject: "" },
+          { time: "", subject: "" },
+          { time: "", subject: "" },
         ],
       },
     ],
@@ -60,21 +60,11 @@ const ExamSchedule = () => {
       {/* Header Section */}
       <div className="header">
         <h1>Exam Schedule</h1>
-        <h2>MIDS Exam</h2>
-        <div className="month-display">
-          <span>{selectedMonth}</span>
-        </div>
+        <div className="centered-title">Midterm Exam</div>
       </div>
 
       {/* Schedule Table */}
       <div className="schedule-table">
-        <div className="time-row">
-          <div className="day-cell">Days</div>
-          <div className="time-cell">09:00 AM - 11:00 AM</div>
-          <div className="time-cell">11:30 AM - 1:30 PM</div>
-          <div className="time-cell">01:45 PM - 3:00 PM</div>
-        </div>
-
         {schedule.map((day, index) => (
           <div className="day-row" key={index}>
             <div className="day-cell">
@@ -88,7 +78,7 @@ const ExamSchedule = () => {
                   <div>
                     <strong>{slot.subject}</strong>
                     <br />
-                    <span>{slot.date}</span>
+                    <span>{slot.time}</span>
                   </div>
                 )}
               </div>
