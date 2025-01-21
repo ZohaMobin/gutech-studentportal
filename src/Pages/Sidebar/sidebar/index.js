@@ -194,7 +194,7 @@ const Sidebar = () => {
         </Link>
 
        
-              <Link to="/fees" className="sideBar-link">
+              <Link to="/scholarships" className="sideBar-link">
                 <li>
                   <img
                     src="/clipboard-inactive.svg"
