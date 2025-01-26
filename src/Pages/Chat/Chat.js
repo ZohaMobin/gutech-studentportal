@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Chat.css";
-// Importing icons from react-icons
 import { FaEllipsisV, FaSearch, FaEnvelope } from "react-icons/fa";
+import { FaMicrophone, FaLink } from "react-icons/fa";
+import { FiSend } from "react-icons/fi";
 
 const Chat = () => {
-    // Separate lists for teachers and students with email addresses
     const initialTeachers = [
         {
             id: "teacher1",
@@ -60,7 +60,6 @@ const Chat = () => {
         },
     ];
 
-    // Initial messages for each contact
     const initialMessages = {
         teacher1: [
             { sender: "them", text: "Hey There!", time: "Today, 8:30pm" },
@@ -70,7 +69,6 @@ const Chat = () => {
             { sender: "them", text: "I am doing well, Can we meet?", time: "Today, 8:36pm" },
             { sender: "you", text: "Yes, sure!", time: "Today, 8:58pm" },
         ],
-        // Add initial messages for other contacts if needed
     };
 
     const [teachers, setTeachers] = useState(initialTeachers);
@@ -79,23 +77,20 @@ const Chat = () => {
     const [selectedContact, setSelectedContact] = useState(null);
     const [messages, setMessages] = useState(initialMessages);
     const [newMessage, setNewMessage] = useState("");
-    const [showEmail, setShowEmail] = useState(false); // State to toggle email display
+    const [showEmail, setShowEmail] = useState(false);
 
     const messagesEndRef = useRef(null);
 
-    // Scroll to bottom when messages change
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages, selectedContact]);
 
-    // Handle search input change
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
 
-    // Filter contacts based on search query
     const filterContacts = (contactsList) => {
         return contactsList.filter((contact) =>
             contact.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -105,13 +100,11 @@ const Chat = () => {
     const filteredTeachers = filterContacts(teachers);
     const filteredStudents = filterContacts(students);
 
-    // Handle contact selection
     const handleContactClick = (contact) => {
         setSelectedContact(contact);
-        setShowEmail(false); // Reset email display when selecting a new contact
+        setShowEmail(false); 
     };
 
-    // Handle sending a new message
     const handleSendMessage = () => {
         if (newMessage.trim() === "" || !selectedContact) return;
 
@@ -141,18 +134,23 @@ const Chat = () => {
         setNewMessage("");
     };
 
-    // Handle pressing Enter to send message
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             handleSendMessage();
         }
     };
 
-    // Handle Mail Icon Click
     const handleMailClick = () => {
         if (selectedContact) {
-            setShowEmail((prev) => !prev); // Toggle email display
+            setShowEmail((prev) => !prev); 
         }
+    };
+
+    const handleVoiceInput = () => {
+        alert("Voice input feature is under development.");
+    };
+    const handleLinkClick = () => {
+        alert("Link click feature is under development.");
     };
 
     return (
@@ -169,7 +167,6 @@ const Chat = () => {
                     />
                 </div>
 
-                {/* Teachers Section */}
                 <div className="section">
                     <h2 className="section-title">Teachers</h2>
                     <ul className="list">
@@ -192,7 +189,6 @@ const Chat = () => {
                     </ul>
                 </div>
 
-                {/* Students Section */}
                 <div className="section">
                     <h2 className="section-title">Students</h2>
                     <ul className="list">
@@ -232,7 +228,6 @@ const Chat = () => {
                                     </p>
                                 </div>
                             </div>
-                            {/* New Icons Section */}
                             <div className="chat-header-icons">
                                 <div className="icon-container">
                                     <FaEnvelope
@@ -276,6 +271,10 @@ const Chat = () => {
                             <div ref={messagesEndRef} />
                         </div>
                         <div className="chat-input-box">
+                
+                        <button className="voice-btn" onClick={handleLinkClick}>
+                                <FaLink />
+                            </button>
                             <input
                                 type="text"
                                 placeholder="Type your message..."
@@ -283,8 +282,12 @@ const Chat = () => {
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 onKeyPress={handleKeyPress}
                             />
+                        <button className="voice-btn" onClick={handleVoiceInput}>
+                                <FaMicrophone />
+                            </button>
                             <button className="send-btn" onClick={handleSendMessage}>
                                 Send
+                                <FiSend style ={{ marginLeft: "5px" }}/>
                             </button>
                         </div>
                     </>
