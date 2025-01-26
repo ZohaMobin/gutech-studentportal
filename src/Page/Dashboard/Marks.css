@@ -26,8 +26,8 @@
   
   @media (max-width: 480px) {
     .marks-bargraph {
-      width: 95%; /* Further reduce width for mobile screens */
-      margin-left: 2%; /* Center with small margins */
+      width: 95%; 
+      margin-left: 2%; 
       top: auto;
       bottom: 20px; /* Keep it at the bottom for mobile */
     }
