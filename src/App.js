@@ -1,11 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
-import ChatApp from './Pages/Chat/Chat';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from "../src/Pages/Sidebar/sidebar/index";
+import Assignments from './Pages/assignments/assignments';
+import Chat from "./Pages/Chat/Chat.js";
+import Dashboard from './Pages/dashboard/dashboard';
+import { Topbar } from './Pages/topbar/topbar';
+
 function App() {
   return (
-    <div>
-      <ChatApp />
-    </div>
+    <Router>
+      <div className="App">
+        <Sidebar />
+        <div className='mainContent '>
+  <Topbar/>
+        <Routes>
+
+          <Route path="/" element={<Dashboard/>} /> 
+          <Route path="/assignments" element={<Assignments />} />
+        <Route path="/Chat" element={<Chat />} />
+        </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
