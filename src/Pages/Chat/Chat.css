@@ -5,11 +5,15 @@
   font-family: "Roboto", sans-serif;
   color: #333;
   background-color: #ffffff;
+  overflow: hidden; /* Prevent horizontal scroll */
+  position: relative; /* For positioning the overlay */
 }
 
+/* Sidebar Styles */
 .sidebar {
   width: 25%;
   min-width: 250px;
+  max-width: 300px;
   border-right: 1px solid #eee;
   background-color: #f9f9f9;
   display: flex;
@@ -17,29 +21,111 @@
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000; /* Ensure sidebar is above other elements */
 }
 
+/* Sidebar Hidden by Default on Mobile */
+.sidebar {
+  transform: translateX(0);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80%;
+    max-width: 300px;
+    background-color: #f9f9f9;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Hide the default sidebar title when overlay is active */
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .close-icon {
+    display: block;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+  }
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  display: none; /* Hidden by default */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar-header {
+    display: flex; /* Visible on mobile */
+  }
+}
+
+/* Close Icon */
+.close-icon {
+  display: none; /* Hidden on larger screens */
+}
+
+@media (max-width: 768px) {
+  .close-icon {
+    display: block;
+  }
+}
+
+/* Overlay Styles */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999; /* Below the sidebar */
+}
+
+/* Sidebar Title */
 .sidebar-title {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   color: #991d20;
 }
 
+/* Search Bar */
 .search-bar {
   display: flex;
   align-items: center;
   position: relative;
   margin-bottom: 1.5rem;
-  width: 85%;
+  width: 100%;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 10px 15px 10px 40px; /* Add left padding for spacing */
+  padding: 10px 15px 10px 40px;
   border-radius: 25px;
   border: 1px solid #ccc;
   outline: none;
   transition: border 0.3s;
+  font-size: 1rem;
 }
 
 .search-bar input:focus {
@@ -48,12 +134,13 @@
 
 .search-icon {
   position: absolute;
-  left: 15px; /* Position the icon inside the input */
+  left: 15px;
   color: #991d20;
   font-size: 1rem;
-  pointer-events: none; /* Prevent click events on the icon */
+  pointer-events: none;
 }
 
+/* Sections */
 .section {
   margin: 1.5rem 0;
   padding: 10px 15px;
@@ -68,6 +155,7 @@
   color: #555;
 }
 
+/* Contact List */
 .list {
   list-style: none;
   margin: 0;
@@ -79,7 +167,6 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: space-between; 
   padding: 10px;
   border-radius: 10px;
   background-color: #fff;
@@ -104,16 +191,15 @@
 
 .list-item-info {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex: 1; 
+  flex-direction: column;
+  flex: 1;
 }
 
 .list-item-name {
   font-weight: 600;
   color: #333;
-  margin-right: 10px;
-  flex: 1; 
+  margin-bottom: 5px;
+  font-size: 1rem;
 }
 
 .list-item-time {
@@ -128,13 +214,16 @@
   padding: 10px;
 }
 
+/* Chat Area */
 .chat-area {
   flex: 1;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
+  position: relative;
 }
 
+/* Chat Header */
 .chat-header {
   display: flex;
   justify-content: space-between;
@@ -143,40 +232,26 @@
   border-bottom: 1px solid #eee;
   background-color: #f7f7f7;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
 }
 
-.chat-header-icons {
-  display: flex;
-  align-items: center;
-  gap: 15px; /* Space between icons */
-}
-
-.icon-container {
-  position: relative; /* To position the email display */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.header-icon {
-  font-size: 1.2rem;
-  color: #991d20;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.header-icon:hover {
-  color: #7a1418;
-}
-
-.email-display {
-  margin-top: 5px;
-  font-size: 0.85rem;
+.hamburger-menu {
+  display: none;
+  font-size: 1.5rem;
   color: #333;
-  background-color: #f0f0f0;
-  padding: 5px 10px;
-  border-radius: 5px;
-  white-space: nowrap;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: block;
+  }
+
+  .user-info {
+    flex: 1;
+    margin-left: 10px;
+  }
 }
 
 .user-info {
@@ -205,6 +280,42 @@
   color: #666;
 }
 
+/* Chat Header Icons */
+.chat-header-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-icon {
+  font-size: 1.2rem;
+  color: #991d20;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.header-icon:hover {
+  color: #7a1418;
+}
+
+.email-display {
+  margin-top: 5px;
+  font-size: 0.85rem;
+  color: #333;
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+/* Chat Messages */
 .chat-messages {
   flex: 1;
   padding: 24px;
@@ -212,8 +323,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  position: relative; 
-  background-color: #ffffff; 
+  position: relative;
+  background-color: #ffffff;
 }
 
 .chat-background-logo {
@@ -222,16 +333,17 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px; 
+  width: 300px;
   height: auto;
-  opacity: 0.2; 
-  pointer-events: none; 
-  z-index: 0; 
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .message {
-  position: relative; 
+  position: relative;
   z-index: 1;
+  max-width: 80%;
 }
 
 .message.left {
@@ -242,10 +354,12 @@
   align-self: flex-end;
 }
 
-.bubble-left, .bubble-right {
+.bubble-left,
+.bubble-right {
   padding: 12px 16px;
   border-radius: 16px;
   position: relative;
+  word-wrap: break-word;
 }
 
 .bubble-left {
@@ -254,12 +368,13 @@
 }
 
 .bubble-right {
-  background-color: #991D20;
+  background-color: #991d20;
   color: white;
   border-bottom-right-radius: 4px;
 }
 
-.bubble-left p, .bubble-right p {
+.bubble-left p,
+.bubble-right p {
   margin: 0;
 }
 
@@ -269,6 +384,13 @@
   margin-top: 4px;
 }
 
+.no-messages {
+  text-align: center;
+  color: #999;
+  margin-top: 20px;
+}
+
+/* Chat Input Box */
 .chat-input-box {
   display: flex;
   align-items: center;
@@ -278,7 +400,6 @@
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
 }
 
-
 .chat-input-box input {
   flex: 1;
   border: 1px solid #ccc;
@@ -286,7 +407,7 @@
   padding: 10px 20px;
   font-size: 0.95rem;
   outline: none;
-  margin: 0 15px;
+  margin: 0 10px;
   transition: border 0.3s;
 }
 
@@ -294,16 +415,17 @@
   border-color: #991d20;
 }
 
-.voice-btn {
+.icon-button {
   background-color: transparent;
   border: none;
   font-size: 1.2rem;
   color: #991d20;
   cursor: pointer;
   transition: color 0.3s;
+  margin: 0 5px;
 }
 
-.voice-btn:hover {
+.icon-button:hover {
   color: #7a1418;
 }
 
@@ -315,6 +437,8 @@
   padding: 10px 20px;
   cursor: pointer;
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
   transition: background-color 0.3s;
 }
 
@@ -322,16 +446,11 @@
   background-color: #7a1418;
 }
 
-.no-messages {
-  text-align: center;
-  color: #999;
-  margin-top: 20px;
-}
-
+/* No Contact Selected */
 .no-contact-selected {
   flex: 1;
   display: flex;
-  flex-direction: column; /* To stack the message and logo vertically */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #666;
@@ -341,15 +460,35 @@
 
 .gutech-logo {
   margin-top: 20px;
-  width: 150px; /* Adjust the size as needed */
+  width: 150px;
   height: auto;
   opacity: 0.8;
 }
 
-/* Responsive Design Adjustments (Optional) */
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 30%;
+  }
+
+  .user-avatar {
+    width: 45px;
+    height: 45px;
+  }
+
+  .list-item-avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .chat-background-logo {
+    width: 250px;
+  }
+}
+
 @media (max-width: 768px) {
   .sidebar {
-    width: 35%;
+    width: 80%;
   }
 
   .chat-header-icons {
@@ -359,5 +498,91 @@
   .user-avatar {
     width: 40px;
     height: 40px;
+  }
+
+  .list-item-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .chat-background-logo {
+    width: 200px;
+  }
+
+  .chat-input-box input {
+    margin: 0 5px;
+    padding: 8px 15px;
+  }
+
+  .send-btn {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    max-width: none;
+  }
+
+  .search-bar input {
+    font-size: 0.9rem;
+    padding: 8px 12px 8px 35px;
+  }
+
+  .search-icon {
+    left: 10px;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-title {
+    font-size: 1.3rem;
+  }
+
+  .section-title {
+    font-size: 1rem;
+  }
+
+  .list-item-name {
+    font-size: 0.95rem;
+  }
+
+  .list-item-time {
+    font-size: 0.75rem;
+  }
+
+  .chat-header {
+    padding: 10px 15px;
+  }
+
+  .user-name {
+    font-size: 1rem;
+  }
+
+  .user-status {
+    font-size: 0.75rem;
+  }
+
+  .chat-input-box {
+    padding: 10px 15px;
+  }
+
+  .chat-input-box input {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+
+  .send-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .gutech-logo {
+    width: 120px;
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Chat.css";
-import { FaEllipsisV, FaSearch, FaEnvelope } from "react-icons/fa";
+import { FaEllipsisV, FaSearch, FaEnvelope, FaBars, FaTimes } from "react-icons/fa";
 import { FaMicrophone, FaLink } from "react-icons/fa";
 import { FiSend } from "react-icons/fi";
 
@@ -78,6 +78,7 @@ const Chat = () => {
     const [messages, setMessages] = useState(initialMessages);
     const [newMessage, setNewMessage] = useState("");
     const [showEmail, setShowEmail] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const messagesEndRef = useRef(null);
 
@@ -102,8 +103,12 @@ const Chat = () => {
 
     const handleContactClick = (contact) => {
         setSelectedContact(contact);
-        setShowEmail(false); 
+        setShowEmail(false);
+        if (window.innerWidth <= 768) {
+            setIsSidebarOpen(false); // Close sidebar on contact selection for mobile
+        }
     };
+
 
     const handleSendMessage = () => {
         if (newMessage.trim() === "" || !selectedContact) return;
@@ -153,10 +158,24 @@ const Chat = () => {
         alert("Link click feature is under development.");
     };
 
+    const toggleSidebar = () => {
+        setIsSidebarOpen((prev) => !prev);
+    };
+    
+    const closeSidebar = () => {
+        setIsSidebarOpen(false);
+    };
+
+
     return (
         <div className="chat-container">
-            <div className="sidebar">
-                <h1 className="sidebar-title">Discussions - Chat</h1>
+            {/* Sidebar */}
+            <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+                {/* Close Icon for Mobile */}
+                <div className="sidebar-header">
+                    <h1 className="sidebar-title">Discussions - Chat</h1>
+                    <FaTimes className="close-icon" onClick={closeSidebar} />
+                </div>
                 <div className="search-bar">
                     <FaSearch className="search-icon" />
                     <input
@@ -211,48 +230,61 @@ const Chat = () => {
                     </ul>
                 </div>
             </div>
+
+            {/* Overlay */}
+            {isSidebarOpen && window.innerWidth <= 768 && (
+                <div className="overlay" onClick={closeSidebar}></div>
+            )}
+
+            {/* Chat Area */}
             <div className="chat-area">
-                {selectedContact ? (
-                    <>
-                        <div className="chat-header">
-                            <div className="user-info">
-                                <img
-                                    src={selectedContact.avatar}
-                                    alt={selectedContact.name}
-                                    className="user-avatar"
-                                />
-                                <div>
-                                    <h3 className="user-name">{selectedContact.name}</h3>
-                                    <p className="user-status">
-                                        {selectedContact.email}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="chat-header-icons">
-                                <div className="icon-container">
-                                    <FaEnvelope
-                                        className="header-icon"
-                                        onClick={handleMailClick}
-                                        title="View Email"
-                                        aria-label="View Email"
-                                    />
-                                    {showEmail && (
-                                        <div className="email-display">
-                                            {selectedContact.email}
-                                        </div>
-                                    )}
-                                </div>
-                                <FaEllipsisV className="header-icon" />
+                {/* Chat Header */}
+                <div className="chat-header">
+                    {/* Hamburger Menu for Mobile */}
+                    <FaBars className="hamburger-menu" onClick={toggleSidebar} />
+
+                    {selectedContact && (
+                        <div className="user-info">
+                            <img
+                                src={selectedContact.avatar}
+                                alt={selectedContact.name}
+                                className="user-avatar"
+                            />
+                            <div>
+                                <h3 className="user-name">{selectedContact.name}</h3>
+                                <p className="user-status">
+                                    {selectedContact.email}
+                                </p>
                             </div>
                         </div>
-                        <div className="chat-messages">
-                        {selectedContact && (
+                    )}
+                    <div className="chat-header-icons">
+                        <div className="icon-container">
+                            <FaEnvelope
+                                className="header-icon"
+                                onClick={handleMailClick}
+                                title="View Email"
+                                aria-label="View Email"
+                            />
+                            {showEmail && (
+                                <div className="email-display">
+                                    {selectedContact.email}
+                                </div>
+                            )}
+                        </div>
+                        <FaEllipsisV className="header-icon" />
+                    </div>
+                </div>
+
+                {/* Chat Messages */}
+                <div className="chat-messages">
+                    {selectedContact ? (
+                        <>
                             <img
-                               src="/gutechlogo.png"
-                               alt="GUtech Logo"
-                               className="chat-background-logo"
-        />
-                        )}
+                                src="/gutechlogo.png"
+                                alt="GUtech Logo"
+                                className="chat-background-logo"
+                            />
                             {messages[selectedContact.id] && messages[selectedContact.id].length > 0 ? (
                                 messages[selectedContact.id].map((msg, index) => (
                                     <div
@@ -269,32 +301,39 @@ const Chat = () => {
                                 <p className="no-messages">No messages yet. Start the conversation!</p>
                             )}
                             <div ref={messagesEndRef} />
-                        </div>
-                        <div className="chat-input-box">
-                
-                        <button className="voice-btn" onClick={handleLinkClick}>
-                                <FaLink />
-                            </button>
-                            <input
-                                type="text"
-                                placeholder="Type your message..."
-                                value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                onKeyPress={handleKeyPress}
+                        </>
+                    ) : (
+                        <div className="no-contact-selected">
+                            <p>Select a contact to start chatting.</p>
+                            <img
+                                src="/gutechlogo.png"
+                                alt="Gutech Logo"
+                                className="gutech-logo"
                             />
-                        <button className="voice-btn" onClick={handleVoiceInput}>
-                                <FaMicrophone />
-                            </button>
-                            <button className="send-btn" onClick={handleSendMessage}>
-                                Send
-                                <FiSend style ={{ marginLeft: "5px" }}/>
-                            </button>
                         </div>
-                    </>
-                ) : (
-                    <div className="no-contact-selected">
-                        <p>Select a contact to start chatting.</p>
-                        <img src="/gutechlogo.png" alt="Gutech Logo" style={{ backgroundColor: "#323232", width: "200px", height: "70px" }} />
+                    )}
+                </div>
+
+                {/* Chat Input Box */}
+                {selectedContact && (
+                    <div className="chat-input-box">
+                        <button className="icon-button" onClick={handleLinkClick} title="Insert Link">
+                            <FaLink />
+                        </button>
+                        <input
+                            type="text"
+                            placeholder="Type your message..."
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                        />
+                        <button className="icon-button" onClick={handleVoiceInput} title="Voice Input">
+                            <FaMicrophone />
+                        </button>
+                        <button className="send-btn" onClick={handleSendMessage}>
+                            Send
+                            <FiSend style={{ marginLeft: "5px" }} />
+                        </button>
                     </div>
                 )}
             </div>
