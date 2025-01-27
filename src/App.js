@@ -4,6 +4,7 @@ import Sidebar from "../src/Pages/Sidebar/sidebar/index";
 import Assignments from './Pages/assignments/assignments';
 import Grading from './Pages/Grading/Grading';
 import Dashboard from './Pages/dashboard/dashboard';
+import ChatApp from './Pages/Chat/Chat';
 import { Topbar } from './Pages/topbar/topbar';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/assignments" element={<Assignments />} />
             <Route path="/grading" element={<Grading />} />
+            <Route path="/chat" element={<ChatApp />} />
           </Routes>
         </div>
       </div>
