@@ -1,6 +1,6 @@
 .announcement-card {
   position: absolute;
-  top: 37%;
+  top: 30%;
   right: 0;
   transform: translateY(-50%);
   background-color: #fff;
@@ -10,7 +10,7 @@
   padding: 25px;
   width: 430px;
   height: auto;
-  margin-right: 300px;
+  margin-right: 600px;
   margin-bottom: 0;
 }
 
