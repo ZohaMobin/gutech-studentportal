@@ -1,27 +1,28 @@
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from "../src/Pages/Sidebar/sidebar/index";
+import Assignments from './Pages/assignments/assignments';
+import Chat from "./Pages/Chat/Chat.js";
+import Dashboard from './Pages/dashboard/dashboard';
+import { Topbar } from './Pages/topbar/topbar';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Sidebar />
+        <div className='mainContent '>
+  <Topbar/>
+        <Routes>
+
+          <Route path="/" element={<Dashboard/>} /> 
+          <Route path="/assignments" element={<Assignments />} />
+        <Route path="/Chat" element={<Chat />} />
+        </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
 export default App;
-
-
-

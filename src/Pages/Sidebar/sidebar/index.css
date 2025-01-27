@@ -8,8 +8,8 @@
   --primary-color: #991D20;
   --secondary-color: #F9F9F9;
   --text-color: #727272;
-  --icon-size: 20px;
-  --icon-size-lg: 25px;
+  --icon-size: 18px;
+  --icon-size-lg: 22px;
   --transition-duration: 0.3s;
 }
 
@@ -22,7 +22,7 @@
   flex-direction: column;
   transition: width var(--transition-duration) ease;
   overflow-y: auto;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .sidebar.collapsed {
@@ -38,7 +38,7 @@
 }
 
 .logo {
-  width: 150px;
+  width: 75%;
   height: auto;
   transition: width var(--transition-duration) ease;
   font-size: 1.5em;
@@ -52,7 +52,7 @@
 .toggle-btn {
   border: none;
   cursor: pointer;
-  width: 2em;
+  width: 15%;
   margin-left: 10%;
 }
 
@@ -161,4 +161,47 @@
 
 .nav-links::-webkit-scrollbar-thumb:hover {
   background: #1abc9c;
+}
+
+
+
+
+@media (max-width: 1000px) {
+  .sidebar {
+    width: 100%; 
+  }
+
+ .sidebar-header{
+
+  padding:10%;
+ }
+
+ 
+
+  .collapsed-logo {
+    width: 75%; 
+  }
+
+  .nav-links li {
+    padding: 10px 15px;
+    justify-content: center;
+  }
+
+  .nav-links li:hover {
+    background-color: var(--primary-color);
+    color: #fff !important;
+  }
+
+  .toggle-btn {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) { 
+
+.userName{
+
+  display: none;
+}
+
 }
