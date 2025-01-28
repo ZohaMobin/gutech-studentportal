@@ -1,47 +1,136 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Signup.css';
 
 const Signup = () => {
   const [isActive, setIsActive] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    rollNo: '',
+    password: '',
+  });
+  const [loginData, setLoginData] = useState({
+    emailOrRollNo: '',
+    password: '',
+  });
+
+  const handleSignupChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleLoginChange = (e) => {
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  };
+
+  const handleSignup = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/signup', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: 'student', // Add a default role (can be dynamic based on your app)
+      });
+      console.log('Signup successful:', response.data);
+      alert('Signup successful! Please log in.');
+    } catch (error) {
+      console.error('Signup error:', error.response?.data?.message || error.message);
+      alert('Signup failed: ' + error.response?.data?.message || error.message);
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email: loginData.emailOrRollNo, // Assuming the backend checks for email or roll number
+        password: loginData.password,
+      });
+      console.log('Login successful:', response.data);
+      alert('Login successful!');
+      // Save token to localStorage for future authenticated requests
+      localStorage.setItem('token', response.data.token);
+    } catch (error) {
+      console.error('Login error:', error.response?.data?.message || error.message);
+      alert('Login failed: ' + error.response?.data?.message || error.message);
+    }
+  };
 
   return (
     <div className={`container ${isActive ? 'active' : ''}`} id="container">
       {/* Sign Up Form */}
       <div className="form-container sign-up">
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <h1 className="ss">Create Account</h1>
-          <input type="text" placeholder="Name" />
-          <input type="email" placeholder="GU-Tech E-mail" />
-          <input type="value" placeholder="Roll-No" />
-          <button type="button">Sign Up</button>
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleSignupChange}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="GU-Tech E-mail"
+            value={formData.email}
+            onChange={handleSignupChange}
+          />
+          <input
+            type="text"
+            name="rollNo"
+            placeholder="Roll-No"
+            value={formData.rollNo}
+            onChange={handleSignupChange}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleSignupChange}
+          />
+          <button type="button" onClick={handleSignup}>
+            Sign Up
+          </button>
         </form>
       </div>
 
       {/* Sign In Form */}
       <div className="form-container sign-in">
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <h1 className="ss">Sign In</h1>
-          <input type="email" placeholder="Email or Roll-No" />
+          <input
+            type="text"
+            name="emailOrRollNo"
+            placeholder="Email or Roll-No"
+            value={loginData.emailOrRollNo}
+            onChange={handleLoginChange}
+          />
           <div className="password-container">
             <input
-              type={showPassword ? 'text' : 'password'} // Toggle between password and text
+              type={showPassword ? 'text' : 'password'}
+              name="password"
               placeholder="Password"
+              value={loginData.password}
+              onChange={handleLoginChange}
             />
             <div
               className="eye-icon"
-              onClick={() => setShowPassword(!showPassword)} // Toggle visibility on click
+              onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? (
-                <i className="fas fa-eye-slash"></i> // Icon for hiding password
+                <i className="fas fa-eye-slash"></i>
               ) : (
-                <i className="fas fa-eye"></i> // Icon for showing password
+                <i className="fas fa-eye"></i>
               )}
             </div>
           </div>
           <Link to="/forgot-password">Forgot Your Password?</Link>
-          <button type="button">Sign In</button>
+          <button type="button" onClick={handleLogin}>
+            Sign In
+          </button>
         </form>
       </div>
 
