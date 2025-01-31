@@ -11,6 +11,9 @@ import EventSchedule from "./Pages/Event-Calender/Eventcalender";
 import Timetable from './Pages/Class Schedule/ClassSchedule';
 import Chat from "./Pages/Chat/Chat.js";
 import Transcript from './Pages/Transcript/Transcript.jsx';
+import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship';
+import JobsAndBootcamps from './Pages/Group5-JobOpportunities/JobsAndBootcamps';
+import BootcampForm from './Pages/Group5-JobOpportunities/BootcampForm';
 import "./Components/Exam Schedual/ExamSchedule.css";
 
 function App() {
@@ -31,6 +34,9 @@ function App() {
             <Route path="/timetable" element={<Timetable />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/transcript" element={<Transcript />} />
+            <Route path="/scholarship" element={<ScholarshipPage />} />
+            <Route path="/jobs-and-bootcamps" element={<JobsAndBootcamps />} />
+            <Route path="/bootcamp-form" element={<BootcampForm />} />
           </Routes>
         </div>
       </div>
