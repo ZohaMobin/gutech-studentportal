@@ -7,10 +7,9 @@ import { Topbar } from "./Pages/topbar/topbar";
 import RecordingsPage from "./Components/Recordings/Recordings";
 import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
 import ExamSchedule from "./Components/Exam Schedual/ExamSchedule";
-
 import EventSchedule from "./Pages/Event-Calender/Eventcalender";
 import Timetable from './Pages/Class Schedule/ClassSchedule';
-
+import Chat from "./Pages/Chat/Chat.js";
 import "./Components/Exam Schedual/ExamSchedule.css";
 
 function App() {
@@ -29,11 +28,11 @@ function App() {
             <Route path="/exam-schedule" element={<ExamSchedule />} />
             <Route path="/event-calender" element={<EventSchedule />} />
             <Route path="/timetable" element={<Timetable />} />
+            <Route path="/chat" element={<Chat />} />
           </Routes>
         </div>
       </div>
     </Router>
   );
 }
-
 export default App;
