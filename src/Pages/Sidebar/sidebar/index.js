@@ -74,8 +74,8 @@ const Sidebar = () => {
           </div>
           {isDropdown1Open && (
             <ul className="dropdown-menu">
-              <Link to="/schedules" className="sideBar-link">
-                <li>{!isCollapsed ? "Schedules" : "schedule"}</li>
+              <Link to="/exam-schedule" className="sideBar-link">
+                <li>{!isCollapsed ? "Exam schedule" : "schedule"}</li>
               </Link>
               <Link to="/timetable" className="sideBar-link">
                 <li>{!isCollapsed ? " Timetable" : "time"}</li>

@@ -6,6 +6,8 @@ import Dashboard from "./Pages/dashboard/dashboard";
 import { Topbar } from "./Pages/topbar/topbar";
 import RecordingsPage from "./Components/Recordings/Recordings";
 import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
+import ExamSchedule from "./Components/Exam Schedual/ExamSchedule";
+import "./Components/Exam Schedual/ExamSchedule.css";
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
             <Route path="/assignments" element={<Assignments />} />
             <Route path="/recordings" element={<RecordingsPage />} />
             <Route path="/recording-links" element={<RecordingLinksPage />} />
+            <Route path="/exam-schedule" element={<ExamSchedule />} />
           </Routes>
         </div>
       </div>
