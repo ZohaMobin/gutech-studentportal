@@ -140,7 +140,8 @@ const Sidebar = () => {
           </li>
         </Link>
 
-        <li className="moreOptions">
+        {/* GRADES */}
+        {/* <li className="moreOptions">
           <div className="dropdown-toggle " onClick={toggleDropdown2}>
             <img
               src="/clipboard-inactive.svg"
@@ -152,7 +153,7 @@ const Sidebar = () => {
           </div>
           {isDropdown2Open && (
             <ul className="dropdown-menu">
-              <Link to="/discrete" className="sideBar-link">
+              <Link to="/grading" className="sideBar-link">
                 <li>{!isCollapsed ? "Discrete" : "Discrete"}</li>
               </Link>
               <Link to="/web-development" className="sideBar-link">
@@ -169,12 +170,12 @@ const Sidebar = () => {
               </Link>
             </ul>
           )}
-        </li>
+        </li> */}
 
-        <Link to="/notes" className="sideBar-link">
+        <Link to="/grading" className="sideBar-link">
           <li>
             <img src="/note-inactive.svg" alt="Notes Icon" className="icon" />
-            {!isCollapsed && "Notes"}
+            {!isCollapsed && "Grades"}
           </li>
         </Link>
 

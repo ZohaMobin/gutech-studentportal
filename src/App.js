@@ -14,8 +14,8 @@ import Transcript from './Pages/Transcript/Transcript.jsx';
 import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship';
 import JobsAndBootcamps from './Pages/Group5-JobOpportunities/JobsAndBootcamps';
 import BootcampForm from './Pages/Group5-JobOpportunities/BootcampForm';
+import Grading from './Pages/Grading/Grading';
 import "./Components/Exam Schedual/ExamSchedule.css";
-
 function App() {
   return (
     <Router>
@@ -37,6 +37,7 @@ function App() {
             <Route path="/scholarship" element={<ScholarshipPage />} />
             <Route path="/jobs-and-bootcamps" element={<JobsAndBootcamps />} />
             <Route path="/bootcamp-form" element={<BootcampForm />} />
+            <Route path="/grading" element={<Grading />} />
           </Routes>
         </div>
       </div>
