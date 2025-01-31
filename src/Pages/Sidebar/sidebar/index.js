@@ -107,6 +107,8 @@ const Sidebar = () => {
           )}
         </li>
 
+
+      {/* DOWNLOADS
         <Link to="/downloads" className="sideBar-link">
           <li>
             <img
@@ -116,9 +118,11 @@ const Sidebar = () => {
             />
             {!isCollapsed && "Downloads"}
           </li>
-        </Link>
+        </Link> */}
 
-        <Link to="/classes" className="sideBar-link">
+
+      {/* CLASSES */}
+        {/* <Link to="/classes" className="sideBar-link">
           <li>
             <img
               src="/classes-inactive.svg"
@@ -127,9 +131,10 @@ const Sidebar = () => {
             />
             {!isCollapsed && "Classes"}
           </li>
-        </Link>
+        </Link> */}
 
-        <Link to="/notes" className="sideBar-link">
+      {/* NOTES */}
+        {/* <Link to="/notes" className="sideBar-link">
           <li>
             <img
               src="/resources-inactive.svg"
@@ -138,9 +143,9 @@ const Sidebar = () => {
             />
             {!isCollapsed && "Resources"}
           </li>
-        </Link>
+        </Link> */}
 
-        {/* GRADES */}
+      {/* GRADES */}
         {/* <li className="moreOptions">
           <div className="dropdown-toggle " onClick={toggleDropdown2}>
             <img
@@ -172,6 +177,8 @@ const Sidebar = () => {
           )}
         </li> */}
 
+
+        {/* GRADINGS */}
         <Link to="/grading" className="sideBar-link">
           <li>
             <img src="/note-inactive.svg" alt="Notes Icon" className="icon" />
@@ -179,6 +186,7 @@ const Sidebar = () => {
           </li>
         </Link>
 
+        {/* RECORDINGS */}
         <Link to="/recordings" className="sideBar-link">
           <li>
             <img
@@ -190,7 +198,8 @@ const Sidebar = () => {
           </li>
         </Link>
 
-        <Link to="/courses" className="sideBar-link">
+      {/* COURSES CHANGED TO FEES */}
+        {/* <Link to="/courses" className="sideBar-link">
           <li>
             <img
               src="/courses-inactive.svg"
@@ -198,6 +207,16 @@ const Sidebar = () => {
               className="icon icon-exlg "
             />
             {!isCollapsed && "Courses"}
+          </li>
+        </Link> */}
+        <Link to="/fees" className="sideBar-link">
+          <li>
+            <img
+              src="/courses-inactive.svg"
+              alt="Courses Icon"
+              className="icon icon-exlg "
+            />
+            {!isCollapsed && "Fees"}
           </li>
         </Link>
 
