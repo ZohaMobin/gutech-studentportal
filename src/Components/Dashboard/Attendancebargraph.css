@@ -1,0 +1,43 @@
+.attendance-bargraph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 570px;
+  margin-left: 22px;
+  margin-top: 370px;
+}
+
+.attendance-bargraph h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .attendance-bargraph {
+    max-width: 90%;
+    margin-left: 5%;
+    margin-top: 150px;
+  }
+
+  .attendance-bargraph h2 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .attendance-bargraph {
+    max-width: 95%;
+    margin-top: 100px;
+  }
+
+  .attendance-bargraph h2 {
+    font-size: 1rem;
+  }
+}
