@@ -31,14 +31,12 @@ const Sidebar = () => {
           src="./gulogo.svg"
           alt="Logo"
         />
-      <img
+        <img
           onClick={toggleSidebar}
           className={`toggle-btn ${isCollapsed ? "collapsed-toggle" : ""}`}
           src="/Slider.svg"
           alt="Toggle Sidebar"
         />
-        
-        
       </div>
 
       <ul className="nav-links">
@@ -77,13 +75,13 @@ const Sidebar = () => {
           {isDropdown1Open && (
             <ul className="dropdown-menu">
               <Link to="/schedules" className="sideBar-link">
-                <li>{!isCollapsed ? "Schedules" :  "schedule"}</li>
+                <li>{!isCollapsed ? "Schedules" : "schedule"}</li>
               </Link>
               <Link to="/timetable" className="sideBar-link">
                 <li>{!isCollapsed ? " Timetable" : "time"}</li>
               </Link>
               <Link to="/calendar" className="sideBar-link">
-                <li>{!isCollapsed ? "Event Calender " :" calendar"}</li>
+                <li>{!isCollapsed ? "Event Calender " : " calendar"}</li>
               </Link>
             </ul>
           )}
@@ -193,48 +191,46 @@ const Sidebar = () => {
           </li>
         </Link>
 
-       
-              <Link to="/fees" className="sideBar-link">
-                <li>
-                  <img
-                    src="/clipboard-inactive.svg"
-                    alt="Fees Icon"
-                    className="icon icon-exlg "
-                  />
-                  {isCollapsed ? "" : "Fees/Scholarship"}
-                </li>
-              </Link>
-              <Link to="/transcript" className="sideBar-link">
-                <li>
-                  <img
-                    src="/downloads-inactive.svg"
-                    alt="Transcript Icon"
-                    className="icon icon-exlg "
-                  />
-                  {isCollapsed ? "" : "Transcript"}
-                </li>
-              </Link>
-              <Link to="/job-opportunities" className="sideBar-link">
-                <li>
-                  <img
-                    src="/note-inactive.svg"
-                    alt="Job Icon"
-                    className="icon icon-exlg "
-                  />
-                  {isCollapsed ? "" : "Job-Opportunities"}
-                </li>
-              </Link>
-              <Link to="/settings" className="sideBar-link">
-                <li>
-                  <img
-                    src="/settings-inactive.svg"
-                    alt="Settings Icon"
-                    className="icon icon-exlg "
-                  />
-                  {isCollapsed ? "" : "Settings"}
-                </li>
-              </Link>
-          
+        <Link to="/fees" className="sideBar-link">
+          <li>
+            <img
+              src="/clipboard-inactive.svg"
+              alt="Fees Icon"
+              className="icon icon-exlg "
+            />
+            {isCollapsed ? "" : "Fees/Scholarship"}
+          </li>
+        </Link>
+        <Link to="/transcript" className="sideBar-link">
+          <li>
+            <img
+              src="/downloads-inactive.svg"
+              alt="Transcript Icon"
+              className="icon icon-exlg "
+            />
+            {isCollapsed ? "" : "Transcript"}
+          </li>
+        </Link>
+        <Link to="/job-opportunities" className="sideBar-link">
+          <li>
+            <img
+              src="/note-inactive.svg"
+              alt="Job Icon"
+              className="icon icon-exlg "
+            />
+            {isCollapsed ? "" : "Job-Opportunities"}
+          </li>
+        </Link>
+        <Link to="/settings" className="sideBar-link">
+          <li>
+            <img
+              src="/settings-inactive.svg"
+              alt="Settings Icon"
+              className="icon icon-exlg "
+            />
+            {isCollapsed ? "" : "Settings"}
+          </li>
+        </Link>
       </ul>
     </div>
   );
