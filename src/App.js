@@ -17,6 +17,7 @@ import BootcampForm from './Pages/Group5-JobOpportunities/BootcampForm';
 import Grading from './Pages/Grading/Grading';
 import Fees from './Pages/Group1-Fees/Fees';
 import AddFee from './Pages/Group1-Fees/AddFee';
+import Attendance from './Pages/Attendance/Attendance';
 import "./Components/Exam Schedual/ExamSchedule.css";
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="/grading" element={<Grading />} />
           <Route path="/fees" element={<Fees/>} />
           <Route path='/add-fee' element={<AddFee/>}/>
+          <Route path="/Attendance" element={<Attendance />} />
           </Routes>
         </div>
       </div>

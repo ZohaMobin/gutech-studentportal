@@ -69,15 +69,15 @@ const Sidebar = () => {
           </li>
         </Link>
 
-        {/* ASSIGNMENTS */}
-        <Link to="/assignments" className="sideBar-link">
+        {/* Attendance */}
+        <Link to="/Attendance" className="sideBar-link">
           <li>
             <img
               src="/clipboard-inactive.svg"
               alt="Assignments Icon"
               className="icon icon-exlg"
             />
-            {!isCollapsed && "Assignments"}
+            {!isCollapsed && "Attendance"}
           </li>
         </Link>
 
@@ -107,8 +107,7 @@ const Sidebar = () => {
           )}
         </li>
 
-
-      {/* DOWNLOADS
+        {/* DOWNLOADS
         <Link to="/downloads" className="sideBar-link">
           <li>
             <img
@@ -120,8 +119,7 @@ const Sidebar = () => {
           </li>
         </Link> */}
 
-
-      {/* CLASSES */}
+        {/* CLASSES */}
         {/* <Link to="/classes" className="sideBar-link">
           <li>
             <img
@@ -133,7 +131,7 @@ const Sidebar = () => {
           </li>
         </Link> */}
 
-      {/* NOTES */}
+        {/* NOTES */}
         {/* <Link to="/notes" className="sideBar-link">
           <li>
             <img
@@ -145,7 +143,7 @@ const Sidebar = () => {
           </li>
         </Link> */}
 
-      {/* GRADES */}
+        {/* GRADES */}
         {/* <li className="moreOptions">
           <div className="dropdown-toggle " onClick={toggleDropdown2}>
             <img
@@ -177,7 +175,6 @@ const Sidebar = () => {
           )}
         </li> */}
 
-
         {/* GRADINGS */}
         <Link to="/grading" className="sideBar-link">
           <li>
@@ -198,7 +195,7 @@ const Sidebar = () => {
           </li>
         </Link>
 
-      {/* COURSES CHANGED TO FEES */}
+        {/* COURSES CHANGED TO FEES */}
         {/* <Link to="/courses" className="sideBar-link">
           <li>
             <img
