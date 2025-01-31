@@ -1,4 +1,4 @@
-import './Class Schedule.css';
+// import "./Class Schedule.css";
 
 const SimpleTable = () => {
   return (
