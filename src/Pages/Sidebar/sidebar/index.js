@@ -40,6 +40,7 @@ const Sidebar = () => {
       </div>
 
       <ul className="nav-links">
+        {/* DEGAULT PAGE IS DASHBOARD */}
         <Link to="/" className="sideBar-link">
           <li>
             <img
@@ -51,6 +52,7 @@ const Sidebar = () => {
           </li>
         </Link>
 
+        {/* ASSIGNMENTS */}
         <Link to="/assignments" className="sideBar-link">
           <li>
             <img
@@ -62,6 +64,7 @@ const Sidebar = () => {
           </li>
         </Link>
 
+        {/* Schedules */}
         <li className="moreOptions">
           <div className="dropdown-toggle " onClick={toggleDropdown1}>
             <img
@@ -80,7 +83,7 @@ const Sidebar = () => {
               <Link to="/timetable" className="sideBar-link">
                 <li>{!isCollapsed ? " Timetable" : "time"}</li>
               </Link>
-              <Link to="/calendar" className="sideBar-link">
+              <Link to="/event-calender" className="sideBar-link">
                 <li>{!isCollapsed ? "Event Calender " : " calendar"}</li>
               </Link>
             </ul>
