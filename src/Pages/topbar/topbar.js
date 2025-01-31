@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import "./topbar.css";
 
 export const Topbar = () => {
@@ -9,11 +9,11 @@ export const Topbar = () => {
         <input type="text" placeholder="Search..." />
       </div>
       <div className="nav-images">
-        <button className='notifybtn'>
-          <img src='./notify.svg' alt='notify' />
+        <button className="notifybtn">
+          <img src="./notify.svg" alt="notify" />
         </button>
-        <img src='./user.svg' alt='user-img' className='userImg' />
-        <p className='userName'> Ahmed </p>
+        <img src="./user.svg" alt="user-img" className="userImg" />
+        <p className="userName"> Ahmed </p>
       </div>
     </nav>
   );

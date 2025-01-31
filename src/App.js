@@ -10,6 +10,7 @@ import ExamSchedule from "./Components/Exam Schedual/ExamSchedule";
 import EventSchedule from "./Pages/Event-Calender/Eventcalender";
 import Timetable from './Pages/Class Schedule/ClassSchedule';
 import Chat from "./Pages/Chat/Chat.js";
+import Transcript from './Pages/Transcript/Transcript.jsx';
 import "./Components/Exam Schedual/ExamSchedule.css";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/event-calender" element={<EventSchedule />} />
             <Route path="/timetable" element={<Timetable />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/transcript" element={<Transcript />} />
           </Routes>
         </div>
       </div>
