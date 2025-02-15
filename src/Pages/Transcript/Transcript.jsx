@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Transcript.css';
 
 const Transcript = () => {
@@ -38,6 +38,19 @@ const Transcript = () => {
     totalCreditsRequired: 18,
     totalCreditsEarned: 18,
   };
+
+  const [stdata, setstudentData] = useState(null);
+  
+  useEffect(() => {
+     axios.get("mockapi/transcriptDATA")
+    .then((response)=>{
+      setstudentData(response.data);
+      console.log(response.data);
+    })
+    .catch((error)=>{
+      console.log("error fetching data",error)
+    })
+  },[])
 
   return (
     <div className="transcript-container">

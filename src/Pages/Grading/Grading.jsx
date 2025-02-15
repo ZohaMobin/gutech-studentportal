@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Plus } from "lucide-react";
+import axios from "axios";
 import "./Grading.css";
 
 const GradingPage = () => {
@@ -7,35 +8,17 @@ const GradingPage = () => {
   const [course, setCourse] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [newAssessment, setNewAssessment] = useState({
+    Sno,
     title: "",
     totalMarks: "",
     weightage: "",
+    Obtained_Marks: "",
+    Total_marks: "",
+    Average: "",
+    Standard_deviation: " ",
+    Minimum: "",
+    Maximum: "",
   });
-
-  // Sample data
-  const quizzes = [
-    {
-      Sno : 1,
-      weightage : 20,
-      Obtained_Marks : 6,	
-      Total_marks : 10,
-      Average	: 12.43,
-      Standard_deviation : " ",	
-      Minimum	: 2,
-      Maximum : 9.5
-    },
-    {
-      Sno : 2,
-      weightage : 20,
-      Obtained_Marks : 6,	
-      Total_marks : 10,
-      Average	: 12.43,
-      Standard_deviation : " ",	
-      Minimum	: 2,
-      Maximum : 9.5
-    },
-    // Add more sample data as needed
-  ];
 
   const assessmentTypes = {
     quizzes: { title: "Quizzes", data: quizzes },
@@ -48,6 +31,19 @@ const GradingPage = () => {
     // Add assessment logic here
     setShowAddModal(false);
   };
+
+  //GET API
+  useEffect(() => {
+    axios.get("http://localhost:5000/grading")
+      .then((response) => {
+        
+        setNewAssessment(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <div className="portal-container">
