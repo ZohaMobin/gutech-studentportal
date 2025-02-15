@@ -180,7 +180,7 @@ const Sidebar = () => {
           </li>
         </Link>
 
-        <Link to="/discussions" className="sideBar-link">
+        <Link to="/chat" className="sideBar-link">
           <li>
             <img
               src="/discussions-inactive.svg"

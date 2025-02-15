@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { Plus } from "lucide-react";
 import "./Grading.css";
+import axios from "axios";
 
 const GradingPage = () => {
   const [activeTab, setActiveTab] = useState("quizzes");
@@ -48,6 +49,20 @@ const GradingPage = () => {
     // Add assessment logic here
     setShowAddModal(false);
   };
+
+  useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/users/1")
+      .then((response) => {
+        setCourse(response.data.course); 
+        setCourse(response.data.course); 
+        setLoading(false); // Stop the loading indicator
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error); // Log any errors
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="portal-container">
