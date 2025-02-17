@@ -4,7 +4,8 @@ import Sidebar from './Pages/Sidebar/sidebar/index';
 import Assignments from './Pages/assignments/assignments';
 import Dashboard from './Pages/dashboard/dashboard';
 import { Topbar } from './Pages/topbar/topbar';
-import ClassSchedule from './Pages/Class Schedule/ClassSchedule';
+import ClassSchedule from './Pages/Class Schedule/ClassSchedule'; // 
+import StudentEventCalendar from './Pages/EventCalendar/EventCalendar'; // 
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/assignments" element={<Assignments />} />
-            <Route path="/timetable" element={ <ClassSchedule />} />
+            <Route path="/timetable" element={<ClassSchedule />} />
+            <Route path="/calendar" element={<StudentEventCalendar />} />
           </Routes>
         </div>
       </div>
