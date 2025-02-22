@@ -3,14 +3,24 @@ import axios from 'axios';
 import './Announcement.css';
 
 function Announcement() {
-  const [announcements, setAnnouncements] = useState([]);
-  const [loading, setLoading] = useState(true); // State for loading status
-  const [error, setError] = useState(null); // State for error handling
+  const [announcements, setAnnouncements] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
-    axios.get('https://student-portal-backend-sgik.onrender.com/') // Replace with your actual API URL
+    axios.get('https://student-portal-backend-sgik.onrender.com/') 
       .then(response => {
-        setAnnouncements(response.data || []);
+        console.log("API Response:", response.data); // Debugging
+
+        // Ensure data is an array before setting it in state
+        if (Array.isArray(response.data)) {
+          setAnnouncements(response.data);
+        } else if (response.data && Array.isArray(response.data.announcements)) {
+          setAnnouncements(response.data.announcements);
+        } else {
+          console.error("Unexpected API response format:", response.data);
+          setAnnouncements([]); // Fallback to an empty array
+        }
       })
       .catch(error => {
         console.error('Error fetching announcements:', error);
