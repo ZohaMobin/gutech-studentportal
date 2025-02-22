@@ -3,8 +3,9 @@ import { useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
-import { FaRegCirclePlay } from "react-icons/fa6";
+import { FaPlayCircle } from "react-icons/fa";
 import "./RecordingLinks.css";
+
 
 const RecordingLinksPage = () => {
   const location = useLocation();
@@ -91,7 +92,7 @@ const RecordingLinksPage = () => {
                   rel="noopener noreferrer"
                   className="watch-recording-button"
                 >
-                  <FaRegCirclePlay />
+                  <FaPlayCircle />
                   Watch Recording
                 </a>
               </div>

@@ -5,8 +5,8 @@ import Sidebar from "../src/Pages/Sidebar/sidebar/index";
 import Assignments from './Pages/assignments/assignments';
 import Dashboard from './Pages/dashboard/dashboard';
 import { Topbar } from './Pages/topbar/topbar';
-import RecordingsPage from './Pages/Recordings/Recordings';
-import RecordingLinksPage from './Pages/Recordings/RecordingLinks';
+import RecordingsPage from './Components/Recordings/Recordings';
+import RecordingLinksPage from './Components/Recordings/RecordingLinks';
 
 
 
@@ -14,19 +14,20 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<RecordingsPage />} />
-        <Route path="/recording-links" element={<RecordingLinksPage />} />
+       
       </Routes>
       <div className="App">
         <Sidebar />
         <div className='mainContent '>
   <Topbar/>
         <Routes>
-
+        
+ <Route path="/recordings" element={<RecordingsPage />} />
+        <Route path="/recording-links" element={<RecordingLinksPage />} />
           <Route path="/" element={<Dashboard/>} /> 
           <Route path="/assignments" element={<Assignments />} />
       
-        </Routes>
+       </Routes>
         </div>
       </div>
     </Router>

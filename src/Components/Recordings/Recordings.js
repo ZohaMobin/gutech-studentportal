@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Recordings.css";
 
-// Your recordings data
+
 const recordingsData = [
   {
     title: "PSPF - Problem Solving and Fundamentals",
