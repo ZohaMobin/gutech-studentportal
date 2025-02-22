@@ -90,10 +90,10 @@
 }
 
 .day.current {
-  background-color: #0056b3; /* Highlight color */
+  background-color:#F3D2A1; /* Highlight color */
   color: white; /* Text color */
   font-weight: bold;
-  border-radius: 50%; /* Ensure circular shape */
+  border-radius: 100%; /* Ensure circular shape */
   padding: 8px; /* Add padding to prevent touching corners */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
 }
