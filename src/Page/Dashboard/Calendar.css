@@ -2,25 +2,24 @@
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 17%;
+  width: 100%;
+  max-width: 350px; /* Consistent max-width */
   height: auto;
   overflow: hidden;
   text-align: center;
   border: 1px solid #ddd;
-  position: absolute;
-  top: 100px;
-  right: 20px;
-  margin-right: 150px;
+  margin: 0 auto;
+  padding: 10px;
 }
 
 .calendar-header {
   color: orangered;
-  padding: 6px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .nav-btn {
@@ -33,90 +32,76 @@
   transition: background-color 0.3s ease;
 }
 
+.nav-btn:hover {
+  background-color: #f0f0f0;
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 1px;
-  padding: 4px;
+  gap: 5px;
+  padding: 10px;
 }
 
 .day {
-  padding: 6px;
+  padding: 8px;
   text-align: center;
-  border-radius: 30%;
-  font-size: 0.8rem;
+  border-radius: 50%;
+  font-size: 0.9rem;
   font-weight: lighter;
   color: black;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 30px;
   height: 30px;
+  margin: 0 auto;
+  transition: background-color 0.3s ease;
 }
 
-@media (max-width: 480px) {
-  .calendar-container {
-    width: 80%;
-    top: 50px;
-    right: 10px;
-  }
-
-  .calendar-header {
-    font-size: 0.8rem;
-    padding: 5px;
-  }
-
-  .calendar-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .day {
-    width: 25px;
-    height: 25px;
-    font-size: 0.7rem;
-  }
+.day.empty {
+  visibility: hidden;
 }
 
-@media (max-width: 768px) {
-  .calendar-container {
-    width: 60%;
-    top: 80px;
-    right: 15px;
-  }
-
-  .calendar-header {
-    font-size: 0.85rem;
-  }
-
-  .calendar-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  .day {
-    width: 28px;
-    height: 28px;
-    font-size: 0.75rem;
-  }
+.day.current {
+  background-color: #707c8a;
+  color: white;
+  font-weight: bold;
 }
 
-@media (min-width: 1024px) {
-  .calendar-container {
-    width: 17%;
-    top: 100px;
-    right: 20px;
-  }
+.day:hover {
+  background-color: #f0f0f0;
+}
 
-  .calendar-header {
-    font-size: 0.9rem;
-  }
+.day {
+  padding: 8px;
+  text-align: center;
+  border-radius: 50%; /* Circular shape for days */
+  font-size: 0.9rem;
+  font-weight: lighter;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+  transition: background-color 0.3s ease;
+}
 
-  .calendar-grid {
-    grid-template-columns: repeat(7, 1fr);
-  }
+.day.current {
+  background-color: #0056b3; /* Highlight color */
+  color: white; /* Text color */
+  font-weight: bold;
+  border-radius: 50%; /* Ensure circular shape */
+  padding: 8px; /* Add padding to prevent touching corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+}
 
-  .day {
-    width: 30px;
-    height: 30px;
-    font-size: 0.8rem;
-  }
+.day:hover {
+  background-color: #f0f0f0; /* Hover effect for better UX */
+}
+
+.day.empty {
+  visibility: hidden; /* Hide empty days */
 }

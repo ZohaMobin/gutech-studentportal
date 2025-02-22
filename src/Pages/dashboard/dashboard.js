@@ -7,21 +7,26 @@ import Statistics from "../../Page/Dashboard/Statistics";
 import TodaysTimetable from "../../Page/Dashboard/Todaystimetable";
 import BarChartmarks from "../../Page/Dashboard/Marks";
 import CGPAMeter from "../../Page/Dashboard/CGPAMeter";
+import './dashboard.css';
 
 const Dashboard = () => {
     const [cgpa, setCgpa] = useState(3.5);  // Using useState for dynamic CGPA
 
     return (
-        <div>
+        <div className="dashboard-container">
             <Announcement />
-            <BarChart />
-            <Calendar />
-            <PieChart />
-            <Statistics />
+            
             <TodaysTimetable />
-            <BarChartmarks />
+            <BarChart />
+            <PieChart />
             <CGPAMeter cgpa={cgpa} />
+            <Calendar />
+            
+            <BarChartmarks />
+            
+            <Statistics />
         </div>
+       
     );
 };
 

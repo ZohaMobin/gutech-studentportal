@@ -1,0 +1,25 @@
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible grid layout */
+  gap: 20px; /* Consistent spacing between components */
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px; /* Limit maximum width for larger screens */
+  justify-content: center;
+  align-items: start;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust for smaller screens */
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    grid-template-columns: 1fr; /* Single column for very small screens */
+    gap: 5px;
+  }
+}
