@@ -5,8 +5,8 @@ import Sidebar from "../src/Pages/Sidebar/sidebar/index";
 import Assignments from './Pages/assignments/assignments';
 import Dashboard from './Pages/dashboard/dashboard';
 import { Topbar } from './Pages/topbar/topbar';
-import RecordingsPage from './Components/Recordings/Recordings';
-import RecordingLinksPage from './Components/Recordings/RecordingLinks';
+import RecordingsPage from './Pages/Recordings/Recordings';
+import RecordingLinksPage from './Pages/Recordings/RecordingLinks';
 
 
 
