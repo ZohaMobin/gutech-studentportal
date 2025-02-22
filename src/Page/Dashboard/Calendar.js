@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Calendar.css';
 
 function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('L https://student-portal-backend-sgik.onrender.com/'); 
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
   const renderCalendar = (date) => {
     const month = date.getMonth();
     const year = date.getFullYear();
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
-    
+
     const monthYear = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
     const days = [];
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -27,8 +42,9 @@ function Calendar() {
     }
 
     for (let i = 1; i <= lastDate; i++) {
+      const hasEvent = events.some(event => new Date(event.date).getDate() === i);
       days.push(
-        <div className="day" key={`day-${i}`}>
+        <div className={`day ${hasEvent ? 'event-day' : ''}`} key={`day-${i}`}>
           {i}
         </div>
       );
@@ -64,6 +80,3 @@ function Calendar() {
 }
 
 export default Calendar;
-
-
-
