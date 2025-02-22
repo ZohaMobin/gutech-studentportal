@@ -8,43 +8,53 @@ const JobsAndBootcamps = () => {
   const bootcamps = [
     {
       title: "Technical Support Specialist",
-      type: "PART-TIME",
-      salary: "$0",
-      company: "Google Inc.",
-      location: "Karachi, Pakistan",
+      type: "Morning",
+      salary: "0",
+      startDate: "2023-06-01",
+      endDate: "2023-06-30",
     },
     {
       title: "Full Stack Developer Bootcamp",
-      type: "FULL-TIME",
-      salary: "$0",
-      company: "Meta Inc.",
-      location: "Lahore, Pakistan",
+      type: "Evening",
+      salary: "0",
+      startDate: "2023-07-01",
+      endDate: "2023-07-31",
     },
   ];
 
   const jobs = [
     {
       title: "Junior Graphic Designer",
+      type: "PART-TIME",
       company: "Google Inc.",
-      salary: "$15,000 - $20,000",
+      salary: "15,000",
       location: "Karachi, Pakistan",
+      linkedIn: "https://www.linkedin.com/company/google",
     },
     {
       title: "Software Engineer",
+      type: "FULL-TIME",
       company: "Microsoft",
-      salary: "$25,000 - $30,000",
+      salary: "25,000",
       location: "Lahore, Pakistan",
+      linkedIn: "https://www.linkedin.com/company/google",
     },
     {
       title: "Marketing Manager",
+      type: "PART-TIME",
       company: "Amazon",
-      salary: "$30,000 - $40,000",
+      salary: "30,000",
       location: "Islamabad, Pakistan",
+      linkedIn: "https://www.linkedin.com/company/google",
     },
   ];
 
   const handleBootcampApply = (bootcamp) => {
     navigate("/apply", { state: { bootcamp } }); // Pass bootcamp data as state
+  };
+
+  const handleJobapply = (linkedInUrl) => {
+    window.open(linkedInUrl, "_blank");
   };
   
 
@@ -59,9 +69,9 @@ const JobsAndBootcamps = () => {
             <div key={index} className="card">
               <h3>{bootcamp.title}</h3>
               <p className="type">{bootcamp.type}</p>
-              <p className="salary">Fee: {bootcamp.salary}</p>
-              <p className="company">{bootcamp.company}</p>
-              <p className="location">{bootcamp.location}</p>
+              <p className="salary">Fee: PKR {bootcamp.salary}</p>
+              <p className="startDate">Start Date: {bootcamp.startDate}</p>
+              <p className="endDate">End Date: {bootcamp.endDate}</p>
               <button className="apply-button" onClick={() => handleBootcampApply(bootcamp)}>
                 Apply
               </button>
@@ -76,10 +86,11 @@ const JobsAndBootcamps = () => {
           {jobs.map((job, index) => (
             <div key={index} className="card">
               <h3>{job.title}</h3>
+              <p className="type">{job.type}</p>
               <p className="company">{job.company}</p>
-              <p className="salary">Salary: {job.salary}</p>
+              <p className="salary">Salary: PKR {job.salary}</p>
               <p className="location">{job.location}</p>
-              <button className="apply-button">Apply</button>
+              <button className="apply-button" onClick={() => handleJobapply(job.linkedIn)}>Apply</button>
             </div>
           ))}
         </div>
