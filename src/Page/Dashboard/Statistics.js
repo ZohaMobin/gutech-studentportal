@@ -7,7 +7,7 @@ function Statistics() {
   const [overallProgressWidth, setOverallProgressWidth] = useState(0);
 
   useEffect(() => {
-    axios.get('https://student-portal-backend-sgik.onrender.com/') // Replace with your actual API URL
+    axios.get('https://student-portal-backend-sgik.onrender.com/statistics') // Replace with your actual API URL
       .then(response => {
         setOverallAttWidth(response.data.overallAttendance || 70);
         setOverallProgressWidth(response.data.overallProgress || 85);
