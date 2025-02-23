@@ -5,7 +5,7 @@ import "./JobsAndBootcamps.css";
 const JobsAndBootcamps = () => {
   const navigate = useNavigate();
 
-  const bootcamps = [
+  const bootcamps = [ //Dummy data of bootcamps// //actual data retrieving from backend using GET API//
     {
       title: "Technical Support Specialist",
       type: "Morning",
@@ -22,7 +22,7 @@ const JobsAndBootcamps = () => {
     },
   ];
 
-  const jobs = [
+  const jobs = [ //Dummy data of jobs// //actual data retrieving from backend using GET API//
     {
       title: "Junior Graphic Designer",
       type: "PART-TIME",
@@ -50,7 +50,7 @@ const JobsAndBootcamps = () => {
   ];
 
   const handleBootcampApply = (bootcamp) => {
-    navigate("/apply", { state: { bootcamp } }); // Pass bootcamp data as state
+    navigate("/apply", { state: { bootcamp } });
   };
 
   const handleJobapply = (linkedInUrl) => {

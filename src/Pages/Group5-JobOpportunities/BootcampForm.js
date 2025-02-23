@@ -3,19 +3,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./BootcampForm.css";
 
 const BootcampForm = () => {
-  const location = useLocation(); // Get the location object
-  const navigate = useNavigate(); // For navigating after form submission
-  const bootcamp = location.state?.bootcamp; // Safely access the bootcamp data
+  const location = useLocation(); 
+  const navigate = useNavigate(); 
+  const bootcamp = location.state?.bootcamp; 
 
-  // Ensure hooks are called before any conditional rendering
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
-    department: "", // New state for department
+    department: "",
   });
 
-  // If bootcamp is undefined, we return the error message
   if (!bootcamp) {
     return <h2>Error: Bootcamp data not found. Please go back and try again.</h2>;
   }
@@ -27,8 +26,8 @@ const BootcampForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Your application for ${bootcamp.title} has been submitted!`);
-    navigate("/"); // Redirect back to the main page after submission
+    alert(`Your application for ${bootcamp.title} has been submitted!`);  //POST API//
+    navigate("/");
   };
 
   return (
