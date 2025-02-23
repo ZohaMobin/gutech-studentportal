@@ -15,7 +15,7 @@ function PieChart() {
 
   const fetchChartData = async () => {
     try {
-      const response = await axios.get('L https://student-portal-backend-sgik.onrender.com/'); 
+      const response = await axios.get('https://student-portal-backend-sgik.onrender.com/'); 
       setChartData(response.data);
     } catch (error) {
       console.error('Error fetching chart data:', error);

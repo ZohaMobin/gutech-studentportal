@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Calendar.css';
 
 function Calendar() {
-  const [currentDate, setCurrentDate] = useState(new Date()); // Track current date
-  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth()); // Track current month
-  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear()); // Track current year
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
+  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+  const [holidays, setHolidays] = useState([]);
 
-  // Function to get the number of days in a month
+  useEffect(() => {
+    fetch(`https://student-portal-backend-sgik.onrender.com/${currentYear}/US`)
+      .then(response => response.json())
+      .then(data => {
+        setHolidays(data.map(holiday => new Date(holiday.date).getDate()));
+      })
+      .catch(error => console.error('Error fetching holidays:', error));
+  }, [currentYear]);
+
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  // Function to get the first day of the month
   const getFirstDayOfMonth = (month, year) => {
     return new Date(year, month, 1).getDay();
   };
 
-  // Function to handle next month
   const handleNextMonth = () => {
     if (currentMonth === 11) {
       setCurrentMonth(0);
@@ -26,7 +33,6 @@ function Calendar() {
     }
   };
 
-  // Function to handle previous month
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
       setCurrentMonth(11);
@@ -36,13 +42,11 @@ function Calendar() {
     }
   };
 
-  // Generate calendar days
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
     const firstDayOfMonth = getFirstDayOfMonth(currentMonth, currentYear);
     const calendarDays = [];
 
-    // Add day names
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     dayNames.forEach((day, index) => {
       calendarDays.push(
@@ -52,22 +56,22 @@ function Calendar() {
       );
     });
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
       calendarDays.push(<div key={`empty-${i}`} className="day empty"></div>);
     }
 
-    // Add days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       const isCurrentDate =
         i === currentDate.getDate() &&
         currentMonth === currentDate.getMonth() &&
         currentYear === currentDate.getFullYear();
 
+      const isHoliday = holidays.includes(i);
+
       calendarDays.push(
         <div
           key={`day-${i}`}
-          className={`day ${isCurrentDate ? 'current' : ''}`}
+          className={`day ${isCurrentDate ? 'current' : ''} ${isHoliday ? 'holiday' : ''}`}
         >
           {i}
         </div>
@@ -93,9 +97,7 @@ function Calendar() {
           &#10095;
         </button>
       </div>
-      <div className="calendar-grid">
-        {renderCalendar()}
-      </div>
+      <div className="calendar-grid">{renderCalendar()}</div>
     </div>
   );
 }
