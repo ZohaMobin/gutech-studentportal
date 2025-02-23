@@ -99,16 +99,7 @@ const Sidebar = () => {
           </Link>
 
 
-          <Link to="/assignments" className="sideBar-link">
-          <li>
-            <img
-              src="/clipboard-inactive.svg"
-              alt="Assignments Icon"
-              className="icon icon-exlg"
-            />
-            {!isCollapsed && "Assignments"}
-          </li>
-        </Link>
+     
 
         <Link to="/Announcement" className="sideBar-link">
           <li>
