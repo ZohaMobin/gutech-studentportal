@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import './Marks.css';
 import {
@@ -10,33 +10,75 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarChartmarks = () => {
-
-  const data = {
-    labels: ["Pspf", "DM", "Pspf Lab", "Web tech", "Web tech lab", "Eng"],
+  const [data, setData] = useState({
+    labels: [],
     datasets: [
       {
         label: "Marks (%)",
-        data: [85, 72, 90, 65, 88, 77], 
+        data: [],
         backgroundColor: [
-          '#FF8C94',  // Darker Light Pink
-          '#A0C4D4',  // Darker Soft Light Blue
-          '#A0E0A0',  // Darker Pale Mint Green
-          '#F5A6C4',  // Darker Soft Blush Pink
-          '#C59BD8',  // Darker Lavender Purple
-          '#A4D8C6',  // Darker Soft Seafoam Green
+          '#FF8C94',
+          '#A0C4D4',
+          '#A0E0A0',
+          '#F5A6C4',
+          '#C59BD8',
+          '#A4D8C6',
         ],
         borderColor: [
-          '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', 
+          '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF',
         ],
         borderWidth: 1,
       },
     ],
-  };
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
+        const transformedData = response.data.slice(0, 6).map((item, index) => ({
+          label: ["Pspf", "DM", "Pspf Lab", "Web tech", "Web tech lab", "Eng"][index],
+          marks: Math.floor(Math.random() * (100 - 60 + 1)) + 60, // Generate random marks between 60 and 100
+        }));
+
+        setData({
+          labels: transformedData.map((item) => item.label),
+          datasets: [
+            {
+              label: "Marks (%)",
+              data: transformedData.map((item) => item.marks),
+              backgroundColor: [
+                '#FF8C94',
+                '#A0C4D4',
+                '#A0E0A0',
+                '#F5A6C4',
+                '#C59BD8',
+                '#A4D8C6',
+              ],
+              borderColor: [
+                '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF',
+              ],
+              borderWidth: 1,
+            },
+          ],
+        });
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const options = {
     responsive: true,
@@ -59,6 +101,14 @@ const BarChartmarks = () => {
       },
     },
   };
+
+  if (isLoading) {
+    return <div className="marks-bargraph"><h2>Loading Marks Data...</h2></div>;
+  }
+
+  if (error) {
+    return <div className="marks-bargraph"><h2>Error: {error.message}</h2></div>;
+  }
 
   return (
     <div className="marks-bargraph">
