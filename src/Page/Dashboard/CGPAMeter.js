@@ -9,10 +9,12 @@ const CGPAMeter = () => {
     axios
       .get("https://api.example.com/cgpa") // Replace with your API URL
       .then((response) => {
-        setCgpa(response.data.cgpa); // Assuming API returns { "cgpa": 3.5 }
+        const receivedCGPA = response.data.cgpa || 3.5; // Use API CGPA or default to 3.5
+        setCgpa(receivedCGPA);
       })
       .catch((error) => {
         console.error("Error fetching CGPA:", error);
+        setCgpa(3.5); // Set CGPA to 3.5 if API fails
       });
   }, []);
 
