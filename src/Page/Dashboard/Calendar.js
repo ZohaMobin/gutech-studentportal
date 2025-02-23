@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Calendar.css';
 
 function Calendar() {
-  const [currentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
   const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+  const [holidays, setHolidays] = useState([]);
+
+  useEffect(() => {
+    fetch(`https://student-portal-backend-sgik.onrender.com/${currentYear}/US`)
+      .then(response => response.json())
+      .then(data => {
+        setHolidays(data.map(holiday => new Date(holiday.date).getDate()));
+      })
+      .catch(error => console.error('Error fetching holidays:', error));
+  }, [currentYear]);
 
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -56,10 +66,12 @@ function Calendar() {
         currentMonth === currentDate.getMonth() &&
         currentYear === currentDate.getFullYear();
 
+      const isHoliday = holidays.includes(i);
+
       calendarDays.push(
         <div
           key={`day-${i}`}
-          className={`day ${isCurrentDate ? 'current' : ''}`}
+          className={`day ${isCurrentDate ? 'current' : ''} ${isHoliday ? 'holiday' : ''}`}
         >
           {i}
         </div>
