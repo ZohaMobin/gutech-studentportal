@@ -1,33 +1,33 @@
 .calendar-container {
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 350px; /* Consistent max-width */
+  max-width: 260px; /* Reduced max-width for a smaller size */
   height: auto;
   overflow: hidden;
   text-align: center;
   border: 1px solid #ddd;
   margin: 0 auto;
-  padding: 10px;
+  padding: 8px;
 }
 
 .calendar-header {
   color: orangered;
-  padding: 10px;
+  padding: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 0.85rem; /* Reduced font size */
 }
 
 .nav-btn {
   color: black;
   border: none;
-  padding: 6px 8px;
+  padding: 4px 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.8rem; /* Reduced font size */
   border-radius: 3px;
   transition: background-color 0.3s ease;
 }
@@ -39,22 +39,22 @@
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-  padding: 10px;
+  gap: 3px; /* Reduced gap between cells */
+  padding: 6px;
 }
 
 .day {
-  padding: 8px;
+  padding: 5px;
   text-align: center;
   border-radius: 50%;
-  font-size: 0.9rem;
+  font-size: 0.75rem; /* Smaller font size */
   font-weight: lighter;
   color: black;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
-  height: 30px;
+  width: 25px; /* Reduced width */
+  height: 25px; /* Reduced height */
   margin: 0 auto;
   transition: background-color 0.3s ease;
 }
@@ -64,44 +64,13 @@
 }
 
 .day.current {
-  background-color: #707c8a;
+  background-color: #F3D2A1;
   color: white;
   font-weight: bold;
+  border-radius: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .day:hover {
   background-color: #f0f0f0;
-}
-
-.day {
-  padding: 8px;
-  text-align: center;
-  border-radius: 50%; /* Circular shape for days */
-  font-size: 0.9rem;
-  font-weight: lighter;
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-  margin: 0 auto;
-  transition: background-color 0.3s ease;
-}
-
-.day.current {
-  background-color:#F3D2A1; /* Highlight color */
-  color: white; /* Text color */
-  font-weight: bold;
-  border-radius: 100%; /* Ensure circular shape */
-  padding: 8px; /* Add padding to prevent touching corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
-}
-
-.day:hover {
-  background-color: #f0f0f0; /* Hover effect for better UX */
-}
-
-.day.empty {
-  visibility: hidden; /* Hide empty days */
 }
