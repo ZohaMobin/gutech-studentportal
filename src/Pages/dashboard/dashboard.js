@@ -15,15 +15,12 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <Announcement />
-            
             <TodaysTimetable />
             <BarChart />
             <PieChart />
             <CGPAMeter cgpa={cgpa} />
             <Calendar />
-            
             <BarChartmarks />
-            
             <Statistics />
         </div>
        

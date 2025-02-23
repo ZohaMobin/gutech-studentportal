@@ -1,52 +1,42 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import "./Announcement.css";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import './Statistics.css';
 
-function Announcement() {
-  const dummyAnnouncements = [
-    {
-      title: "Notice",
-      message: "Classes will be suspended on Friday, January 17, 2025, due to inclement weather. Please plan accordingly.",
-    },
-    {
-      title: "Upcoming Event",
-      message: "The Leap Innovation Workshop will be held on Monday, January 20, 2025. Attendance is highly encouraged.",
-    },
-  ];
-
-  const [announcements, setAnnouncements] = useState(dummyAnnouncements);
+function Statistics() {
+  const [overallAttWidth, setOverallAttWidth] = useState(70); // Default value
+  const [overallProgressWidth, setOverallProgressWidth] = useState(85); // Default value
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get("https://jsonplaceholder.typicode.com/posts?_limit=2") // Dummy API
+    axios.get('https://jsonplaceholder.typicode.com/posts/1') // Replace with actual API
       .then(response => {
-        const formattedData = response.data.map(post => ({
-          title: `Announcement ${post.id}`,
-          message: post.title,
-        }));
-        setAnnouncements([...dummyAnnouncements, ...formattedData]); // Keep dummy data + API data
+        setOverallAttWidth(Number(response.data.overallAttendance) || 70);
+        setOverallProgressWidth(Number(response.data.overallProgress) || 85);
       })
       .catch(error => {
-        console.error("Error fetching announcements:", error);
-        setError("Failed to load additional announcements.");
+        console.error('Error fetching statistics:', error);
+        setError("Failed to load statistics. Using default values.");
       });
   }, []);
 
   return (
-    <div className="announcement-card">
-      <h2>Important Announcements</h2>
+    <div className="card2">
+      <h3>Statistics Overview</h3>
       {error && <p className="error-message">{error}</p>}
-      <div className="boxes-container">
-        {announcements.map((announcement, index) => (
-          <div key={index} className="announcement-box">
-            <p>
-              <strong>{announcement.title}:</strong> {announcement.message}
-            </p>
-          </div>
-        ))}
+
+      <div className="stats-bar">
+        <p>Overall Attendance: {overallAttWidth}%</p>
+        <div className="bar-container">
+          <div className="bar overall-attendance" style={{ width: `${overallAttWidth}%` }}></div>
+        </div>
+
+        <p>Overall Progress: {overallProgressWidth}%</p>
+        <div className="bar-container">
+          <div className="bar overall-progress" style={{ width: `${overallProgressWidth}%` }}></div>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Announcement;
+export default Statistics;
