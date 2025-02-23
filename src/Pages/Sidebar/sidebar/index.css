@@ -8,26 +8,39 @@
   --primary-color: #991D20;
   --secondary-color: #F9F9F9;
   --text-color: #727272;
-  --icon-size: 20px;
-  --icon-size-lg: 25px;
+  --icon-size: 18px;
+  --icon-size-lg: 22px;
   --transition-duration: 0.3s;
 }
 
 .sidebar {
+
+  overflow: hidden;
   height: 100vh;
   width: var(--sidebar-width);
   background-color: var(--secondary-color);
   color: var(--text-color);
   display: flex;
   flex-direction: column;
-  transition: width var(--transition-duration) ease;
-  overflow-y: auto;
-  font-size: 20px;
+  transition: transform var(--transition-duration) ease, width var(--transition-duration) ease;
+
+  font-size: 16px;
+
 }
 
 .sidebar.collapsed {
   width: var(--collapsed-sidebar-width);
 }
+
+.sidebar.offcanvas-open {
+  transform: translateX(0);
+}
+
+.sidebar.collapsed.offcanvas-open {
+  transform: translateX(0);
+}
+
+
 
 .sidebar-header {
   display: flex;
@@ -38,7 +51,7 @@
 }
 
 .logo {
-  width: 150px;
+  width: 75%;
   height: auto;
   transition: width var(--transition-duration) ease;
   font-size: 1.5em;
@@ -52,7 +65,7 @@
 .toggle-btn {
   border: none;
   cursor: pointer;
-  width: 2em;
+  width: 15%;
   margin-left: 10%;
 }
 
@@ -69,6 +82,7 @@
   color: var(--text-color);
   flex-grow: 1;
   overflow-y: auto;
+
 }
 
 .nav-links li {
@@ -162,3 +176,34 @@
 .nav-links::-webkit-scrollbar-thumb:hover {
   background: #1abc9c;
 }
+
+.nav-links {
+  flex-wrap: wrap;
+  padding-left: 0;
+}
+
+@media (max-width: 900px) {
+ 
+
+  .sidebar {
+    width: 50%; 
+  }
+}
+
+@media (max-width: 900px) {
+.toggleBtn{
+  border: none;
+  cursor: pointer;
+
+  width:5%;
+}
+  .toggle-btn{
+
+    display: none;
+  }
+  .sidebar.hidden {
+    display: none;
+  }
+}
+
+/* Toggle button styles */

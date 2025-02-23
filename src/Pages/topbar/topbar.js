@@ -4,6 +4,7 @@ import "./topbar.css";
 export const Topbar = () => {
   return (
     <nav className="navbar">
+      
       <div className="search-bar">
         <img src="./searchIcon.svg" alt="magnifying glass" width="30" />
         <input type="text" placeholder="Search..." />
