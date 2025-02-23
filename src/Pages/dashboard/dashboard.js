@@ -14,9 +14,10 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-container">
-            <Announcement />
-            <TodaysTimetable />
+            
             <Calendar />
+            <TodaysTimetable />
+            <Announcement />
             <BarChart />
             <CGPAMeter cgpa={cgpa} />
             <PieChart />
