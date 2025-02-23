@@ -16,10 +16,10 @@ const Dashboard = () => {
         <div className="dashboard-container">
             <Announcement />
             <TodaysTimetable />
-            <BarChart />
-            <PieChart />
-            <CGPAMeter cgpa={cgpa} />
             <Calendar />
+            <BarChart />
+            <CGPAMeter cgpa={cgpa} />
+            <PieChart />
             <BarChartmarks />
             <Statistics />
         </div>
