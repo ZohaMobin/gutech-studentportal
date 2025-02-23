@@ -8,10 +8,11 @@ function Calendar() {
   const [holidays, setHolidays] = useState([]);
 
   useEffect(() => {
-    fetch(`https://student-portal-backend-sgik.onrender.com/${currentYear}/US`)
+    fetch(`https://jsonplaceholder.typicode.com/posts/1`)
       .then(response => response.json())
       .then(data => {
-        setHolidays(data.map(holiday => new Date(holiday.date).getDate()));
+        const dummyHolidays = [1, 10, 15, 25]; // Example static holidays
+        setHolidays(dummyHolidays);
       })
       .catch(error => console.error('Error fetching holidays:', error));
   }, [currentYear]);
