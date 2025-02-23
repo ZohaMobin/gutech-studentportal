@@ -9,7 +9,7 @@
 /* Dashboard Container */
 .dashboard-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Flexible grid for all screens */
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); /* Flexible grid for all screens */
   gap: 20px; /* Space between grid items */
   padding: 20px;
   margin: 0 auto;

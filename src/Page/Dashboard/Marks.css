@@ -8,7 +8,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%; /* Take full width of the grid cell */
-  max-width: 350px; /* Consistent max-width */
+  max-width: 380px; /* Consistent max-width */
   height: auto; /* Allow height to adjust based on content */
   margin: 0 auto; /* Center the component */
   margin-bottom: 20px; /* Add margin to separate from the next component */
@@ -18,7 +18,7 @@
 @media (max-width: 768px) {
   .marks-bargraph {
     width: 90%; /* Adjust width for smaller screens */
-    max-width: 350px; /* Consistent max-width */
+    max-width: 380px; /* Consistent max-width */
     padding: 15px; /* Adjust padding for smaller screens */
   }
 }

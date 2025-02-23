@@ -8,7 +8,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%; /* Take full width of the grid cell */
-  max-width: 350px; /* Consistent max-width */
+  max-width: 380px; /* Consistent max-width */
   margin: 0 auto; /* Center the component */
 }
 
