@@ -1,21 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Calendar.css';
 
 function Calendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
   const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
-  const [holidays, setHolidays] = useState([]);
-
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/posts/1`)
-      .then(response => response.json())
-      .then(data => {
-        const dummyHolidays = [1, 10, 15, 25]; // Example static holidays
-        setHolidays(dummyHolidays);
-      })
-      .catch(error => console.error('Error fetching holidays:', error));
-  }, [currentYear]);
 
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -67,12 +56,10 @@ function Calendar() {
         currentMonth === currentDate.getMonth() &&
         currentYear === currentDate.getFullYear();
 
-      const isHoliday = holidays.includes(i);
-
       calendarDays.push(
         <div
           key={`day-${i}`}
-          className={`day ${isCurrentDate ? 'current' : ''} ${isHoliday ? 'holiday' : ''}`}
+          className={`day ${isCurrentDate ? 'current' : ''}`}
         >
           {i}
         </div>
