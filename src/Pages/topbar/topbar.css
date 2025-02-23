@@ -83,7 +83,9 @@
 
 @media (max-width: 1000px) {
   .navbar {
-    padding: 10px;
+    padding: 7px;
+    margin-left:12%;
+
   }
 
   .search-bar {
