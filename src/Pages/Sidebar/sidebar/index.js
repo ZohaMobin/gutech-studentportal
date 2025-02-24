@@ -108,72 +108,7 @@ const Sidebar = () => {
         </li>
 
         {/* DOWNLOADS
-        <Link to="/downloads" className="sideBar-link">
-          <li>
-            <img
-              src="/downloads-inactive.svg"
-              alt="Downloads Icon"
-              className="icon"
-            />
-            {!isCollapsed && "Downloads"}
-          </li>
-        </Link> */}
-
-        {/* CLASSES */}
-        {/* <Link to="/classes" className="sideBar-link">
-          <li>
-            <img
-              src="/classes-inactive.svg"
-              alt="Classes Icon"
-              className="icon-exlg "
-            />
-            {!isCollapsed && "Classes"}
-          </li>
-        </Link> */}
-
-        {/* NOTES */}
-        {/* <Link to="/notes" className="sideBar-link">
-          <li>
-            <img
-              src="/resources-inactive.svg"
-              alt="Resources Icon"
-              className="icon "
-            />
-            {!isCollapsed && "Resources"}
-          </li>
-        </Link> */}
-
-        {/* GRADES */}
-        {/* <li className="moreOptions">
-          <div className="dropdown-toggle " onClick={toggleDropdown2}>
-            <img
-              src="/clipboard-inactive.svg"
-              alt="Grades Icon"
-              className="icon icon-exlg "
-            />
-            {!isCollapsed && "Grades"}
-            <span className="dropdown-icon">{isDropdown2Open ? "▲" : "▼"}</span>
-          </div>
-          {isDropdown2Open && (
-            <ul className="dropdown-menu">
-              <Link to="/grading" className="sideBar-link">
-                <li>{!isCollapsed ? "Discrete" : "Discrete"}</li>
-              </Link>
-              <Link to="/web-development" className="sideBar-link">
-                <li>{!isCollapsed ? "Web Development" : "Web-Dev"}</li>
-              </Link>
-              <Link to="/programming-fundamentals" className="sideBar-link">
-                <li>{!isCollapsed ? "Programming Fundamentals" : "PF"}</li>
-              </Link>
-              <Link to="/design-thinking" className="sideBar-link">
-                <li>{!isCollapsed ? "Design Thinking" : "DT"}</li>
-              </Link>
-              <Link to="/english" className="sideBar-link">
-                <li>{!isCollapsed ? "English" : "Eng"}</li>
-              </Link>
-            </ul>
-          )}
-        </li> */}
+   
 
         {/* GRADINGS */}
         <Link to="/Grading" className="sideBar-link">
@@ -196,16 +131,7 @@ const Sidebar = () => {
         </Link>
 
         {/* COURSES CHANGED TO FEES */}
-        {/* <Link to="/courses" className="sideBar-link">
-          <li>
-            <img
-              src="/courses-inactive.svg"
-              alt="Courses Icon"
-              className="icon icon-exlg "
-            />
-            {!isCollapsed && "Courses"}
-          </li>
-        </Link> */}
+     
         <Link to="/fees" className="sideBar-link">
           <li>
             <img
@@ -271,6 +197,5 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
 
 

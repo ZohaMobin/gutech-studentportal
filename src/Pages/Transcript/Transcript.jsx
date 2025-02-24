@@ -15,11 +15,11 @@ const Transcript = () => {
         name: "Fall 2023",
         courses: [
           { code: "WEB101", title: "Web Tech Lab", creditUnits: 3, grade: "A", points: 4 },
-          { code: "WEB102", title: "Web Tech", creditUnits: 3, grade: "B", points: 3 },
+          { code: "WEB102", title: "Web Tech", creditUnits: 4, grade: "B", points: 4 },
           { code: "PSPFLAB", title: "PSPF Lab", creditUnits: 3, grade: "A", points: 4 },
           { code: "PSPF", title: "PSPF", creditUnits: 3, grade: "B", points: 3 }
         ],
-        gpa: 3.42,
+        gpa: 3.7,
         creditsAttempted: 12,
         creditsEarned: 12,
       },
@@ -41,17 +41,7 @@ const Transcript = () => {
 
   const [stdata, setstudentData] = useState(null);
   
-  // useEffect(() => {
-  //    axios.get("mockapi/transcriptDATA")
-  //   .then((response)=>{
-  //     setstudentData(response.data);
-  //     console.log(response.data);
-  //   })
-  //   .catch((error)=>{
-  //     console.log("error fetching data",error)
-  //   })
-  // },[])
-
+ 
   return (
     <div className="transcript-container">
       <header className="transcript-header">

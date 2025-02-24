@@ -1,37 +1,32 @@
 .marks-bargraph {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 20px;
-    top: 45%;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 570px;
-    margin-left: 650px;
-    position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Take full width of the grid cell */
+  max-width: 350px; /* Consistent max-width */
+  height: auto; /* Allow height to adjust based on content */
+  margin: 0 auto; /* Center the component */
+  margin-bottom: 20px; /* Add margin to separate from the next component */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .marks-bargraph {
+    width: 90%; /* Adjust width for smaller screens */
+    max-width: 350px; /* Consistent max-width */
+    padding: 15px; /* Adjust padding for smaller screens */
   }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .marks-bargraph {
-      width: 90%; /* Adjust width to fit smaller screens */
-      margin-left: 5%; /* Center the container */
-      top: auto; /* Adjust position */
-      bottom: 20px; /* Keep it towards the bottom for smaller screens */
-    }
+}
+
+@media (max-width: 480px) {
+  .marks-bargraph {
+    width: 95%; /* Ensure it takes full width of the grid */
+    max-width: 100%; /* Remove max-width restriction */
+    padding: 10px; /* Adjust padding for very small screens */
   }
-  
-  @media (max-width: 480px) {
-    .marks-bargraph {
-      width: 95%; 
-      margin-left: 2%; 
-      top: auto;
-      bottom: 20px; /* Keep it at the bottom for mobile */
-    }
-  }
-  
-  
-  
+}

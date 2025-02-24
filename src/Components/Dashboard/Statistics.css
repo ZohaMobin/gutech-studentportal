@@ -1,26 +1,16 @@
-body {
-  margin: 0;
-  padding: 0;
-  align-items: self-start;
-}
-
 .card2 {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: white;
-  width: 350px;
-  height: auto;
-  padding: 75px;
-  padding-top: 12px;
+  width: 100%; /* Take full width of the grid cell */
+  max-width: 350px; /* Consistent max-width */
+  height: auto; /* Allow height to adjust based on content */
+  padding: 20px; /* Adjusted padding */
   text-align: center;
-  top: 95%;
-  transition: transform 0.3s ease;
-  position: absolute;
-  border: 1px solid #dddddd;
-  margin-left: 500px;
-  margin-bottom: 0;
+  border: 1px solid #ddd; /* Add a subtle border */
+  margin: 0 auto; /* Center the component */
+  margin-bottom: 20px; /* Add margin to separate from the next component */
 }
-
 .card2 h3 {
   font-size: 1.5rem;
   font-weight: bold;
@@ -58,45 +48,14 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
   .card2 {
-      width: 90%; /* Adjust width to fit smaller screens */
-      padding: 20px; /* Reduce padding for smaller screens */
-      margin-left: 5%; /* Center the card */
-      margin-right: 5%; /* Center the card */
-      top: auto;
-      position: static; /* Remove fixed position */
-      margin-top: 20px; /* Add spacing from top */
-  }
-
-  .card2 h3 {
-      font-size: 1.2rem; /* Adjust heading size */
-  }
-
-  .bar-container {
-      height: 15px; /* Reduce height of progress bars */
-  }
-
-  .bar {
-      font-size: 12px; /* Reduce text size in bars */
+    width: 90%; /* Adjust width for smaller screens */
+    padding: 20px; /* Adjust padding for smaller screens */
   }
 }
 
 @media (max-width: 480px) {
   .card2 {
-      width: 95%; /* Adjust width further for small screens */
-      padding: 15px; /* Reduce padding further for small screens */
-      margin-left: 2%; /* Center the card with small margins */
-      margin-top: 20px; /* Add spacing from top */
-  }
-
-  .card2 h3 {
-      font-size: 1rem; /* Adjust heading size for very small screens */
-  }
-
-  .bar-container {
-      height: 12px; /* Further reduce the height of progress bars */
-  }
-
-  .bar {
-      font-size: 10px; /* Further reduce font size in bars */
+    width: 95%; /* Ensure it takes full width of the grid */
+    padding: 15px; /* Adjust padding for very small screens */
   }
 }
