@@ -1,4 +1,4 @@
-
+/* 
 
 
 
@@ -52,16 +52,16 @@
   border: none;
   border-radius: 100%;
 
-  transition: background-color 0.3s ease; /* Smooth hover effect */
+  transition: background-color 0.3s ease; 
 }
 
 .notifybtn img {
-  width: 50px; /* Increase image size */
-  height: 50px; /* Increase image size */
+  width: 50px; 
+  height: 50px; 
 }
 
 .notifybtn:hover {
-  background-color: rgba(153, 29, 32, 0.1); /* Light red background on hover */
+  background-color: rgba(153, 29, 32, 0.1);
 }
 
 .userImg {
@@ -101,4 +101,4 @@
   margin-left: 10px;
   width: 300px;
   transition: border-color 0.3s ease, background-color 0.3s ease;
-}
+} */
