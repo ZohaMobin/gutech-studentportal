@@ -3,8 +3,8 @@ import './Transcript.css';
 
 const Transcript = () => {
   const studentData = {
-    name: "Muhammad Yousuf",
-    studentId: "BCS-010",
+    name: "Muhammad Waqas",
+    studentId: "BCS-023",
     dob: "09/21/2005",
     degree: "Bachelor of Computer Science",
     major: "Computer Science",
@@ -41,16 +41,16 @@ const Transcript = () => {
 
   const [stdata, setstudentData] = useState(null);
   
-  useEffect(() => {
-     axios.get("mockapi/transcriptDATA")
-    .then((response)=>{
-      setstudentData(response.data);
-      console.log(response.data);
-    })
-    .catch((error)=>{
-      console.log("error fetching data",error)
-    })
-  },[])
+  // useEffect(() => {
+  //    axios.get("mockapi/transcriptDATA")
+  //   .then((response)=>{
+  //     setstudentData(response.data);
+  //     console.log(response.data);
+  //   })
+  //   .catch((error)=>{
+  //     console.log("error fetching data",error)
+  //   })
+  // },[])
 
   return (
     <div className="transcript-container">

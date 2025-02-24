@@ -176,7 +176,7 @@ const Sidebar = () => {
         </li> */}
 
         {/* GRADINGS */}
-        <Link to="/grading" className="sideBar-link">
+        <Link to="/Grading" className="sideBar-link">
           <li>
             <img src="/note-inactive.svg" alt="Notes Icon" className="icon" />
             {!isCollapsed && "Grades"}
@@ -242,7 +242,7 @@ const Sidebar = () => {
         </Link>
 
         {/* TRANSCRIPT */}
-        <Link to="/transcript" className="sideBar-link">
+        <Link to="/Transcript" className="sideBar-link">
           <li>
             <img
               src="/downloads-inactive.svg"
@@ -264,16 +264,7 @@ const Sidebar = () => {
             {isCollapsed ? "" : "Job-Opportunities"}
           </li>
         </Link>
-        <Link to="/settings" className="sideBar-link">
-          <li>
-            <img
-              src="/settings-inactive.svg"
-              alt="Settings Icon"
-              className="icon icon-exlg "
-            />
-            {isCollapsed ? "" : "Settings"}
-          </li>
-        </Link>
+      
       </ul>
     </div>
   );

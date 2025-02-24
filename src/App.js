@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "../src/Pages/Sidebar/sidebar/index";
 import Assignments from "./Pages/assignments/assignments";
-import Dashboard from "./Pages/dashboard/dashboard";
+import Dashboard from './Pages/dashboard/dashboard';
 import { Topbar } from "./Pages/topbar/topbar";
 import RecordingsPage from "./Components/Recordings/Recordings";
 import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
@@ -14,7 +14,7 @@ import Transcript from './Pages/Transcript/Transcript.jsx';
 import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship';
 import JobsAndBootcamps from './Pages/Group5-JobOpportunities/JobsAndBootcamps';
 import BootcampForm from './Pages/Group5-JobOpportunities/BootcampForm';
-import Grading from './Pages/Grading/Grading';
+import GradingPage from './Pages/Grading/Grading';
 import Fees from './Pages/Group1-Fees/Fees';
 import AddFee from './Pages/Group1-Fees/AddFee';
 import Attendance from './Pages/Attendance/Attendance';
@@ -23,7 +23,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Sidebar */}
+
         <Sidebar />
         <div className="mainContent ">
           <Topbar />
@@ -40,7 +40,7 @@ function App() {
             <Route path="/scholarship" element={<ScholarshipPage />} />
             <Route path="/jobs-and-bootcamps" element={<JobsAndBootcamps />} />
             <Route path="/bootcamp-form" element={<BootcampForm />} />
-            <Route path="/grading" element={<Grading />} />
+            <Route path="/Grading" element={< GradingPage />} />
           <Route path="/fees" element={<Fees/>} />
           <Route path='/add-fee' element={<AddFee/>}/>
           <Route path="/Attendance" element={<Attendance />} />
