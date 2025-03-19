@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
 
 const Signup = () => {
@@ -16,7 +16,7 @@ const Signup = () => {
     emailOrRollNo: '',
     password: '',
   });
-
+  const navigate = useNavigate();
   const handleSignupChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -27,8 +27,10 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', {
-        name: formData.name,
+      const apiUrl= process.env.REACT_APP_BACKEND_URL;
+      const response = await axios.post(`${apiUrl}/api/auth/register`, {
+        name : formData.name,
+        rollNumber: formData.rollNo,
         email: formData.email,
         password: formData.password,
         role: 'student', // Add a default role (can be dynamic based on your app)
@@ -43,14 +45,16 @@ const Signup = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const apiUrl= process.env.REACT_APP_BACKEND_URL;
+      const response = await axios.post(`${apiUrl}/api/auth/login`, {
         email: loginData.emailOrRollNo, // Assuming the backend checks for email or roll number
         password: loginData.password,
       });
       console.log('Login successful:', response.data);
       alert('Login successful!');
       // Save token to localStorage for future authenticated requests
-      localStorage.setItem('token', response.data.token);
+      sessionStorage.setItem('token', response.data.token);
+      navigate("/");
     } catch (error) {
       console.error('Login error:', error.response?.data?.message || error.message);
       alert('Login failed: ' + error.response?.data?.message || error.message);
@@ -129,7 +133,7 @@ const Signup = () => {
           </div>
           <Link to="/forgot-password">Forgot Your Password?</Link>
           <button type="button" onClick={handleLogin}>
-            Sign In
+          Sign In
           </button>
         </form>
       </div>
