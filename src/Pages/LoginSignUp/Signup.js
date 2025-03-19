@@ -54,7 +54,7 @@ const Signup = () => {
       alert('Login successful!');
       // Save token to localStorage for future authenticated requests
       sessionStorage.setItem('token', response.data.token);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       console.error('Login error:', error.response?.data?.message || error.message);
       alert('Login failed: ' + error.response?.data?.message || error.message);
