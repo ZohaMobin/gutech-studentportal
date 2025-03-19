@@ -1,255 +1,268 @@
-// import React, { useState,useEffect } from "react";
-// import { Plus } from "lucide-react";
-// import axios from "axios";
-// import "./Grading.css";
-
-// const GradingPage = () => {
-//   const [activeTab, setActiveTab] = useState("quizzes");
-//   const [course, setCourse] = useState("");
-//   const [showAddModal, setShowAddModal] = useState(false);
-//   const [newAssessment, setNewAssessment] = useState({
-//     // Sno,
-//     title: "",
-//     totalMarks: "",
-//     weightage: "",
-//     Obtained_Marks: "",
-//     Total_marks: "",
-//     Average: "",
-//     Standard_deviation: " ",
-//     Minimum: "",
-//     Maximum: "",
-//   });
-
-//   const assessmentTypes = {
-//     quizzes: { title: "Quizzes" },
-//     assignments: { title: "Assignments", data: [] },
-//     mids: { title: "Mids", data: [] },
-//     finals: { title: "Finals", data: [] },
-//   };
-
-//   const handleAddAssessment = () => {
-//     // Add assessment logic here
-//     setShowAddModal(false);
-//   };
-
-//   // //GET API
-//   // useEffect(() => {
-//   //   axios.get("http://localhost:5000/grading")
-//   //     .then((response) => {
-        
-//   //       setNewAssessment(response.data);
-//   //       console.log(response.data);
-//   //     })
-//   //     .catch((error) => {
-//   //       console.error(error);
-//   //     });
-//   // }, []);
-
-//   return (
-//     <div className="portal-container">
-//       <div className="filters-section">
-//         <div className="filters-grid">
-//           <select
-//             className="form-input"
-//             value={course}
-//             onChange={(e) => setCourse(e.target.value)}
-//           >
-//             <option value="">Select Course</option>
-//             <option value="discrete">Discrete</option>
-//             <option value="pspf">PSPF</option>
-//             <option value="calculus">Calculus</option>
-//           </select>
-//         </div>
-//       </div>
-
-//       <div className="tab-container fade-in">
-//         <div className="tab-header">
-//           {Object.keys(assessmentTypes).map((type) => (
-//             <button
-//               key={type}
-//               className={`tab-button ${activeTab === type ? "active" : ""}`}
-//               onClick={() => setActiveTab(type)}
-//             >
-//               {assessmentTypes[type].title}
-//             </button>
-//           ))}
-//         </div>
-
-//         <div className="table-section">
-//           <div className="table-header">
-//             <h2>{assessmentTypes[activeTab].title}</h2>
-//           </div>
-
-//           <table className="data-table">
-//             <thead>
-//               <tr>
-//                 <th>{activeTab} #</th>
-//                 <th>Weightage</th>
-//                 <th>Obtained Marks</th>
-//                 <th>Total marks</th>
-//                 <th>Average</th>
-//                 <th>Standard deviation</th>
-//                 <th>Minimum</th>
-//                 <th>Maximum</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {assessmentTypes[activeTab].data.map((item, index) => (
-//                 <tr key={index}>
-//                   <td>{item.Sno}</td>
-//                   <td>{item.weightage}</td>
-//                   <td>{item.Obtained_Marks}</td>
-//                   <td>{item.Total_marks}</td>
-//                   <td>{item.Average}</td>
-//                   <td>{item.Standard_deviation}</td>
-//                   <td>{item.Minimum}</td>
-//                   <td>{item.Maximum}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default GradingPage;
-
-
 import React, { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
-import axios from "axios";
 import "./Grading.css";
 
-const GradingPage = () => {
+const Grading = () => {
   const [activeTab, setActiveTab] = useState("quizzes");
-  const [course, setCourse] = useState("");
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [newAssessment, setNewAssessment] = useState({
-    title: "",
-    totalMarks: "",
-    weightage: "",
-    Obtained_Marks: "",
-    Total_marks: "",
-    Average: "",
-    Standard_deviation: "",
-    Minimum: "",
-    Maximum: "",
-  });
+  const [activeCourse, setActiveCourse] = useState("all");
+  const [marksData, setMarksData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Dummy data for each assessment type
-  const assessmentTypes = {
+  // Sample data structure - this would be replaced with your API data
+  const sampleData = {
+    courses: [
+      { id: "all", name: "All Courses" },
+      { id: "discrete", name: "Discrete Mathematics" },
+      { id: "pspf", name: "Programming Fundamentals" },
+      { id: "calculus", name: "Calculus" }
+    ],
     quizzes: {
-      title: "Quizzes",
-      data: [
-        { Sno: 1, weightage: "10%", Obtained_Marks: 8, Total_marks: 10, Average: 7, Standard_deviation: 1.2, Minimum: 5, Maximum: 10 },
-        { Sno: 2, weightage: "15%", Obtained_Marks: 12, Total_marks: 15, Average: 10, Standard_deviation: 1.5, Minimum: 8, Maximum: 14 },
+      all: [
+        { serial: 1, weightage: 15, obtainedMarks: 12.5, totalMarks: 15, average: 12.97, stdDev: 1.1, min: 8, max: 14.5 },
+        { serial: 2, weightage: 15, obtainedMarks: 13.5, totalMarks: 15, average: 11.3, stdDev: 1.8, min: 7, max: 15 },
+        { serial: 3, weightage: 20, obtainedMarks: 17, totalMarks: 20, average: 16.63, stdDev: 1.4, min: 12.5, max: 19 }
       ],
+      discrete: [
+        { serial: 1, weightage: 15, obtainedMarks: 12.5, totalMarks: 15, average: 12.97, stdDev: 1.1, min: 8, max: 14.5 },
+      ],
+      pspf: [
+        { serial: 1, weightage: 15, obtainedMarks: 13.5, totalMarks: 15, average: 11.3, stdDev: 1.8, min: 7, max: 15 },
+      ],
+      calculus: [
+        { serial: 1, weightage: 20, obtainedMarks: 17, totalMarks: 20, average: 16.63, stdDev: 1.4, min: 12.5, max: 19 }
+      ]
     },
     assignments: {
-      title: "Assignments",
-      data: [
-        { Sno: 1, weightage: "20%", Obtained_Marks: 18, Total_marks: 20, Average: 16, Standard_deviation: 2.1, Minimum: 12, Maximum: 20 },
+      all: [
+        { serial: 1, weightage: 25, obtainedMarks: 22, totalMarks: 25, average: 21.2, stdDev: 1.8, min: 17, max: 24 },
+        { serial: 2, weightage: 25, obtainedMarks: 19.5, totalMarks: 25, average: 18.77, stdDev: 2.1, min: 15, max: 23.5 }
       ],
+      discrete: [
+        { serial: 1, weightage: 25, obtainedMarks: 22, totalMarks: 25, average: 21.2, stdDev: 1.8, min: 17, max: 24 },
+      ],
+      pspf: [
+        { serial: 1, weightage: 25, obtainedMarks: 19.5, totalMarks: 25, average: 18.77, stdDev: 2.1, min: 15, max: 23.5 }
+      ],
+      calculus: []
     },
-    mids: {
-      title: "Mids",
-      data: [
-        { Sno: 1, weightage: "30%", Obtained_Marks: 22, Total_marks: 30, Average: 20, Standard_deviation: 3, Minimum: 15, Maximum: 28 },
+    midterms: {
+      all: [
+        { serial: 1, weightage: 30, obtainedMarks: 26, totalMarks: 30, average: 25.2, stdDev: 2.2, min: 19, max: 29 }
       ],
+      discrete: [
+        { serial: 1, weightage: 30, obtainedMarks: 26, totalMarks: 30, average: 25.2, stdDev: 2.2, min: 19, max: 29 }
+      ],
+      pspf: [],
+      calculus: []
     },
     finals: {
-      title: "Finals",
-      data: [
-        { Sno: 1, weightage: "40%", Obtained_Marks: 38, Total_marks: 40, Average: 35, Standard_deviation: 4, Minimum: 30, Maximum: 40 },
+      all: [
+        { serial: 1, weightage: 50, obtainedMarks: 43, totalMarks: 50, average: 41.6, stdDev: 3.4, min: 32, max: 48 }
       ],
-    },
+      discrete: [
+        { serial: 1, weightage: 50, obtainedMarks: 43, totalMarks: 50, average: 41.6, stdDev: 3.4, min: 32, max: 48 }
+      ],
+      pspf: [],
+      calculus: []
+    }
   };
 
-  const handleAddAssessment = () => {
-    setShowAddModal(false);
+  // Simulating API data fetch
+  useEffect(() => {
+    // Replace this with your actual API call
+    setTimeout(() => {
+      setMarksData(sampleData);
+      setLoading(false);
+    }, 500);
+  }, []);
+
+  // Calculate totals for a specific category and course
+  const calculateTotals = (category, courseId) => {
+    if (!marksData || !marksData[category] || !marksData[category][courseId]) return null;
+    
+    const items = marksData[category][courseId];
+    if (items.length === 0) return null;
+    
+    return {
+      totalWeightage: items.reduce((sum, item) => sum + item.weightage, 0),
+      totalObtained: items.reduce((sum, item) => sum + item.obtainedMarks, 0),
+      totalMarks: items.reduce((sum, item) => sum + item.totalMarks, 0)
+    };
   };
 
-  // Uncomment when API is ready
-  // useEffect(() => {
-  //   axios.get("http://localhost:5000/grading")
-  //     .then((response) => {
-  //       setNewAssessment(response.data);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
+  // Calculate grand total across all assessment types
+  const calculateGrandTotal = (courseId) => {
+    if (!marksData) return null;
+    
+    const categories = ['quizzes', 'assignments', 'midterms', 'finals'];
+    let totalObtained = 0;
+    let totalMarks = 0;
+    let totalWeightage = 0;
+    let average = 0;
+    let min = 0;
+    let max = 0;
+    
+    categories.forEach(category => {
+      const categoryData = marksData[category][courseId];
+      if (categoryData && categoryData.length > 0) {
+        totalObtained += categoryData.reduce((sum, item) => sum + item.obtainedMarks, 0);
+        totalMarks += categoryData.reduce((sum, item) => sum + item.totalMarks, 0);
+        totalWeightage += categoryData.reduce((sum, item) => sum + item.weightage, 0);
+        
+        // Calculate average, min, max across all items in the category
+        const avgSum = categoryData.reduce((sum, item) => sum + item.average, 0);
+        average += avgSum;
+        
+        const minVal = Math.min(...categoryData.map(item => item.min));
+        if (minVal < min || min === 0) min = minVal;
+        
+        const maxVal = Math.max(...categoryData.map(item => item.max));
+        if (maxVal > max) max = maxVal;
+      }
+    });
+    
+    if (totalMarks === 0) return null;
+    
+    return {
+      totalObtained,
+      totalMarks,
+      totalWeightage,
+      classAverage: (average / categories.filter(cat => marksData[cat][courseId].length > 0).length).toFixed(2),
+      min,
+      max
+    };
+  };
+
+  if (loading) {
+    return <div className="loading-container">Loading marks data...</div>;
+  }
+
+  const activeCategoryData = marksData[activeTab][activeCourse];
+  const totals = calculateTotals(activeTab, activeCourse);
+  const grandTotal = calculateGrandTotal(activeCourse);
 
   return (
-    <div className="portal-container">
-      <div className="filters-section">
-        <div className="filters-grid">
-          <select
-            className="form-input"
-            value={course}
-            onChange={(e) => setCourse(e.target.value)}
-          >
-            <option value="">Select Course</option>
-            <option value="discrete">Discrete</option>
-            <option value="pspf">PSPF</option>
-            <option value="calculus">Calculus</option>
-          </select>
-        </div>
+    <div className="marks-container">
+      {/* Page Header */}
+      <div className="page-header">
+        <h1>Marks Overview</h1>
       </div>
-
-      <div className="tab-container fade-in">
-        <div className="tab-header">
-          {Object.keys(assessmentTypes).map((type) => (
-            <button
-              key={type}
-              className={`tab-button ${activeTab === type ? "active" : ""}`}
-              onClick={() => setActiveTab(type)}
-            >
-              {assessmentTypes[type].title}
-            </button>
-          ))}
-        </div>
-
-        <div className="table-section">
-          <div className="table-header">
-            <h2>{assessmentTypes[activeTab].title}</h2>
-          </div>
-
-          <table className="data-table">
+      
+      {/* Course Tabs */}
+      <div className="course-tabs">
+        {marksData.courses.map(course => (
+          <button
+            key={course.id}
+            className={`course-tab ${activeCourse === course.id ? 'active' : ''}`}
+            onClick={() => setActiveCourse(course.id)}
+          >
+            {course.name}
+          </button>
+        ))}
+      </div>
+      
+      {/* Assessment Type Tabs */}
+      <div className="assessment-tabs">
+        <button
+          className={`assessment-tab ${activeTab === 'quizzes' ? 'active' : ''}`}
+          onClick={() => setActiveTab('quizzes')}
+        >
+          Quizzes
+        </button>
+        <button
+          className={`assessment-tab ${activeTab === 'assignments' ? 'active' : ''}`}
+          onClick={() => setActiveTab('assignments')}
+        >
+          Assignments
+        </button>
+        <button
+          className={`assessment-tab ${activeTab === 'midterms' ? 'active' : ''}`}
+          onClick={() => setActiveTab('midterms')}
+        >
+          Midterms
+        </button>
+        <button
+          className={`assessment-tab ${activeTab === 'finals' ? 'active' : ''}`}
+          onClick={() => setActiveTab('finals')}
+        >
+          Finals
+        </button>
+      </div>
+      
+      {/* Marks Table */}
+      <div className="marks-table-container">
+        <table className="marks-table">
+          <thead>
+            <tr>
+              <th>Serial #</th>
+              <th>Weightage</th>
+              <th>Obtained Marks</th>
+              <th>Total Marks</th>
+              <th>Average</th>
+              <th>Minimum</th>
+              <th>Maximum</th>
+            </tr>
+          </thead>
+          <tbody>
+            {activeCategoryData && activeCategoryData.length > 0 ? (
+              <>
+                {activeCategoryData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.serial}</td>
+                    <td>{item.weightage}</td>
+                    <td>{item.obtainedMarks}</td>
+                    <td>{item.totalMarks}</td>
+                    <td>{item.average}</td>
+                    <td>{item.min}</td>
+                    <td>{item.max}</td>
+                  </tr>
+                ))}
+                {totals && (
+                  <tr className="total-row">
+                    <td>Total</td>
+                    <td>{totals.totalWeightage}</td>
+                    <td>{totals.totalObtained}</td>
+                    <td>{totals.totalMarks}</td>
+                    <td colSpan={4}></td>
+                  </tr>
+                )}
+              </>
+            ) : (
+              <tr>
+                <td colSpan={8} className="no-data">No data available for this category</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      
+      {/* Grand Total Section */}
+      {grandTotal && (
+        <div className="grand-total-section">
+          <h2>Grand Total Marks</h2>
+          <table className="grand-total-table">
             <thead>
               <tr>
-                <th>{activeTab} #</th>
-                <th>Weightage</th>
+                <th>Total Marks</th>
                 <th>Obtained Marks</th>
-                <th>Total marks</th>
-                <th>Average</th>
-                <th>Standard deviation</th>
-                <th>Minimum</th>
-                <th>Maximum</th>
+                <th>Class Average</th>
+                <th>Min</th>
+                <th>Max</th>
               </tr>
             </thead>
             <tbody>
-              {assessmentTypes[activeTab].data.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.Sno}</td>
-                  <td>{item.weightage}</td>
-                  <td>{item.Obtained_Marks}</td>
-                  <td>{item.Total_marks}</td>
-                  <td>{item.Average}</td>
-                  <td>{item.Standard_deviation}</td>
-                  <td>{item.Minimum}</td>
-                  <td>{item.Maximum}</td>
-                </tr>
-              ))}
+              <tr>
+                <td>{grandTotal.totalMarks.toFixed(2)}</td>
+                <td>{grandTotal.totalObtained.toFixed(2)}</td>
+                <td>{grandTotal.classAverage}</td>
+                <td>{grandTotal.min.toFixed(2)}</td>
+                <td>{grandTotal.max.toFixed(2)}</td>
+              </tr>
             </tbody>
           </table>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default GradingPage;
+export default Grading;
