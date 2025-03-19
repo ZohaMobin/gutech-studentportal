@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Sidebar from '../Sidebar/sidebar/Sidebar';
 import './MainLayout.css';
 import Topbar from '../topbar/topbar';
+import { Outlet } from 'react-router-dom';
 
 const MainLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -35,6 +36,7 @@ const MainLayout = ({ children }) => {
       
       <div className={`content-area ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <main className="main-content">
+        <Outlet />
           {/* Dynamic content based on active page */}
           {React.Children.map(children, child => {
             // Clone the child element and pass the activePage prop
