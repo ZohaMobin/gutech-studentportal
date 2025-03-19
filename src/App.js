@@ -1,15 +1,23 @@
-import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AppLayout from "./AppLayout";
-import Signup from "./Pages/LoginSignUp/Signup.js";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MainLayout from './Pages/MainLayout/ MainLayout'; // Fixed import path
+import Signup from './Pages/LoginSignUp/Signup';
+import GradingPage from './Pages/Grading/Grading';
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="app">
         <Routes>
+          {/* Signup Page */}
           <Route path="/" element={<Signup />} />
-          <Route path="/*" element={<AppLayout />} />
+
+          {/* Main Layout with Nested Routes */}
+          <Route path="/*" element={<MainLayout />}>
+            <Route path="marks" element={<GradingPage />} />
+            {/* Add more routes if needed */}
+          </Route>
+
         </Routes>
       </div>
     </Router>

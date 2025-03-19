@@ -8,13 +8,12 @@
 }
 
 body {
-  /* background-color: #f8e0e0; /* A softer shade for the background */
-  /* background: linear-gradient(to right, #f8dede, #fce8e8);  */
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   height: 100vh;
+  background: #fff;
+  margin: 0;
 }
 
 .container {
@@ -26,7 +25,12 @@ body {
   width: 768px;
   max-width: 100%;
   min-height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
 }
+
 
 .container p {
   font-size: 14px;

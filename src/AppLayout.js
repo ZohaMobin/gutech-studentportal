@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import Sidebar from "./Pages/Sidebar/sidebar/index";
-import Dashboard from './Pages/dashboard/dashboard';
+import Sidebar from "./Pages/Sidebar/sidebar/Sidebar.jsx";
+//import Dashboard from './Pages/dashboard/dashboard';
 import { Topbar } from "./Pages/topbar/topbar.js";
 import RecordingsPage from "./Components/Recordings/Recordings";
 import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
@@ -21,8 +21,9 @@ function AppLayout() {
   return (
     <>
       <Sidebar />
-      <div className="mainContent">
+      <div className="main-wrapper">
         <Topbar />
+        <div className="page-container">
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/recordings" element={<RecordingsPage />} />
@@ -40,8 +41,9 @@ function AppLayout() {
           <Route path='/add-fee' element={<AddFee />} />
           <Route path="/Attendance" element={<Attendance />} />
         </Routes>
-      </div>
-    </>
+        </div>
+        </div>
+      </>
   );
 }
 
