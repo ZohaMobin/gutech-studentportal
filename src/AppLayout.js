@@ -1,20 +1,20 @@
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./Pages/Sidebar/sidebar/index";
-import { Topbar } from "./Pages/topbar/topbar";
-import Dashboard from './Pages/dashboard/dashboard';
+import { Topbar } from "./Pages/Topbar/topbar.js";
+import Dashboard from './Pages/Dashboard/dashboard.js';
 import RecordingsPage from "./Components/Recordings/Recordings";
 import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
 import ExamSchedule from "./Components/Exam Schedual/ExamSchedule";
-import EventSchedule from "./Pages/Event-Calender/Eventcalender";
-import Timetable from './Pages/Class Schedule/ClassSchedule';
+import EventSchedule from "./Pages/EventCalender/Eventcalender.js";
+import Timetable from './Pages/ClassSchedule/ClassSchedule.jsx';
 import Chat from "./Pages/Chat/Chat.js";
 import Transcript from './Pages/Transcript/Transcript.jsx';
-import ScholarshipPage from './Pages/Group5-JobOpportunities/Scholarship';
-import JobsAndBootcamps from './Pages/Group5-JobOpportunities/JobsAndBootcamps';
-import BootcampForm from './Pages/Group5-JobOpportunities/BootcampForm';
+import ScholarshipPage from './Pages/JobOpportunities/Scholarship';
+import JobsAndBootcamps from './Pages/JobOpportunities/JobsAndBootcamps';
+import BootcampForm from './Pages/JobOpportunities/BootcampForm';
 import GradingPage from './Pages/Grading/Grading';
-import Fees from './Pages/Group1-Fees/Fees';
-import AddFee from './Pages/Group1-Fees/AddFee';
+import Fees from './Pages/Fees/Fees.js';
+import AddFee from './Pages/Fees/AddFee.js';
 import Attendance from './Pages/Attendance/Attendance';
 
 function AppLayout() {
