@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./Pages/Sidebar/sidebar/index";
-import { Topbar } from "./Pages/Topbar/topbar.js";
-import Dashboard from './Pages/Dashboard/dashboard.js';
+import Dashboard from './Pages/dashboard/dashboard';
+import { Topbar } from "./Pages/topbar/topbar.js";
 import RecordingsPage from "./Components/Recordings/Recordings";
 import RecordingLinksPage from "./Components/Recordings/RecordingLinks";
 import ExamSchedule from "./Components/Exam Schedual/ExamSchedule";
