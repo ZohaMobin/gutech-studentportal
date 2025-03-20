@@ -1,12 +1,21 @@
-// Header.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './topbar.css';
 
 const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  
+  const user = JSON.parse(sessionStorage.getItem('user'));
 
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+    navigate('/login'); // Redirect to login page
   };
 
   return (
@@ -22,8 +31,7 @@ const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
         {/* Logo for mobile */}
         <div className="header-logo-mobile">
           <div className="logo">
-            <div className="logo-icon">P</div>
-            <span className="logo-text">Portal</span>
+            <img src={`${process.env.PUBLIC_URL}/gulogo.svg`} alt="GUtech Logo" className="gulogo" />
           </div>
         </div>
 
@@ -56,15 +64,17 @@ const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
             {isProfileMenuOpen && (
               <div className="profile-dropdown">
                 <div className="profile-header">
-                  <span className="profile-name">John Doe</span>
-                  <span className="profile-email">john.doe@example.com</span>
+                  <span className="profile-name">{user?.name}</span>
+                  <span className="profile-email">{user?.email}</span>
                 </div>
                 <div className="profile-menu">
                   <a href="#" className="profile-menu-item">My Profile</a>
                   <a href="#" className="profile-menu-item">Account Settings</a>
                   <a href="#" className="profile-menu-item">Preferences</a>
                   <div className="profile-divider"></div>
-                  <a href="#" className="profile-menu-item logout">Logout</a>
+                  <a href="#" className="profile-menu-item logout" onClick={handleLogout}>
+                    Logout
+                  </a>
                 </div>
               </div>
             )}

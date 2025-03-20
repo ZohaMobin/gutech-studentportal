@@ -4,7 +4,7 @@ import './sidebar.css';
 
 const Sidebar = ({ isOpen, activePage }) => {
   const navigate = useNavigate(); // React Router navigation function
-
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'attendance', label: 'Attendance', icon: '📅' },
@@ -19,6 +19,7 @@ const Sidebar = ({ isOpen, activePage }) => {
       {/* Sidebar Header */}
       <div className="sidebar-header">
         <div className="logo">
+          
           <div className="logo-icon">P</div>
           <span className="logo-text">Portal</span>
         </div>
@@ -46,10 +47,10 @@ const Sidebar = ({ isOpen, activePage }) => {
       <div className="sidebar-footer">
         <div className="sidebar-footer-content">
           <div className="user-avatar-small">
-            <span>JD</span>
+            <span>GU</span>
           </div>
           <div className="user-info">
-            <span className="user-name-small">John Doe</span>
+            <span className="user-name-small">{user?.name}</span>
             <a href="#" className="user-profile-link">View Profile</a>
           </div>
         </div>

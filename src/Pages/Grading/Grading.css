@@ -1,14 +1,13 @@
 /* Marks Display Page Styles */
 .marks-container {
   margin: 0 auto;
-  padding: 15px 20px;
-  max-width: 2500px;
+  padding: 30px 20px;
+  max-width: 1200px;
   border-top: 5px solid #991D20;
   background-color: #fff;
   font-family: 'Roboto', Arial, sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-
 
 .page-header {
   margin-bottom: 1.5rem;
