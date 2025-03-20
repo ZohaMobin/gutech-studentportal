@@ -34,6 +34,29 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  width: 24px;
+  height: 24px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
 /* Navigation section */
 .sidebar-nav {
   flex: 1;
@@ -47,7 +70,8 @@
   padding: 12px 20px;
   color: var(--text-color);
   text-decoration: none;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
 }
 
 .sidebar-nav-item:hover {
@@ -55,10 +79,18 @@
   color: var(--primary-color);
 }
 
-.sidebar-nav-item.active {
+/* Increase specificity and ensure this comes after the hover styles */
+.sidebar-nav .sidebar-nav-item.active {
   background-color: var(--primary-light);
   color: var(--primary-color);
   font-weight: 500;
+  border-left: 3px solid var(--primary-color);
+}
+
+/* Make sure active state overrides hover state */
+.sidebar-nav .sidebar-nav-item.active:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
 }
 
 .sidebar-nav-icon {

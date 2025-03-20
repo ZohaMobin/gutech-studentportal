@@ -1,13 +1,25 @@
 // MainLayout.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../Sidebar/sidebar/Sidebar';
 import './MainLayout.css';
 import Topbar from '../topbar/topbar';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 const MainLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState('dashboard');
+  const location = useLocation();
+  
+  // Update activePage when the route changes
+  useEffect(() => {
+    // Extract the page ID from the path (without the leading slash)
+    const currentPath = location.pathname.substring(1);
+    if (currentPath) {
+      setActivePage(currentPath);
+    } else {
+      setActivePage('dashboard'); // Default to dashboard if on root path
+    }
+  }, [location]);
   
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -36,11 +48,11 @@ const MainLayout = ({ children }) => {
       
       <div className={`content-area ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <main className="main-content">
-        <Outlet />
+          <Outlet />
           {/* Dynamic content based on active page */}
           {React.Children.map(children, child => {
             // Clone the child element and pass the activePage prop
-            return React.cloneElement(child, { activePage });
+            return child ? React.cloneElement(child, { activePage }) : null;
           })}
         </main>
       </div>
