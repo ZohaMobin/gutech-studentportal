@@ -6,10 +6,22 @@ const Dashboard = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
-  const user = JSON.parse(sessionStorage.getItem('user'));
+  // Get user from sessionStorage or use default if not available
+  const getUserFromStorage = () => {
+    try {
+      const userData = sessionStorage.getItem('user');
+      return userData ? JSON.parse(userData) : { name: "Student User" };
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return { name: "Student User" };
+    }
+  };
+  
+  const user = getUserFromStorage();
+  
   // Sample student data
   const studentData = {
-    name: user?.name,
+    name: user?.name || "Student User",
     id: "STU2025031",
     program: "Computer Science",
     semester: "Spring 2025",
@@ -46,15 +58,29 @@ const Dashboard = () => {
     }
   };
 
-  // Listen for window resize
+  // Improved window resize handler with debounce
   useEffect(() => {
+    let timeoutId = null;
+    
     const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setIsMobile(window.innerWidth < 768);
+      clearTimeout(timeoutId);
+      
+      timeoutId = setTimeout(() => {
+        const width = window.innerWidth;
+        setWindowWidth(width);
+        setIsMobile(width < 768);
+      }, 150); // Debounce delay of 150ms
     };
     
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    // Initial call to set the values
+    handleResize();
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const cgpaLevel = (studentData.cgpa / 4) * 100;
@@ -75,7 +101,7 @@ const Dashboard = () => {
     return time;
   };
   
-  // Shorten subject names for small screens if needed
+  // Optimized subject name display based on screen size
   const getSubjectLabel = (subject) => {
     if (windowWidth < 576) {
       // Create abbreviations for subjects on very small screens
@@ -130,10 +156,10 @@ const Dashboard = () => {
     }
   };
 
-  // Choose which days to display based on screen size
+  // Responsively choose which days to display based on screen size
   const displayDays = () => {
     if (windowWidth < 576) {
-      // For very small screens, show only current day + next day (simulating "today" and "tomorrow")
+      // For very small screens, show only current day + next day
       const today = new Date().getDay(); // 0=Sunday, 1=Monday, ...
       const dayIndex = today === 0 || today > 5 ? 0 : today - 1; // Adjust to match our days array (0=Monday)
       const nextDayIndex = (dayIndex + 1) % 5;
@@ -149,10 +175,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header">
-        {/* Header content can be added here */}
-      </div>
-      
       <div className="student-profile">
         <div className="profile-content">
           <div className="profile-avatar">
@@ -204,19 +226,26 @@ const Dashboard = () => {
           <div className="card-header">
             <h3>Attendance</h3>
             <div className="card-actions">
-              <button className="card-action-button"><i className="fas fa-ellipsis-h"></i></button>
+              <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
             </div>
           </div>
           <div className="attendance-overview">
-            <div className="attendance-circle">
-              <svg viewBox="0 0 36 36" className="circular-chart">
-                <path className="circle-bg" d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path className="circle" strokeDasharray={`${studentData.attendance.overall}, 100`} d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <text x="18" y="17" className="percentage-value">{studentData.attendance.overall}</text>
-                <text x="18" y="22" className="percentage-symbol">%</text>
-              </svg>
-              <div className="attendance-label">Overall</div>
-            </div>
+          <div className="attendance-circle">
+  <svg viewBox="0 0 36 36" className="circular-chart">
+    <path className="circle-bg" 
+          d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+    <path className="circle" 
+          strokeDasharray={`${studentData.attendance.overall}, 100`}
+          d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+    <text x="18" y="20.35" className="percentage-value">{studentData.attendance.overall}</text>
+    <text x="18" y="24.5" className="percentage-symbol">%</text>
+  </svg>
+  <div className="attendance-label">Overall</div>
+</div>
             <div className="attendance-details">
               {studentData.attendance.subjects.map((subject, index) => (
                 <div key={index} className="subject-attendance">
@@ -245,7 +274,7 @@ const Dashboard = () => {
           <div className="card-header">
             <h3>Course Performance</h3>
             <div className="card-actions">
-              <button className="card-action-button"><i className="fas fa-ellipsis-h"></i></button>
+              <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
             </div>
           </div>
           <div className="course-performance">
@@ -279,13 +308,13 @@ const Dashboard = () => {
           <div className="card-header">
             <h3>{windowWidth < 576 ? "Schedule" : "Weekly Timetable"}</h3>
             <div className="card-actions">
-              <button className="card-action-button"><i className="fas fa-ellipsis-h"></i></button>
+              <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
             </div>
           </div>
           <div className="timetable-container">
             <div className="timetable-grid">
-              <div className="timetable-header time-column">
-                <div className="timetable-cell"></div>
+              <div className="timetable-column time-column">
+                <div className="timetable-cell day-cell"></div>
                 {studentData.timetable.timeSlots.map((time, index) => (
                   <div key={index} className="timetable-cell time-cell">{getTimeLabel(time)}</div>
                 ))}
@@ -294,23 +323,22 @@ const Dashboard = () => {
               {displayDays().map((day, dayIndex) => (
                 <div key={dayIndex} className="timetable-column">
                   <div className="timetable-cell day-cell">{getDayLabel(day)}</div>
-                  
                   {studentData.timetable.timeSlots.map((time, timeIndex) => {
-                    const classInfo = getClassByTimeAndDay(day, time);
+                    const classItem = getClassByTimeAndDay(day, time);
                     return (
                       <div key={timeIndex} className="timetable-cell class-cell">
-                        {classInfo ? (
+                        {classItem && (
                           <div 
                             className="class-item" 
-                            style={{ backgroundColor: getClassColor(classInfo.subject) }}
+                            style={{ backgroundColor: getClassColor(classItem.subject) }}
                           >
-                            <div className="class-subject">{getSubjectLabel(classInfo.subject)}</div>
+                            <div className="class-subject">{getSubjectLabel(classItem.subject)}</div>
                             <div className="class-details">
-                              <span className="class-location">{windowWidth < 576 ? classInfo.location.split('-')[1] : classInfo.location}</span>
-                              <span className="class-duration">{classInfo.duration}</span>
+                              <span>{classItem.location}</span>
+                              <span>{classItem.duration}</span>
                             </div>
                           </div>
-                        ) : <div className="class-empty"></div>}
+                        )}
                       </div>
                     );
                   })}
@@ -319,49 +347,52 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        
-        <div className="dashboard-card performance-summary">
+
+        <div className="dashboard-card summary-card">
           <div className="card-header">
             <h3>Performance Summary</h3>
             <div className="card-actions">
-              <button className="card-action-button"><i className="fas fa-ellipsis-h"></i></button>
+              <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
             </div>
           </div>
           <div className="summary-stats">
             <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: 'var(--primary-light)' }}>
-                <i className="fas fa-chart-line"></i>
+              <div className="stat-icon" style={{ backgroundColor: "var(--primary-light)" }}>
+                <i className="fas fa-calendar-alt" style={{ color: "var(--primary-color)" }}></i>
               </div>
               <div className="stat-content">
-                <div className="stat-value">84.2%</div>
+                <div className="stat-value">87%</div>
+                <div className="stat-label">Attendance Rate</div>
+              </div>
+            </div>
+            
+            <div className="stat-item">
+              <div className="stat-icon" style={{ backgroundColor: "var(--success-light)" }}>
+                <i className="fas fa-check-circle" style={{ color: "var(--success-color)" }}></i>
+              </div>
+              <div className="stat-content">
+                <div className="stat-value">84%</div>
+                <div className="stat-label">Assignment Completion</div>
+              </div>
+            </div>
+            
+            <div className="stat-item">
+              <div className="stat-icon" style={{ backgroundColor: "var(--secondary-light)" }}>
+                <i className="fas fa-chart-line" style={{ color: "var(--secondary-color)" }}></i>
+              </div>
+              <div className="stat-content">
+                <div className="stat-value">79/100</div>
                 <div className="stat-label">Average Score</div>
               </div>
             </div>
+            
             <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: 'var(--success-light)' }}>
-                <i className="fas fa-check-circle"></i>
+              <div className="stat-icon" style={{ backgroundColor: "var(--accent-light)" }}>
+                <i className="fas fa-star" style={{ color: "var(--accent-color)" }}></i>
               </div>
               <div className="stat-content">
-                <div className="stat-value">12/15</div>
-                <div className="stat-label">Assignments</div>
-              </div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: 'var(--warning-light)' }}>
-                <i className="fas fa-star"></i>
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">3.7</div>
-                <div className="stat-label">GPA Trend</div>
-              </div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: 'var(--danger-light)' }}>
-                <i className="fas fa-clock"></i>
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">3</div>
-                <div className="stat-label">Pending Tasks</div>
+                <div className="stat-value">23</div>
+                <div className="stat-label">Merit Points</div>
               </div>
             </div>
           </div>
