@@ -1,79 +1,299 @@
 .transcript-container {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 900px;
-  margin: auto;
+  margin: 30px auto;
+  padding: 40px;
+  max-width: 1000px;
+  border: 1px solid #ccc;
+  border-top: 8px solid #991D20;
   background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  font-family: 'Times New Roman', serif;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  color: #333;
+  line-height: 1.5;
+  margin-top: 50rem;
 }
 
+/* Header Styles */
 .transcript-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #991D20;
+  position: relative;
+}
+
+.university-logo {
+  font-size: 32px;
+  font-weight: bold;
+  color: #991D20;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
 }
 
 .transcript-header h1 {
-  margin: 0;
-  font-size: 24px;
+  margin: 10px 0;
+  font-size: 22px;
   font-weight: bold;
+  letter-spacing: 1px;
 }
 
-.transcript-header p {
-  margin: 5px 0;
+.transcript-id {
   font-size: 14px;
-  font-weight: normal;
+  color: #555;
+  margin-top: 10px;
+}
+
+.transcript-id p {
+  margin: 3px 0;
+}
+
+/* Section Headers */
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 25px 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  color: #991D20;
+  letter-spacing: 1px;
+}
+
+/* Student Info Styles */
+.student-info-container {
+  margin-bottom: 30px;
 }
 
 .student-info {
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.info-group {
+  flex: 1;
+  min-width: 300px;
 }
 
 .student-info p {
-  margin: 2px 0;
+  margin: 8px 0;
+  font-size: 15px;
 }
 
+.student-info p span {
+  font-weight: bold;
+  display: inline-block;
+  width: 160px;
+}
+
+/* Semester Section Styles */
 .semester-section {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  page-break-inside: avoid;
 }
 
-.semester-section h2 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.semester-section h3 {
+  font-size: 17px;
+  margin: 15px 0 10px;
+  font-weight: bold;
 }
 
-.semester-section table {
+/* Table Styles */
+.course-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  font-size: 14px;
 }
 
-.semester-section th, .semester-section td {
+.course-table th, 
+.course-table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
   text-align: left;
 }
 
-.semester-section th {
-  background-color: #f4f4f4;
-}
-
-.semester-summary {
-  font-size: 14px;
-  margin: 5px 0;
-}
-
-.transcript-footer {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.transcript-footer p {
-  margin: 5px 0;
-}
-
-.signature {
-  margin-top: 10px;
-  font-style: italic;
+.course-table th {
+  background-color: #f6f6f6;
   font-weight: bold;
+}
+
+.course-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.course-table tfoot td {
+  background-color: #f6f6f6;
+  font-weight: bold;
+}
+
+.summary-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-details span {
+  margin-right: 20px;
+}
+
+/* Academic Summary Styles */
+.academic-summary {
+  margin: 30px 0;
+  page-break-inside: avoid;
+}
+
+.summary-table table {
+  width: 70%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.summary-table td {
+  padding: 8px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.summary-table td:first-child {
+  font-weight: normal;
+  width: 60%;
+}
+
+.summary-table td:first-child span {
+  font-weight: bold;
+}
+
+.summary-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Footer Styles */
+.transcript-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+.verification {
+  font-size: 14px;
+  font-style: italic;
+  margin-bottom: 30px;
+}
+
+.signature-section {
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 0 20px;
+}
+
+.signature-line {
+  flex: 1;
+  text-align: center;
+  margin-right: 40px;
+}
+
+.line {
+  border-top: 1px solid #000;
+  width: 80%;
+  margin: 0 auto 10px;
+}
+
+.university-seal {
+  flex: 1;
+  text-align: center;
+}
+
+.seal-placeholder {
+  width: 100px;
+  height: 100px;
+  border: 1px dashed #991D20;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: #991D20;
+  font-style: italic;
+}
+
+.footer-note {
+  font-size: 12px;
+  margin-top: 20px;
+  color: #777;
+}
+
+@media print {
+  /* Reset all page margins */
+  @page {
+    size: portrait;
+    margin: 0.5cm;
+  }
+  
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .transcript-container {
+    margin: 0;
+    padding: 20px;
+    max-width: 100%;
+    box-shadow: none;
+    border: none;
+    border-top: 8px solid #991D20;
+  }
+  
+  /* Make sure background colors and borders print */
+  .university-logo {
+    color: #991D20 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  h2 {
+    color: #991D20 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .course-table th,
+  .course-table tfoot td {
+    background-color: #f6f6f6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .course-table tr:nth-child(even) {
+    background-color: #f9f9f9 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Avoid page breaks inside sections */
+  .student-info-container {
+    page-break-inside: avoid;
+  }
+  
+  /* Force page breaks between major sections if needed */
+  .academic-record {
+    page-break-before: auto;
+  }
+  
+  /* Fix common print issues */
+  table { 
+    page-break-inside: auto;
+  }
+  
+  tr { 
+    page-break-inside: avoid; 
+    page-break-after: auto;
+  }
+  
+  thead { 
+    display: table-header-group; 
+  }
+  
+  tfoot { 
+    display: table-footer-group; 
+  }
 }

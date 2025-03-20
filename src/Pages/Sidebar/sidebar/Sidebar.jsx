@@ -8,7 +8,7 @@ const Sidebar = ({ isOpen, activePage }) => {
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'attendance', label: 'Attendance', icon: '📅' },
-    { id: 'marks', label: 'Marks', icon: '📄' }, // Clicking this should go to /marks
+    { id: 'marks', label: 'Marks', icon: '📄' }, 
     { id: 'transcript', label: 'Transcript', icon: '📜' },
     { id: 'timetable', label: 'Timetable', icon: '📆' },
     { id: 'settings', label: 'Settings', icon: '⚙️' }

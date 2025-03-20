@@ -1,0 +1,21 @@
+/* Add these styles to your Transcript.css file */
+
+.print-wrapper {
+    position: relative;
+  }
+  
+  .no-print {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  /* Hide print button when printing */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    
+    .print-button {
+      display: none !important;
+    }
+  }
