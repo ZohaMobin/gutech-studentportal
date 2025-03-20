@@ -15,7 +15,7 @@ const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
-    navigate('/login'); // Redirect to login page
+    navigate('/'); // Redirect to login page
   };
 
   return (

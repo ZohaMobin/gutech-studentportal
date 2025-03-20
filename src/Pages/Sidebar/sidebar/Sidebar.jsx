@@ -13,6 +13,7 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
     { id: 'marks', label: 'Marks', icon: '📄' },
     { id: 'transcript', label: 'Transcript', icon: '📜' },
     { id: 'timetable', label: 'Timetable', icon: '📆' },
+    { id: 'fees', label: 'Fees', icon: '💵' },
     { id: 'settings', label: 'Settings', icon: '⚙️' }
   ];
   

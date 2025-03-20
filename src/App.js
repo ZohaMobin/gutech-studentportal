@@ -5,6 +5,7 @@ import Signup from './Pages/LoginSignUp/Signup';
 import GradingPage from './Pages/Grading/Grading';
 import ClassSchedule from './Pages/ClassSchedule/ClassSchedule';
 import Transcript from './Pages/Transcript/Transcript';
+import Dashboard from './Pages/DashboardPage/dashboardPage';
 
 function App() {
   return (
@@ -13,12 +14,13 @@ function App() {
         <Routes>
           {/* Signup Page */}
           <Route path="/" element={<Signup />} />
-
+          
           {/* Main Layout with Nested Routes */}
           <Route path="/*" element={<MainLayout />}>
             <Route path="marks" element={<GradingPage />} />
             <Route path="timetable" element={<ClassSchedule />} />
             <Route path="transcript" element={<Transcript />} />
+            <Route path='dashboard' element={<Dashboard />} />
             {/* Add more routes if needed */}
           </Route>
 

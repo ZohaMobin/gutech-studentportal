@@ -1,4 +1,4 @@
-// MainLayout.jsx
+// MainLayout.jsx - Updated
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../Sidebar/sidebar/Sidebar';
 import './MainLayout.css';
@@ -40,21 +40,22 @@ const MainLayout = ({ children }) => {
         isSidebarOpen={isSidebarOpen} 
       />
       
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onNavClick={handleNavClick}
-        activePage={activePage}
-      />
-      
-      <div className={`content-area ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-        <main className="main-content">
-          <Outlet />
-          {/* Dynamic content based on active page */}
-          {React.Children.map(children, child => {
-            // Clone the child element and pass the activePage prop
-            return child ? React.cloneElement(child, { activePage }) : null;
-          })}
-        </main>
+      <div className="main-container">
+        <Sidebar 
+          isOpen={isSidebarOpen} 
+          onNavClick={handleNavClick}
+          activePage={activePage} 
+        />
+        
+        <div className={`content-area ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+          <main className="main-content">
+            <Outlet />
+            {React.Children.map(children, child => {
+              // Clone the child element and pass the activePage prop
+              return child ? React.cloneElement(child, { activePage }) : null;
+            })}
+          </main>
+        </div>
       </div>
       
       {/* Overlay for mobile when sidebar is open */}
