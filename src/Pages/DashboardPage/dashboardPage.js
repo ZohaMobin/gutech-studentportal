@@ -6,9 +6,10 @@ const Dashboard = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
+  const user = JSON.parse(sessionStorage.getItem('user'));
   // Sample student data
   const studentData = {
-    name: "Alex Johnson",
+    name: user?.name,
     id: "STU2025031",
     program: "Computer Science",
     semester: "Spring 2025",

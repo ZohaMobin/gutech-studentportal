@@ -35,16 +35,6 @@ const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
           </div>
         </div>
 
-        {/* Search bar */}
-        <div className="header-search">
-          <div className="search-container">
-            <input type="text" placeholder="Search..." className="search-input" />
-            <button className="search-button">
-              <span className="search-icon">🔍</span>
-            </button>
-          </div>
-        </div>
-
         {/* Right navigation */}
         <nav className="header-nav">
           <a href="#" className="header-nav-item">Help</a>
