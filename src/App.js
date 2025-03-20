@@ -6,6 +6,7 @@ import GradingPage from './Pages/Grading/Grading';
 import ClassSchedule from './Pages/ClassSchedule/ClassSchedule';
 import Transcript from './Pages/Transcript/Transcript';
 import Dashboard from './Pages/DashboardPage/dashboardPage';
+import ComingSoonPage from './Pages/ComingSoon/comingsoon';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
             <Route path="timetable" element={<ClassSchedule />} />
             <Route path="transcript" element={<Transcript />} />
             <Route path='dashboard' element={<Dashboard />} />
+            <Route path='fees' element={<ComingSoonPage />} />
+            <Route path='attendance' element={<ComingSoonPage />} />
             {/* Add more routes if needed */}
           </Route>
 
