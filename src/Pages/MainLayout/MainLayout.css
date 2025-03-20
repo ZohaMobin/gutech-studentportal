@@ -1,4 +1,4 @@
-/* MainLayout.css - Complete overhaul */
+/* MainLayout.css - Improved Responsive Dashboard */
 :root {
     --primary-color: #991D20;
     --primary-light: rgba(153, 29, 32, 0.1);
@@ -54,7 +54,13 @@
     display: none;
   }
   
-  /* Media queries */
+  /* Media queries for improved dashboard responsiveness */
+  @media (max-width: 1024px) {
+    .main-content {
+      padding: 15px;
+    }
+  }
+  
   @media (max-width: 768px) {
     .content-area {
       margin-left: 0 !important;
@@ -70,5 +76,15 @@
       bottom: 0;
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 800;
+    }
+    
+    .main-content {
+      padding: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-content {
+      padding: 5px;
     }
   }
