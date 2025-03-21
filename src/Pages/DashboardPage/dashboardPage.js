@@ -6,7 +6,6 @@ const Dashboard = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
-  // Get user from sessionStorage or use default if not available
   const getUserFromStorage = () => {
     try {
       const userData = sessionStorage.getItem('user');
