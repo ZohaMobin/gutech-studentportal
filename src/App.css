@@ -10,22 +10,8 @@
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
 
-body {
-  background-color: var(--light-bg);
-  color: var(--text-color);
-}
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
 
 .app {
   min-height: 100vh;
