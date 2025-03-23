@@ -3,78 +3,126 @@ import "./Grading.css";
 
 const Grading = () => {
   const [activeTab, setActiveTab] = useState("quizzes");
-  const [activeCourse, setActiveCourse] = useState("discrete"); // Changed default to first actual course
+  const [activeCourse, setActiveCourse] = useState("");
   const [marksData, setMarksData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample data structure - this would be replaced with your API data
-  const sampleData = {
-    courses: [
-      // Removed "all" course
-      { id: "discrete", name: "Discrete Mathematics" },
-      { id: "pspf", name: "Programming Fundamentals" },
-      { id: "calculus", name: "Calculus" }
-    ],
-    quizzes: {
-      // Keep "all" data for reference but we won't display it anymore
-      all: [
-        { serial: 1, weightage: 15, obtainedMarks: 12.5, totalMarks: 15, average: 12.97, stdDev: 1.1, min: 8, max: 14.5 },
-        { serial: 2, weightage: 15, obtainedMarks: 13.5, totalMarks: 15, average: 11.3, stdDev: 1.8, min: 7, max: 15 },
-        { serial: 3, weightage: 20, obtainedMarks: 17, totalMarks: 20, average: 16.63, stdDev: 1.4, min: 12.5, max: 19 }
-      ],
-      discrete: [
-        { serial: 1, weightage: 15, obtainedMarks: 12.5, totalMarks: 15, average: 12.97, stdDev: 1.1, min: 8, max: 14.5 },
-      ],
-      pspf: [
-        { serial: 1, weightage: 15, obtainedMarks: 13.5, totalMarks: 15, average: 11.3, stdDev: 1.8, min: 7, max: 15 },
-      ],
-      calculus: [
-        { serial: 1, weightage: 20, obtainedMarks: 17, totalMarks: 20, average: 16.63, stdDev: 1.4, min: 12.5, max: 19 }
-      ]
-    },
-    assignments: {
-      all: [
-        { serial: 1, weightage: 25, obtainedMarks: 22, totalMarks: 25, average: 21.2, stdDev: 1.8, min: 17, max: 24 },
-        { serial: 2, weightage: 25, obtainedMarks: 19.5, totalMarks: 25, average: 18.77, stdDev: 2.1, min: 15, max: 23.5 }
-      ],
-      discrete: [
-        { serial: 1, weightage: 25, obtainedMarks: 22, totalMarks: 25, average: 21.2, stdDev: 1.8, min: 17, max: 24 },
-      ],
-      pspf: [
-        { serial: 1, weightage: 25, obtainedMarks: 19.5, totalMarks: 25, average: 18.77, stdDev: 2.1, min: 15, max: 23.5 }
-      ],
-      calculus: []
-    },
-    midterms: {
-      all: [
-        { serial: 1, weightage: 30, obtainedMarks: 26, totalMarks: 30, average: 25.2, stdDev: 2.2, min: 19, max: 29 }
-      ],
-      discrete: [
-        { serial: 1, weightage: 30, obtainedMarks: 26, totalMarks: 30, average: 25.2, stdDev: 2.2, min: 19, max: 29 }
-      ],
-      pspf: [],
-      calculus: []
-    },
-    finals: {
-      all: [
-        { serial: 1, weightage: 50, obtainedMarks: 43, totalMarks: 50, average: 41.6, stdDev: 3.4, min: 32, max: 48 }
-      ],
-      discrete: [
-        { serial: 1, weightage: 50, obtainedMarks: 43, totalMarks: 50, average: 41.6, stdDev: 3.4, min: 32, max: 48 }
-      ],
-      pspf: [],
-      calculus: []
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/grade/student/67de02eb0ad325dc130689b3");
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const apiData = await response.json();
+        const processedData = processApiData(apiData);
+        setMarksData(processedData);
+        
+        // Set active course to the first course in the list
+        if (processedData.courses.length > 0) {
+          setActiveCourse(processedData.courses[0].id);
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Process API data to match the component's expected structure
+  const processApiData = (apiData) => {
+    // Extract unique courses
+    const coursesMap = new Map();
+    
+    apiData.forEach(item => {
+      const courseId = item.enrollmentId.sectionId.courseId._id;
+      const courseName = item.enrollmentId.sectionId.courseId.name;
+      
+      if (!coursesMap.has(courseId)) {
+        coursesMap.set(courseId, {
+          id: courseId,
+          name: courseName
+        });
+      }
+    });
+    
+    const courses = Array.from(coursesMap.values());
+    
+    // Initialize the data structure
+    const processedData = {
+      courses: courses,
+      quizzes: {},
+      assignments: {},
+      midterms: {},
+      finals: {}
+    };
+    
+    // Initialize course data for each assessment type
+    courses.forEach(course => {
+      processedData.quizzes[course.id] = [];
+      processedData.assignments[course.id] = [];
+      processedData.midterms[course.id] = [];
+      processedData.finals[course.id] = [];
+    });
+    
+    // Process the API data
+    apiData.forEach(item => {
+      const courseId = item.enrollmentId.sectionId.courseId._id;
+      const assessmentType = mapAssessmentType(item.type);
+      
+      // Skip if assessment type is unrecognized
+      if (!assessmentType) return;
+      
+      // Calculate class statistics (in a real scenario, these would come from the API)
+      // For this example, we'll simulate these values
+      const average = item.maxMarks * 0.85; // Simulated class average (85% of max)
+      const stdDev = item.maxMarks * 0.1; // Simulated standard deviation (10% of max)
+      const min = Math.max(0, item.maxMarks * 0.6); // Simulated minimum (60% of max)
+      const max = Math.min(item.maxMarks, item.maxMarks * 0.95); // Simulated maximum (95% of max)
+      
+      // Create the assessment item
+      const assessmentItem = {
+        serial: parseInt(item.title) || 1, // Use title as serial, fallback to 1
+        weightage: item.weightage,
+        obtainedMarks: item.obtainedMarks,
+        totalMarks: item.maxMarks,
+        average: average,
+        stdDev: stdDev,
+        min: min,
+        max: max
+      };
+      
+      // Add to the appropriate array
+      processedData[assessmentType][courseId].push(assessmentItem);
+    });
+    
+    return processedData;
+  };
+  
+  // Map API assessment type to component assessment type
+  const mapAssessmentType = (apiType) => {
+    switch (apiType.toLowerCase()) {
+      case 'quiz':
+        return 'quizzes';
+      case 'assignment':
+        return 'assignments';
+      case 'midterm':
+        return 'midterms';
+      case 'final':
+        return 'finals';
+      default:
+        return null;
     }
   };
-
-  // Simulating API data fetch
-  useEffect(() => {
-    // Replace this with your actual API call
-    setTimeout(() => {
-      setMarksData(sampleData);
-      setLoading(false);
-    }, 500);
-  }, []);
 
   // Calculate totals for a specific category and course
   const calculateTotals = (category, courseId) => {
@@ -101,6 +149,7 @@ const Grading = () => {
     let average = 0;
     let min = 0;
     let max = 0;
+    let categoryCount = 0;
     
     categories.forEach(category => {
       const categoryData = marksData[category][courseId];
@@ -112,12 +161,13 @@ const Grading = () => {
         // Calculate average, min, max across all items in the category
         const avgSum = categoryData.reduce((sum, item) => sum + item.average, 0);
         average += avgSum;
+        categoryCount += categoryData.length;
         
         const minVal = Math.min(...categoryData.map(item => item.min));
-        if (minVal < min || min === 0) min = minVal;
+        min = min === 0 ? minVal : Math.min(min, minVal);
         
         const maxVal = Math.max(...categoryData.map(item => item.max));
-        if (maxVal > max) max = maxVal;
+        max = Math.max(max, maxVal);
       }
     });
     
@@ -127,7 +177,7 @@ const Grading = () => {
       totalObtained,
       totalMarks,
       totalWeightage,
-      classAverage: (average / categories.filter(cat => marksData[cat][courseId].length > 0).length).toFixed(2),
+      classAverage: categoryCount > 0 ? (average / categoryCount).toFixed(2) : 0,
       min,
       max
     };
@@ -135,6 +185,14 @@ const Grading = () => {
 
   if (loading) {
     return <div className="loading-container">Loading marks data...</div>;
+  }
+
+  if (error) {
+    return <div className="error-container">Error loading data: {error}</div>;
+  }
+
+  if (!marksData || !activeCourse) {
+    return <div className="no-data-container">No marks data available</div>;
   }
 
   const activeCategoryData = marksData[activeTab][activeCourse];
@@ -212,9 +270,9 @@ const Grading = () => {
                     <td>{item.weightage}</td>
                     <td>{item.obtainedMarks}</td>
                     <td>{item.totalMarks}</td>
-                    <td>{item.average}</td>
-                    <td>{item.min}</td>
-                    <td>{item.max}</td>
+                    <td>{item.average.toFixed(2)}</td>
+                    <td>{item.min.toFixed(2)}</td>
+                    <td>{item.max.toFixed(2)}</td>
                   </tr>
                 ))}
                 {totals && (
@@ -223,13 +281,13 @@ const Grading = () => {
                     <td>{totals.totalWeightage}</td>
                     <td>{totals.totalObtained}</td>
                     <td>{totals.totalMarks}</td>
-                    <td colSpan={4}></td>
+                    <td colSpan={3}></td>
                   </tr>
                 )}
               </>
             ) : (
               <tr>
-                <td colSpan={8} className="no-data">No data available for this category</td>
+                <td colSpan={7} className="no-data">No data available for this category</td>
               </tr>
             )}
           </tbody>
