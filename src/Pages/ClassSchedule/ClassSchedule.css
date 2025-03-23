@@ -4,10 +4,9 @@
 .schedule-container {
   margin: 0 auto;
   padding: 30px 20px;
-  max-width: 1200px;
+  max-width: calc(100% - var(--sidebar-width));;
   border-top: 5px solid #991D20;
   background-color: #fff;
-  font-family: 'Roboto', Arial, sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 

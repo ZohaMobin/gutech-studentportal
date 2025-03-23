@@ -21,7 +21,7 @@ const PrintButton = () => {
         margin: '20px 0',
         display: 'block',
         marginLeft: 'auto',
-        marginRight: 'auto'
+
       }}
       className="print-button"
     >

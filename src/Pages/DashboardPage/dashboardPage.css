@@ -1,4 +1,4 @@
-/* Responsive Dashboard Styles */
+/* Responsive Dashboard Styles - Enhanced Version */
 :root {
     --primary-color: #991D20;
     --primary-light: rgba(153, 29, 32, 0.1);
@@ -29,19 +29,34 @@
     --card-shadow: 0 4px 20px var(--shadow-color);
     --sidebar-width: 250px;
     --header-height: 60px;
+    
+    /* Breakpoints as CSS variables for consistency */
+    --bp-sm: 576px;
+    --bp-md: 768px;
+    --bp-lg: 992px;
+    --bp-xl: 1200px;
 }
 
-
-
+/* Base container */
 .dashboard-container {
-    width: 80%;
+    width: 100%;
     max-width: 100%;
-    padding: 30px;
+    margin: 0 auto;
+    padding: 16px;
     box-sizing: border-box;
-    background-color: #fff;
-    overflow-x: hidden;
-    margin-left: 220px;
-    margin-top: 10rem;
+    background-color: var(--white);
+}
+
+@media (min-width: 768px) {
+    .dashboard-container {
+        padding: 24px;
+    }
+}
+
+@media (min-width: 992px) {
+    .dashboard-container {
+        padding: 30px;
+    }
 }
 
 /* Header Styles */
@@ -49,29 +64,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 12px;
 }
 
-/* Profile Card */
+/* Profile Card - Stacked layout on mobile, horizontal on larger screens */
 .student-profile {
     background-color: var(--white);
     border-radius: var(--border-radius);
-    padding: 20px;
+    padding: 16px;
     box-shadow: var(--card-shadow);
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     width: 100%;
-}
-
-@media (min-width: 768px) {
-    .student-profile {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
 }
 
 .profile-content {
@@ -79,48 +86,34 @@
     align-items: center;
     gap: 15px;
     margin-bottom: 20px;
-    width: 100%;
-}
-
-@media (min-width: 768px) {
-    .profile-content {
-        margin-bottom: 0;
-        width: auto;
-    }
 }
 
 .avatar-circle {
-    width: 60px;
-    height: 60px;
-    min-width: 60px;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
     border-radius: 50%;
     background: linear-gradient(to right bottom, var(--primary-color), var(--primary-dark));
     color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: 1px;
 }
 
 .profile-info h2 {
-    font-size: 18px;
-    margin: 0 0 10px 0;
+    font-size: 16px;
+    margin: 0 0 8px 0;
     color: var(--text-dark);
     font-weight: 600;
 }
 
 .student-details {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-}
-
-@media (min-width: 480px) {
-    .student-details {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 .detail-item {
@@ -130,18 +123,18 @@
 
 .detail-label {
     font-weight: 500;
-    width: 80px;
+    width: 70px;
     color: var(--text-light);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .detail-value {
     color: var(--text-dark);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 12px;
 }
 
-/* CGPA Meter */
+/* CGPA Meter - Full width on mobile, fixed width on desktop */
 .cgpa-meter-container {
     width: 100%;
     padding: 15px;
@@ -151,38 +144,32 @@
     box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
-    .cgpa-meter-container {
-        width: 250px;
-    }
-}
-
 .cgpa-meter-container h3 {
     margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
     color: var(--text-color);
     font-weight: 500;
 }
 
 .cgpa-value {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--primary-color);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     line-height: 1;
 }
 
 .cgpa-max {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--text-light);
     font-weight: 400;
 }
 
 .meter {
-    height: 12px;
+    height: 10px;
     background-color: var(--border-color);
-    border-radius: 6px;
+    border-radius: 5px;
     overflow: hidden;
     margin-bottom: 8px;
 }
@@ -190,23 +177,81 @@
 .meter-fill {
     height: 100%;
     background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    border-radius: 6px;
+    border-radius: 5px;
     transition: var(--transition);
 }
 
 .meter-scale {
     display: flex;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-light);
     padding: 0 2px;
 }
 
-/* Dashboard Cards */
+/* Responsive media queries for the profile section */
+@media (min-width: 768px) {
+    .student-profile {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .profile-content {
+        margin-bottom: 0;
+        width: auto;
+    }
+    
+    .avatar-circle {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+        font-size: 20px;
+    }
+    
+    .profile-info h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    .detail-label {
+        width: 80px;
+        font-size: 13px;
+    }
+    
+    .detail-value {
+        font-size: 13px;
+    }
+    
+    .cgpa-meter-container {
+        width: 250px;
+    }
+    
+    .cgpa-value {
+        font-size: 32px;
+    }
+    
+    .meter {
+        height: 12px;
+    }
+    
+    .meter-scale {
+        font-size: 11px;
+    }
+}
+
+/* Dashboard Cards Grid */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .dashboard-grid {
+        gap: 20px;
+    }
 }
 
 @media (min-width: 992px) {
@@ -218,33 +263,60 @@
 .dashboard-card {
     background-color: var(--white);
     border-radius: var(--border-radius);
-    padding: 20px;
+    padding: 16px;
     box-shadow: var(--card-shadow);
     height: 100%;
     width: 100%;
     box-sizing: border-box;
 }
 
+@media (min-width: 768px) {
+    .dashboard-card {
+        padding: 20px;
+    }
+}
+
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .card-header h3 {
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-dark);
     font-weight: 600;
     margin: 0;
 }
 
-/* Attendance Card */
+@media (min-width: 768px) {
+    .card-header h3 {
+        font-size: 18px;
+    }
+    
+    .card-header {
+        margin-bottom: 20px;
+    }
+}
+
+/* Attendance Card - Responsive layout */
 .attendance-overview {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
+}
+
+.attendance-circle {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.attendance-details {
+    width: 100%;
 }
 
 @media (min-width: 576px) {
@@ -252,22 +324,18 @@
         flex-direction: row;
         align-items: flex-start;
     }
-}
-
-.attendance-circle {
-    width: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.attendance-details {
-    flex: 1;
-    width: 100%;
+    
+    .attendance-circle {
+        width: 120px;
+    }
+    
+    .attendance-details {
+        flex: 1;
+    }
 }
 
 .subject-attendance {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .subject-info {
@@ -277,85 +345,126 @@
 }
 
 .subject-name {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-dark);
     font-weight: 500;
 }
 
 .attendance-value {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-color);
     font-weight: 500;
 }
 
 .attendance-bar-container {
-    height: 8px;
+    height: 6px;
     background-color: var(--light-bg);
-    border-radius: 4px;
+    border-radius: 3px;
     overflow: hidden;
 }
 
 .attendance-bar {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 3px;
     transition: var(--transition);
 }
 
-/* Course Performance */
+@media (min-width: 768px) {
+    .subject-name, .attendance-value {
+        font-size: 14px;
+    }
+    
+    .attendance-bar-container {
+        height: 8px;
+        border-radius: 4px;
+    }
+    
+    .attendance-bar {
+        border-radius: 4px;
+    }
+}
+
+/* Course Performance - Responsive design */
 .course-item {
-    margin-bottom: 22px;
+    margin-bottom: 18px;
     position: relative;
 }
 
 .course-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .course-name {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-dark);
     font-weight: 500;
 }
 
 .course-marks {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-color);
     font-weight: 500;
 }
 
 .course-progress-container {
-    height: 8px;
+    height: 6px;
     background-color: var(--light-bg);
-    border-radius: 4px;
+    border-radius: 3px;
     overflow: hidden;
     margin-bottom: 4px;
 }
 
 .course-progress {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 3px;
     transition: var(--transition);
 }
 
 .grade-indicator {
     position: absolute;
     right: 0;
-    top: 28px;
-    width: 20px;
-    height: 20px;
+    top: 26px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background-color: var(--light-bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
     color: var(--text-dark);
 }
 
-/* Timetable Styles */
+@media (min-width: 768px) {
+    .course-name, .course-marks {
+        font-size: 14px;
+    }
+    
+    .course-progress-container {
+        height: 8px;
+        border-radius: 4px;
+    }
+    
+    .course-progress {
+        border-radius: 4px;
+    }
+    
+    .grade-indicator {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+        top: 28px;
+    }
+    
+    .course-item {
+        margin-bottom: 22px;
+    }
+}
+
+/* Timetable Styles - Mobile-first with horizontal scrolling */
 .timetable-container {
     overflow-x: auto;
     padding-bottom: 10px;
@@ -364,13 +473,7 @@
 
 .timetable-grid {
     display: flex;
-    min-width: 100%;
-}
-
-@media (max-width: 575px) {
-    .timetable-grid {
-        min-width: 450px;
-    }
+    min-width: 450px; /* Minimum width ensures readability on small screens */
 }
 
 .timetable-column {
@@ -385,38 +488,26 @@
 }
 
 .time-column {
-    min-width: 60px;
+    min-width: 55px;
     flex-shrink: 0;
 }
 
-@media (min-width: 576px) {
-    .time-column {
-        min-width: 80px;
-    }
-}
-
 .timetable-cell {
-    height: 70px;
-    padding: 6px;
+    height: 65px;
+    padding: 5px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-@media (min-width: 576px) {
-    .timetable-cell {
-        height: 80px;
-        padding: 8px;
-    }
-}
-
 .day-cell, .time-cell {
-    height: 40px;
+    height: 36px;
     font-weight: 600;
     color: var(--text-color);
     background-color: var(--light-bg);
-    font-size: 12px;
+    font-size: 11px;
+    text-align: center;
 }
 
 .day-cell {
@@ -425,22 +516,15 @@
 }
 
 .class-cell {
-    height: 70px;
-    padding: 6px 3px;
-}
-
-@media (min-width: 576px) {
-    .class-cell {
-        height: 80px;
-        padding: 8px 4px;
-    }
+    height: 65px;
+    padding: 5px 3px;
 }
 
 .class-item {
     height: 100%;
     width: 100%;
-    border-radius: 8px;
-    padding: 6px;
+    border-radius: 6px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -448,34 +532,89 @@
     cursor: pointer;
 }
 
-@media (min-width: 576px) {
-    .class-item {
-        padding: 8px;
-    }
-}
-
 .class-subject {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--text-dark);
-    margin-bottom: 4px;
-}
-
-@media (min-width: 576px) {
-    .class-subject {
-        font-size: 13px;
-        margin-bottom: 5px;
-    }
+    margin-bottom: 3px;
 }
 
 .class-details {
     display: flex;
     justify-content: space-between;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-color);
 }
 
 @media (min-width: 576px) {
+    .time-column {
+        min-width: 65px;
+    }
+    
+    .timetable-cell {
+        height: 70px;
+        padding: 6px;
+    }
+    
+    .day-cell, .time-cell {
+        height: 38px;
+        font-size: 12px;
+    }
+    
+    .class-cell {
+        height: 70px;
+        padding: 6px 3px;
+    }
+    
+    .class-item {
+        border-radius: 7px;
+        padding: 6px;
+    }
+    
+    .class-subject {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+    
+    .class-details {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 768px) {
+    .time-column {
+        min-width: 80px;
+    }
+    
+    .timetable-grid {
+        min-width: 100%;
+    }
+    
+    .timetable-cell {
+        height: 80px;
+        padding: 8px;
+    }
+    
+    .day-cell, .time-cell {
+        height: 40px;
+        font-size: 12px;
+    }
+    
+    .class-cell {
+        height: 80px;
+        padding: 8px 4px;
+    }
+    
+    .class-item {
+        border-radius: 8px;
+        padding: 8px;
+    }
+    
+    .class-subject {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+    
     .class-details {
         font-size: 11px;
     }
@@ -485,42 +624,35 @@
 .summary-stats {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 12px;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 480px) {
     .summary-stats {
         grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
     }
 }
 
 .stat-item {
     display: flex;
     align-items: center;
-    padding: 12px;
+    padding: 10px;
     background-color: var(--light-bg);
-    border-radius: 10px;
+    border-radius: 8px;
     transition: var(--transition);
 }
 
 .stat-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 15px;
-    font-size: 16px;
+    margin-right: 12px;
+    font-size: 15px;
     color: var(--text-dark);
-}
-
-@media (min-width: 576px) {
-    .stat-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
-    }
 }
 
 .stat-content {
@@ -528,24 +660,49 @@
 }
 
 .stat-value {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-dark);
     line-height: 1.2;
 }
 
-@media (min-width: 576px) {
-    .stat-value {
-        font-size: 20px;
-    }
-}
-
 .stat-label {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-light);
 }
 
 @media (min-width: 576px) {
+    .stat-item {
+        padding: 12px;
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        margin-right: 15px;
+    }
+    
+    .stat-value {
+        font-size: 18px;
+    }
+    
+    .stat-label {
+        font-size: 11px;
+    }
+}
+
+@media (min-width: 768px) {
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+    
     .stat-label {
         font-size: 12px;
     }
@@ -563,10 +720,73 @@
 .fas.fa-star:before { content: "★"; }
 .fas.fa-clock:before { content: "⏱"; }
 
-/* Optimize Layout for MainLayout integration */
-.dashboard-container {
-    border-top: none;
-    box-shadow: none;
+/* Circular chart for attendance */
+.circular-chart {
+    width: 100%;
+    max-width: 100px;
+    height: auto;
+}
+
+@media (min-width: 768px) {
+    .circular-chart {
+        max-width: 120px;
+    }
+}
+
+.circle-bg {
+    fill: none;
+    stroke: var(--light-bg);
+    stroke-width: 3;
+}
+
+.circle {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+.percentage-value {
+    font-size: 9px;
+    text-anchor: middle;
+    font-weight: bold;
+    fill: var(--text-dark);
+}
+
+.percentage-symbol {
+    font-size: 5px;
+    text-anchor: middle;
+    fill: var(--text-light);
+}
+
+@media (min-width: 768px) {
+    .percentage-value {
+        font-size: 10px;
+    }
+    
+    .percentage-symbol {
+        font-size: 6px;
+    }
+    
+    .circle-bg, .circle {
+        stroke-width: 3.2;
+    }
+}
+
+.attendance-label {
+    margin-top: 6px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-color);
+}
+
+@media (min-width: 768px) {
+    .attendance-label {
+        margin-top: 8px;
+        font-size: 14px;
+    }
 }
 
 /* Custom Scrollbar */
@@ -607,44 +827,7 @@
     border-width: 0;
 }
 
-/* Add these styles to your CSS file */
-.circular-chart {
-    width: 100%;
-    max-width: 120px;
-    height: auto;
-  }
-  
-  .circle-bg {
-    fill: none;
-    stroke: var(--light-bg);
-    stroke-width: 3.2;
-  }
-  
-  .circle {
-    fill: none;
-    stroke: var(--primary-color);
-    stroke-width: 3.2;
-    stroke-linecap: round;
-    transform: rotate(-90deg);
-    transform-origin: center;
-  }
-  
-  .percentage-value {
-    font-size: 10px;
-    text-anchor: middle;
-    font-weight: bold;
-    fill: var(--text-dark);
-  }
-  
-  .percentage-symbol {
-    font-size: 6px;
-    text-anchor: middle;
-    fill: var(--text-light);
-  }
-  
-  .attendance-label {
-    margin-top: 8px;
-    text-align: center;
-    font-size: 14px;
-    color: var(--text-color);
-  }
+/* Add smooth transitions for all elements */
+* {
+    transition: var(--transition);
+}

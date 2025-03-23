@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import './dashboardPage.css';
+import './dashboardPage.css'; // Import the CSS file
 
 const Dashboard = () => {
   // State to track viewport size
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
+
   const getUserFromStorage = () => {
     try {
       const userData = sessionStorage.getItem('user');
@@ -15,9 +15,9 @@ const Dashboard = () => {
       return { name: "Student User" };
     }
   };
-  
+
   const user = getUserFromStorage();
-  
+
   // Sample student data
   const studentData = {
     name: user?.name || "Student User",
@@ -60,22 +60,22 @@ const Dashboard = () => {
   // Improved window resize handler with debounce
   useEffect(() => {
     let timeoutId = null;
-    
+
     const handleResize = () => {
       clearTimeout(timeoutId);
-      
+
       timeoutId = setTimeout(() => {
         const width = window.innerWidth;
         setWindowWidth(width);
         setIsMobile(width < 768);
       }, 150); // Debounce delay of 150ms
     };
-    
+
     window.addEventListener('resize', handleResize);
-    
+
     // Initial call to set the values
     handleResize();
-    
+
     return () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(timeoutId);
@@ -83,7 +83,7 @@ const Dashboard = () => {
   }, []);
 
   const cgpaLevel = (studentData.cgpa / 4) * 100;
-  
+
   // Use abbreviated days for mobile
   const getDayLabel = (day) => {
     if (isMobile) {
@@ -91,7 +91,7 @@ const Dashboard = () => {
     }
     return day;
   };
-  
+
   // Simplify time format for mobile
   const getTimeLabel = (time) => {
     if (isMobile) {
@@ -99,12 +99,12 @@ const Dashboard = () => {
     }
     return time;
   };
-  
+
   // Optimized subject name display based on screen size
   const getSubjectLabel = (subject) => {
     if (windowWidth < 576) {
       // Create abbreviations for subjects on very small screens
-      switch(subject) {
+      switch (subject) {
         case "Data Structures": return "DS";
         case "Algorithm Design": return "Algo";
         case "Web Development": return "Web";
@@ -114,7 +114,7 @@ const Dashboard = () => {
     }
     if (windowWidth < 768) {
       // Shortened names for small screens
-      switch(subject) {
+      switch (subject) {
         case "Data Structures": return "Data Struct.";
         case "Algorithm Design": return "Algorithms";
         case "Web Development": return "Web Dev";
@@ -141,7 +141,7 @@ const Dashboard = () => {
   };
 
   const getClassColor = (subject) => {
-    switch(subject) {
+    switch (subject) {
       case "Data Structures":
         return "var(--primary-light)";
       case "Algorithm Design":
@@ -191,7 +191,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="cgpa-meter-container">
           <h3>CGPA Performance</h3>
           <div className="cgpa-meter">
@@ -229,22 +229,22 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="attendance-overview">
-          <div className="attendance-circle">
-  <svg viewBox="0 0 36 36" className="circular-chart">
-    <path className="circle-bg" 
-          d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-    <path className="circle" 
-          strokeDasharray={`${studentData.attendance.overall}, 100`}
-          d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-    <text x="18" y="20.35" className="percentage-value">{studentData.attendance.overall}</text>
-    <text x="18" y="24.5" className="percentage-symbol">%</text>
-  </svg>
-  <div className="attendance-label">Overall</div>
-</div>
+            <div className="attendance-circle">
+              <svg viewBox="0 0 36 36" className="circular-chart">
+                <path className="circle-bg"
+                  d="M18 2.0845
+                     a 15.9155 15.9155 0 0 1 0 31.831
+                     a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path className="circle"
+                  strokeDasharray={`${studentData.attendance.overall}, 100`}
+                  d="M18 2.0845
+                     a 15.9155 15.9155 0 0 1 0 31.831
+                     a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <text x="18" y="20.35" className="percentage-value">{studentData.attendance.overall}</text>
+                <text x="18" y="24.5" className="percentage-symbol">%</text>
+              </svg>
+              <div className="attendance-label">Overall</div>
+            </div>
             <div className="attendance-details">
               {studentData.attendance.subjects.map((subject, index) => (
                 <div key={index} className="subject-attendance">
@@ -253,13 +253,13 @@ const Dashboard = () => {
                     <div className="attendance-value">{subject.percentage}%</div>
                   </div>
                   <div className="attendance-bar-container">
-                    <div 
-                      className="attendance-bar" 
-                      style={{ 
-                        width: `${subject.percentage}%`, 
-                        backgroundColor: subject.percentage >= 85 ? 'var(--success-color)' : 
-                                        subject.percentage >= 75 ? 'var(--warning-color)' : 
-                                        'var(--danger-color)'
+                    <div
+                      className="attendance-bar"
+                      style={{
+                        width: `${subject.percentage}%`,
+                        backgroundColor: subject.percentage >= 85 ? 'var(--success-color)' :
+                          subject.percentage >= 75 ? 'var(--warning-color)' :
+                            'var(--danger-color)'
                       }}
                     ></div>
                   </div>
@@ -284,19 +284,19 @@ const Dashboard = () => {
                   <span className="course-marks">{course.marks}/{course.total}</span>
                 </div>
                 <div className="course-progress-container">
-                  <div 
-                    className="course-progress" 
-                    style={{ 
-                      width: `${(course.marks / course.total) * 100}%`, 
-                      backgroundColor: getGradeColor(course.marks, course.total) 
+                  <div
+                    className="course-progress"
+                    style={{
+                      width: `${(course.marks / course.total) * 100}%`,
+                      backgroundColor: getGradeColor(course.marks, course.total)
                     }}
                   ></div>
                 </div>
                 <div className="grade-indicator">
-                  {course.marks >= 90 ? 'A' : 
-                   course.marks >= 80 ? 'B' : 
-                   course.marks >= 70 ? 'C' : 
-                   course.marks >= 60 ? 'D' : 'F'}
+                  {course.marks >= 90 ? 'A' :
+                    course.marks >= 80 ? 'B' :
+                      course.marks >= 70 ? 'C' :
+                        course.marks >= 60 ? 'D' : 'F'}
                 </div>
               </div>
             ))}
@@ -318,7 +318,7 @@ const Dashboard = () => {
                   <div key={index} className="timetable-cell time-cell">{getTimeLabel(time)}</div>
                 ))}
               </div>
-              
+
               {displayDays().map((day, dayIndex) => (
                 <div key={dayIndex} className="timetable-column">
                   <div className="timetable-cell day-cell">{getDayLabel(day)}</div>
@@ -327,8 +327,8 @@ const Dashboard = () => {
                     return (
                       <div key={timeIndex} className="timetable-cell class-cell">
                         {classItem && (
-                          <div 
-                            className="class-item" 
+                          <div
+                            className="class-item"
                             style={{ backgroundColor: getClassColor(classItem.subject) }}
                           >
                             <div className="class-subject">{getSubjectLabel(classItem.subject)}</div>
@@ -364,7 +364,7 @@ const Dashboard = () => {
                 <div className="stat-label">Attendance Rate</div>
               </div>
             </div>
-            
+
             <div className="stat-item">
               <div className="stat-icon" style={{ backgroundColor: "var(--success-light)" }}>
                 <i className="fas fa-check-circle" style={{ color: "var(--success-color)" }}></i>
@@ -374,7 +374,7 @@ const Dashboard = () => {
                 <div className="stat-label">Assignment Completion</div>
               </div>
             </div>
-            
+
             <div className="stat-item">
               <div className="stat-icon" style={{ backgroundColor: "var(--secondary-light)" }}>
                 <i className="fas fa-chart-line" style={{ color: "var(--secondary-color)" }}></i>
@@ -384,7 +384,7 @@ const Dashboard = () => {
                 <div className="stat-label">Average Score</div>
               </div>
             </div>
-            
+
             <div className="stat-item">
               <div className="stat-icon" style={{ backgroundColor: "var(--accent-light)" }}>
                 <i className="fas fa-star" style={{ color: "var(--accent-color)" }}></i>
