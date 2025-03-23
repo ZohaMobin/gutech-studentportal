@@ -3,19 +3,20 @@ import "./Grading.css";
 
 const Grading = () => {
   const [activeTab, setActiveTab] = useState("quizzes");
-  const [activeCourse, setActiveCourse] = useState("all");
+  const [activeCourse, setActiveCourse] = useState("discrete"); // Changed default to first actual course
   const [marksData, setMarksData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Sample data structure - this would be replaced with your API data
   const sampleData = {
     courses: [
-      { id: "all", name: "All Courses" },
+      // Removed "all" course
       { id: "discrete", name: "Discrete Mathematics" },
       { id: "pspf", name: "Programming Fundamentals" },
       { id: "calculus", name: "Calculus" }
     ],
     quizzes: {
+      // Keep "all" data for reference but we won't display it anymore
       all: [
         { serial: 1, weightage: 15, obtainedMarks: 12.5, totalMarks: 15, average: 12.97, stdDev: 1.1, min: 8, max: 14.5 },
         { serial: 2, weightage: 15, obtainedMarks: 13.5, totalMarks: 15, average: 11.3, stdDev: 1.8, min: 7, max: 15 },
