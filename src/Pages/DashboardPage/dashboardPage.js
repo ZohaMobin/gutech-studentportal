@@ -5,6 +5,9 @@ const Dashboard = () => {
   // State to track viewport size
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [grades, setGrades] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const getUserFromStorage = () => {
     try {
@@ -18,7 +21,83 @@ const Dashboard = () => {
 
   const user = getUserFromStorage();
 
-  // Sample student data
+  // Fetch grades data from API
+  useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:5000/api/grade/student/67de02eb0ad325dc130689b3');
+        
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setGrades(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching grades:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchGrades();
+  }, []);
+
+  // Process grades data to get course performance
+  const processCoursePerformance = () => {
+    if (!grades.length) return [];
+    
+    // Group grades by course
+    const courseMap = {};
+    
+    grades.forEach(grade => {
+      const courseName = grade.enrollmentId.sectionId.courseId.name;
+      const courseCode = grade.enrollmentId.sectionId.courseId.code;
+      const displayName = `${courseCode}: ${courseName}`;
+      
+      if (!courseMap[displayName]) {
+        courseMap[displayName] = {
+          name: displayName,
+          totalObtained: 0,
+          totalMax: 0,
+          grades: []
+        };
+      }
+      
+      // Calculate weighted marks (obtainedMarks * weightage)
+      const weightedObtained = (grade.obtainedMarks / grade.maxMarks) * grade.weightage;
+      const weightedMax = grade.weightage;
+      
+      courseMap[displayName].totalObtained += weightedObtained;
+      courseMap[displayName].totalMax += weightedMax;
+      courseMap[displayName].grades.push({
+        type: grade.type,
+        title: grade.title,
+        obtained: grade.obtainedMarks,
+        max: grade.maxMarks,
+        weightage: grade.weightage,
+        date: new Date(grade.date)
+      });
+    });
+    
+    // Convert to array and calculate percentages
+    return Object.values(courseMap).map(course => {
+      // Calculate the weighted percentage
+      const percentage = (course.totalObtained / course.totalMax) * 100;
+      const standardizedMarks = Math.round(percentage);
+      
+      return {
+        name: course.name,
+        marks: standardizedMarks,
+        total: 100,
+        grades: course.grades
+      };
+    });
+  };
+
+  // Sample student data with processed grades
   const studentData = {
     name: user?.name || "Student User",
     id: "STU2025031",
@@ -35,12 +114,7 @@ const Dashboard = () => {
         { name: "Database Systems", percentage: 91 }
       ]
     },
-    courses: [
-      { name: "Data Structures", marks: 88, total: 100 },
-      { name: "Algorithm Design", marks: 76, total: 100 },
-      { name: "Web Development", marks: 81, total: 100 },
-      { name: "Database Systems", marks: 92, total: 100 }
-    ],
+    courses: processCoursePerformance(),
     timetable: {
       days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       timeSlots: ["9:00 AM", "11:00 AM", "1:00 PM", "3:00 PM"],
@@ -102,6 +176,24 @@ const Dashboard = () => {
 
   // Optimized subject name display based on screen size
   const getSubjectLabel = (subject) => {
+    if (!subject) return "";
+    
+    // For API course names (they now include course code)
+    if (subject.includes(':')) {
+      const parts = subject.split(':');
+      if (windowWidth < 576) {
+        // Just return the course code for very small screens
+        return parts[0].trim();
+      }
+      if (windowWidth < 768) {
+        // Return course code and abbreviated name
+        const name = parts[1].trim();
+        return `${parts[0].trim()}: ${name.substring(0, 10)}...`;
+      }
+      return subject;
+    }
+    
+    // For other hardcoded subjects
     if (windowWidth < 576) {
       // Create abbreviations for subjects on very small screens
       switch (subject) {
@@ -132,6 +224,14 @@ const Dashboard = () => {
     if (percentage >= 70) return "var(--warning-color)";
     if (percentage >= 60) return "var(--warning-light)";
     return "var(--danger-color)";
+  };
+
+  const getGradeLetter = (marks) => {
+    if (marks >= 90) return 'A';
+    if (marks >= 80) return 'B';
+    if (marks >= 70) return 'C';
+    if (marks >= 60) return 'D';
+    return 'F';
   };
 
   const getClassByTimeAndDay = (day, time) => {
@@ -170,6 +270,14 @@ const Dashboard = () => {
     }
     // For larger screens, show all days
     return studentData.timetable.days;
+  };
+
+  // Calculate average score from courses
+  const calculateAverageScore = () => {
+    if (studentData.courses.length === 0) return 0;
+    
+    const sum = studentData.courses.reduce((acc, course) => acc + course.marks, 0);
+    return Math.round(sum / studentData.courses.length);
   };
 
   return (
@@ -277,29 +385,42 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="course-performance">
-            {studentData.courses.map((course, index) => (
-              <div key={index} className="course-item">
-                <div className="course-header">
-                  <span className="course-name">{getSubjectLabel(course.name)}</span>
-                  <span className="course-marks">{course.marks}/{course.total}</span>
-                </div>
-                <div className="course-progress-container">
-                  <div
-                    className="course-progress"
-                    style={{
-                      width: `${(course.marks / course.total) * 100}%`,
-                      backgroundColor: getGradeColor(course.marks, course.total)
-                    }}
-                  ></div>
-                </div>
-                <div className="grade-indicator">
-                  {course.marks >= 90 ? 'A' :
-                    course.marks >= 80 ? 'B' :
-                      course.marks >= 70 ? 'C' :
-                        course.marks >= 60 ? 'D' : 'F'}
-                </div>
+            {loading ? (
+              <div className="loading-indicator">Loading grades data...</div>
+            ) : error ? (
+              <div className="error-message">
+                Error loading grades: {error}
+                <button 
+                  className="retry-button"
+                  onClick={() => window.location.reload()}
+                >
+                  Retry
+                </button>
               </div>
-            ))}
+            ) : studentData.courses.length === 0 ? (
+              <div className="no-data-message">No course data available</div>
+            ) : (
+              studentData.courses.map((course, index) => (
+                <div key={index} className="course-item">
+                  <div className="course-header">
+                    <span className="course-name">{getSubjectLabel(course.name)}</span>
+                    <span className="course-marks">{course.marks}/{course.total}</span>
+                  </div>
+                  <div className="course-progress-container">
+                    <div
+                      className="course-progress"
+                      style={{
+                        width: `${(course.marks / course.total) * 100}%`,
+                        backgroundColor: getGradeColor(course.marks, course.total)
+                      }}
+                    ></div>
+                  </div>
+                  <div className="grade-indicator">
+                    {getGradeLetter(course.marks)}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
@@ -347,55 +468,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="dashboard-card summary-card">
-          <div className="card-header">
-            <h3>Performance Summary</h3>
-            <div className="card-actions">
-              <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
-            </div>
-          </div>
-          <div className="summary-stats">
-            <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: "var(--primary-light)" }}>
-                <i className="fas fa-calendar-alt" style={{ color: "var(--primary-color)" }}></i>
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">87%</div>
-                <div className="stat-label">Attendance Rate</div>
-              </div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: "var(--success-light)" }}>
-                <i className="fas fa-check-circle" style={{ color: "var(--success-color)" }}></i>
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">84%</div>
-                <div className="stat-label">Assignment Completion</div>
-              </div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: "var(--secondary-light)" }}>
-                <i className="fas fa-chart-line" style={{ color: "var(--secondary-color)" }}></i>
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">79/100</div>
-                <div className="stat-label">Average Score</div>
-              </div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-icon" style={{ backgroundColor: "var(--accent-light)" }}>
-                <i className="fas fa-star" style={{ color: "var(--accent-color)" }}></i>
-              </div>
-              <div className="stat-content">
-                <div className="stat-value">23</div>
-                <div className="stat-label">Merit Points</div>
-              </div>
-            </div>
-          </div>
-        </div>
+    
       </div>
     </div>
   );
