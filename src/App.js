@@ -21,18 +21,21 @@ function App() {
 
             {/* Protected Routes */}
             <Route element={<PrivateRoute />}>
+              {/* Redirect from /main to /main/dashboard */}
+              <Route path="/" element={<Navigate to="/main/dashboard" replace />} />
+              
               <Route path="/main/*" element={<MainLayout />}>
+                <Route path="dashboard" element={<Dashboard />} />
                 <Route path="marks" element={<GradingPage />} />
                 <Route path="timetable" element={<ClassSchedule />} />
                 <Route path="transcript" element={<Transcript />} />
-                <Route path="dashboard" element={<Dashboard />} />
                 <Route path="fees" element={<ComingSoonPage />} />
                 <Route path="attendance" element={<ComingSoonPage />} />
               </Route>
             </Route>
 
             {/* Catch-all route redirects to login */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>
       </Router>

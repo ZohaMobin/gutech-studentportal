@@ -115,7 +115,9 @@ const Signup = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    if (!validateLoginForm()) return;
+    if (validateLoginForm()){
+      navigate("/main/dashboard");
+  };
     
     try {
       setIsSubmitting(true);
