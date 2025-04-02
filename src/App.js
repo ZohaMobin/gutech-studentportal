@@ -23,7 +23,7 @@ function App() {
             <Route element={<PrivateRoute />}>
               {/* Main Layout and its nested routes */}
               <Route path="/main" element={<MainLayout />}>
-                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route index element={<Navigate to="/main/dashboard" replace />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="marks" element={<GradingPage />} />
                 <Route path="timetable" element={<ClassSchedule />} />
@@ -34,7 +34,7 @@ function App() {
             </Route>
             
             {/* Catch-all route redirects to login */}
-            <Route path="*" element={<Navigate to="/dasboard" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </Router>

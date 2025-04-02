@@ -115,10 +115,8 @@ const Signup = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    if (validateLoginForm()){
-      navigate("/dashboard");
-  };
-    
+    if (!validateLoginForm()) return; // ❌ Stop execution if form is invalid
+  
     try {
       setIsSubmitting(true);
       setError('');
@@ -128,22 +126,23 @@ const Signup = () => {
         email: loginForm.identifier, // Backend should check if this is email or roll number
         password: loginForm.password,
       });
-      
-      // Save user data securely
+  
+      // ✅ Save user data securely
       sessionStorage.setItem('token', response.data.token);
       sessionStorage.setItem('user', JSON.stringify(response.data.user));
-      
-      // Navigate to dashboard
+  
+      // ✅ Navigate only after successful login
       navigate("/dashboard");
+  
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Login failed. Please check your credentials.';
-      setError(errorMessage);
-      console.error('Login error:', errorMessage);
+      setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
+ 
   // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
