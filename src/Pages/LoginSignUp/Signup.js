@@ -116,7 +116,7 @@ const Signup = () => {
     e.preventDefault();
     
     if (validateLoginForm()){
-      navigate("/main/dashboard");
+      navigate("/dashboard");
   };
     
     try {
