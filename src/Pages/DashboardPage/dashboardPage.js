@@ -26,7 +26,8 @@ const Dashboard = () => {
     const fetchGrades = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/grade/student/67de02eb0ad325dc130689b3');
+        const apiUrl = process.env.REACT_APP_BACKEND_URL;
+        const response = await fetch(`${apiUrl}/api/grade/student/67de02eb0ad325dc130689b3`);
         
         if (!response.ok) {
           throw new Error(`API request failed with status ${response.status}`);
