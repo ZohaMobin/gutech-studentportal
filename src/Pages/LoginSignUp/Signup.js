@@ -129,6 +129,12 @@ const Signup = () => {
        email: loginForm.identifier,
        password: loginForm.password,
      });
+
+         // Check if the user is a student
+         if (response.data.user.role !== 'student') {
+          setError('Access denied. This portal is for students only.');
+          return;
+        }
  
      const { user, token } = response.data;
      login(user, token); // 🔑 Save user and token in context + sessionStorage
