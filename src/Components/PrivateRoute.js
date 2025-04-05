@@ -1,16 +1,18 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from './AuthContext.js';
-import LoadingSpinner from './LoadingSpinner.js'; // You'll need to create this component
+import { useAuth } from './AuthContext';
 
 const PrivateRoute = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  
+  const { isAuthenticated, token, currentUser } = useAuth();
+  console.log("Auth check: ", isAuthenticated);
 
-  if (isLoading) {
-    return <LoadingSpinner />;
+
+  if (!token || !currentUser) {
+    return <Navigate to="/" replace />;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
+  return <Outlet />;
 };
 
 export default PrivateRoute;

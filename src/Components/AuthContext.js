@@ -1,65 +1,66 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-// Create an AuthContext
-const AuthContext = createContext(null);
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// AuthProvider component to manage authentication state
+// Create the authentication context
+const AuthContext = createContext();
+
+// Custom hook to use the auth context
+export const useAuth = () => useContext(AuthContext);
+
+// Provider component
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Check authentication on component mount
+  // Load user from sessionStorage on mount
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
+    const storedToken = sessionStorage.getItem('token');
     const storedUser = sessionStorage.getItem('user');
+    console.log("Checking session storage: ", storedToken, storedUser);
 
-    if (token && storedUser) {
+    if (storedToken && storedUser) {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setIsAuthenticated(true);
-      } catch (error) {
-        // Clear invalid stored data
-        logout();
+        setToken(storedToken);
+        setCurrentUser(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Error parsing stored user:", err);
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
       }
     }
-    setIsLoading(false);
+
+    setLoading(false);
   }, []);
 
-  // Login method
-  const login = (userData, token) => {
-    sessionStorage.setItem('token', token);
-    sessionStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    setIsAuthenticated(true);
+  // Login function
+  const login = (user, authToken) => {
+    sessionStorage.setItem('token', authToken);
+    sessionStorage.setItem('user', JSON.stringify(user));
+    setCurrentUser(user);
+    setToken(authToken);
   };
 
-  // Logout method
+  // Logout function
   const logout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');
-    setUser(null);
-    setIsAuthenticated(false);
+    setCurrentUser(null);
+    setToken(null);
   };
 
+  // Context value
+  const value = {
+    currentUser,
+    token,
+    login,
+    logout,
+    isAuthenticated: !!token,
+  };
+
+  // Render only when not loading
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isAuthenticated, 
-      isLoading, 
-      login, 
-      logout 
-    }}>
-      {children}
+    <AuthContext.Provider value={value}>
+      {!loading ? children : <div>Loading...</div>}
     </AuthContext.Provider>
   );
-};
-
-// Custom hook to use auth context
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../Components/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
 
@@ -111,36 +112,35 @@ const Signup = () => {
     }
   };
 
-  // Handle login submission
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    
-    if (!validateLoginForm()) return; // ❌ Stop execution if form is invalid
-  
-    try {
-      setIsSubmitting(true);
-      setError('');
-      
-      const apiUrl = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.post(`${apiUrl}/api/auth/login`, {
-        email: loginForm.identifier, // Backend should check if this is email or roll number
-        password: loginForm.password,
-      });
-  
-      // ✅ Save user data securely
-      sessionStorage.setItem('token', response.data.token);
-      sessionStorage.setItem('user', JSON.stringify(response.data.user));
-  
-      // ✅ Navigate only after successful login
-      navigate("/dashboard");
-  
-    } catch (error) {
-      setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
+ // Handle login submission
+ const { login } = useAuth(); // ⬅️ make sure this is at the top
+
+ const handleLogin = async (e) => {
+   e.preventDefault();
+ 
+   if (!validateLoginForm()) return;
+ 
+   try {
+     setIsSubmitting(true);
+     setError('');
+ 
+     const apiUrl = process.env.REACT_APP_BACKEND_URL;
+     const response = await axios.post(`${apiUrl}/api/auth/login`, {
+       email: loginForm.identifier,
+       password: loginForm.password,
+     });
+ 
+     const { user, token } = response.data;
+     login(user, token); // 🔑 Save user and token in context + sessionStorage
+     navigate("/main/dashboard");  // 🚀 Redirect to dashboard
+ 
+   } catch (error) {
+     setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
+   } finally {
+     setIsSubmitting(false);
+   }
+ };
+ 
 
  
   // Toggle password visibility

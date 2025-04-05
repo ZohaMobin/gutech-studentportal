@@ -1,9 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './Components/AuthContext';
 import PrivateRoute from './Components/PrivateRoute';
 import Signup from './Pages/LoginSignUp/Signup';
-import MainLayout from './Pages/MainLayout/ MainLayout.jsx';
+import MainLayout from './Pages/MainLayout/ MainLayout';
 import GradingPage from './Pages/Grading/Grading';
 import ClassSchedule from './Pages/ClassSchedule/ClassSchedule';
 import Transcript from './Pages/Transcript/Transcript';
@@ -13,7 +13,7 @@ import ComingSoonPage from './Pages/ComingSoon/comingsoon';
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <BrowserRouter>
         <div className="app">
           <Routes>
             {/* Public Routes */}
@@ -21,9 +21,8 @@ function App() {
             
             {/* Protected Routes */}
             <Route element={<PrivateRoute />}>
-              {/* Main Layout and its nested routes */}
               <Route path="/main" element={<MainLayout />}>
-                <Route index element={<Navigate to="/main/dashboard" replace />} />
+                <Route index element={<Dashboard />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="marks" element={<GradingPage />} />
                 <Route path="timetable" element={<ClassSchedule />} />
@@ -37,7 +36,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
-      </Router>
+      </BrowserRouter>
     </AuthProvider>
   );
 }
