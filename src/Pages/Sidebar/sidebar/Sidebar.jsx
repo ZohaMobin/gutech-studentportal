@@ -8,13 +8,13 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
   
   const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'attendance', label: 'Attendance', icon: '📅' },
-    { id: 'marks', label: 'Marks', icon: '📄' },
-    { id: 'transcript', label: 'Transcript', icon: '📜' },
-    { id: 'timetable', label: 'Timetable', icon: '📆' },
-    { id: 'fees', label: 'Fees', icon: '💵' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' }
+    { id: 'dashboard', label: 'Dashboard', icon: '📊', path: '/main/dashboard' },
+    { id: 'attendance', label: 'Attendance', icon: '📅', path: '/main/attendance' },
+    { id: 'marks', label: 'Marks', icon: '📄', path: '/main/marks' },
+    { id: 'transcript', label: 'Transcript', icon: '📜', path: '/main/transcript' },
+    { id: 'timetable', label: 'Timetable', icon: '📆', path: '/main/timetable' },
+    { id: 'fees', label: 'Fees', icon: '💵', path: '/main/fees' },
+    { id: 'settings', label: 'Settings', icon: '⚙️', path: '/main/settings' }
   ];
   
   return (
@@ -36,7 +36,7 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
             className={`sidebar-nav-item ${activePage === item.id ? 'active' : ''}`}
             onClick={(e) => {
               e.preventDefault();
-              navigate(`/${item.id}`);
+              navigate(item.path);
               onNavClick(item.id); // Call the handler from parent
             }}
           >

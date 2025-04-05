@@ -12,12 +12,12 @@ const MainLayout = ({ children }) => {
   
   // Update activePage when the route changes
   useEffect(() => {
-    // Extract the page ID from the path (without the leading slash)
-    const currentPath = location.pathname.substring(1);
-    if (currentPath) {
-      setActivePage(currentPath);
+    // Extract the page ID from the path (e.g., /main/dashboard -> dashboard)
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length >= 3) {
+      setActivePage(pathParts[2]); // Get the last part of the path
     } else {
-      setActivePage('dashboard'); // Default to dashboard if on root path
+      setActivePage('dashboard'); // Default to dashboard if path is incomplete
     }
   }, [location]);
   
