@@ -14,38 +14,66 @@ export const AuthProvider = ({ children }) => {
 
   // Load user from sessionStorage on mount
   useEffect(() => {
-    const storedToken = sessionStorage.getItem('token');
-    const storedUser = sessionStorage.getItem('user');
-    console.log("Checking session storage: ", storedToken, storedUser);
+    const loadAuthState = () => {
+      const storedToken = sessionStorage.getItem('token');
+      const storedUser = sessionStorage.getItem('user');
+      console.log("Checking session storage: ", storedToken, storedUser);
 
-    if (storedToken && storedUser) {
-      try {
-        setToken(storedToken);
-        setCurrentUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Error parsing stored user:", err);
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
+      if (storedToken && storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setToken(storedToken);
+          setCurrentUser(parsedUser);
+        } catch (err) {
+          console.error("Error parsing stored user:", err);
+          sessionStorage.removeItem('token');
+          sessionStorage.removeItem('user');
+        }
       }
-    }
+      setLoading(false);
+    };
 
-    setLoading(false);
+    loadAuthState();
+
+    // Add event listener for storage changes
+    window.addEventListener('storage', loadAuthState);
+    return () => window.removeEventListener('storage', loadAuthState);
   }, []);
 
   // Login function
   const login = (user, authToken) => {
-    sessionStorage.setItem('token', authToken);
-    sessionStorage.setItem('user', JSON.stringify(user));
-    setCurrentUser(user);
-    setToken(authToken);
+    if (!user || !authToken) {
+      console.error('Invalid login data');
+      return;
+    }
+    
+    try {
+      sessionStorage.setItem('token', authToken);
+      sessionStorage.setItem('user', JSON.stringify(user));
+      setCurrentUser(user);
+      setToken(authToken);
+    } catch (err) {
+      console.error('Error storing auth data:', err);
+    }
   };
 
   // Logout function
   const logout = () => {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('user');
-    setCurrentUser(null);
-    setToken(null);
+    try {
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+      setCurrentUser(null);
+      setToken(null);
+    } catch (err) {
+      console.error('Error during logout:', err);
+    }
+  };
+
+  // Check if user is authenticated
+  const isAuthenticated = () => {
+    const storedToken = sessionStorage.getItem('token');
+    const storedUser = sessionStorage.getItem('user');
+    return !!(storedToken && storedUser);
   };
 
   // Context value
@@ -54,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     token,
     login,
     logout,
-    isAuthenticated: !!token,
+    isAuthenticated: isAuthenticated(),
   };
 
   // Render only when not loading

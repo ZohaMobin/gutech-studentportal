@@ -3,15 +3,15 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const PrivateRoute = () => {
-  
-  const { isAuthenticated, token, currentUser } = useAuth();
-  console.log("Auth check: ", isAuthenticated);
+  const { isAuthenticated } = useAuth();
 
-
-  if (!token || !currentUser) {
+  // Check authentication status
+  if (!isAuthenticated) {
+    // Redirect to login page if not authenticated
     return <Navigate to="/" replace />;
   }
 
+  // Render the protected route
   return <Outlet />;
 };
 
