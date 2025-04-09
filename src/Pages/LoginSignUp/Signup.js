@@ -12,8 +12,6 @@ const Signup = () => {
   
   // Signup form state
   const [signupForm, setSignupForm] = useState({
-    name: '',
-    email: '',
     rollNumber: '',
     password: '',
   });
@@ -42,13 +40,8 @@ const Signup = () => {
 
   // Validate signup form
   const validateSignupForm = () => {
-    if (!signupForm.name || !signupForm.email || !signupForm.rollNumber || !signupForm.password) {
+    if (!signupForm.rollNumber || !signupForm.password) {
       setError('All fields are required');
-      return false;
-    }
-    
-    if (!signupForm.email.includes('@') || !signupForm.email.includes('.')) {
-      setError('Please enter a valid email address');
       return false;
     }
     
@@ -80,20 +73,15 @@ const Signup = () => {
       setError('');
       
       const apiUrl = process.env.REACT_APP_BACKEND_URL;
-      const response = await axios.post(`${apiUrl}/api/auth/register`, {
-        name: signupForm.name,
+      const response = await axios.post(`${apiUrl}/api/auth/student-signup`, {
         rollNumber: signupForm.rollNumber,
-        email: signupForm.email,
         password: signupForm.password,
-        role: 'student',
       });
       
       console.log('Registration successful:', response.data);
       
       // Reset form after successful registration
       setSignupForm({
-        name: '',
-        email: '',
         rollNumber: '',
         password: '',
       });
@@ -102,7 +90,7 @@ const Signup = () => {
       setIsSignupActive(false);
       
       // Show success message
-      alert('Registration successful! Please log in with your credentials.');
+      alert('Registration successful! Please log in with your roll number and password.');
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
       setError(errorMessage);
@@ -126,7 +114,7 @@ const Signup = () => {
  
      const apiUrl = process.env.REACT_APP_BACKEND_URL;
      const response = await axios.post(`${apiUrl}/api/auth/login`, {
-       email: loginForm.identifier,
+       rollNumber: loginForm.identifier,
        password: loginForm.password,
      });
 
@@ -163,24 +151,6 @@ const Signup = () => {
             <h1 className="form-title">Create Account</h1>
             
             {error && <div className="error-message">{error}</div>}
-            
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={signupForm.name}
-              onChange={handleSignupChange}
-              disabled={isSubmitting}
-            />
-            
-            <input
-              type="email"
-              name="email"
-              placeholder="Institutional Email"
-              value={signupForm.email}
-              onChange={handleSignupChange}
-              disabled={isSubmitting}
-            />
             
             <input
               type="text"

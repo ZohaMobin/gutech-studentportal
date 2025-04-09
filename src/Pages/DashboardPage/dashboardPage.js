@@ -27,7 +27,31 @@ const Dashboard = () => {
       try {
         setLoading(true);
         const apiUrl = process.env.REACT_APP_BACKEND_URL;
-        const response = await fetch(`${apiUrl}/api/grade/student/67de02eb0ad325dc130689b3`);
+        
+        // Get the student ID from the user's session
+        const userData = sessionStorage.getItem('user');
+        if (!userData) {
+          throw new Error('User data not found. Please log in again.');
+        }
+        
+        const user = JSON.parse(userData);
+        if (!user.studentId) {
+          throw new Error('Student ID not found. Please log in again.');
+        }
+
+        // Get the auth token from session storage
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          throw new Error('Authentication token not found. Please log in again.');
+        }
+        
+        // Use the studentId from the user object
+        const response = await fetch(`${apiUrl}/api/grades/student/${user.studentId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         
         if (!response.ok) {
           throw new Error(`API request failed with status ${response.status}`);
