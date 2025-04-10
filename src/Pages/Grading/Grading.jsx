@@ -152,18 +152,21 @@ const Grading = () => {
     };
 
     // Extract unique courses from the grades
-    const uniqueCourses = new Set();
+    const uniqueCourses = new Map();
     apiData.grades.forEach(grade => {
       if (grade.registrationId?.courseId) {
-        uniqueCourses.add({
-          id: grade.registrationId.courseId._id,
-          name: `${grade.registrationId.courseId.code}: ${grade.registrationId.courseId.name}`
-        });
+        const courseId = grade.registrationId.courseId._id;
+        if (!uniqueCourses.has(courseId)) {
+          uniqueCourses.set(courseId, {
+            id: courseId,
+            name: `${grade.registrationId.courseId.code}: ${grade.registrationId.courseId.name}`
+          });
+        }
       }
     });
 
     // Add courses to processed data
-    processedData.courses = Array.from(uniqueCourses);
+    processedData.courses = Array.from(uniqueCourses.values());
 
     // If no courses found, add a default course
     if (processedData.courses.length === 0) {
