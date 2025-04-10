@@ -64,76 +64,236 @@ const Grading = () => {
 
   // Process API data to match the component's expected structure
   const processApiData = (apiData) => {
-    // Extract unique courses
-    const coursesMap = new Map();
-    
-    apiData.forEach(item => {
-      const courseId = item.enrollmentId.sectionId.courseId._id;
-      const courseName = item.enrollmentId.sectionId.courseId.name;
-      
-      if (!coursesMap.has(courseId)) {
-        coursesMap.set(courseId, {
-          id: courseId,
-          name: courseName
-        });
-      }
-    });
-    
-    const courses = Array.from(coursesMap.values());
-    
-    // Initialize the data structure
+    // If apiData is empty or not in the expected format, create a default structure
+    if (!apiData || !apiData.grades || !Array.isArray(apiData.grades) || apiData.grades.length === 0) {
+      return {
+        courses: [
+          {
+            id: 'default',
+            name: 'No Courses Available'
+          }
+        ],
+        quizzes: {
+          'default': [
+            {
+              serial: 'No Quizzes',
+              weightage: 0,
+              obtainedMarks: '-',
+              totalMarks: '-',
+              average: '-',
+              min: '-',
+              max: '-'
+            }
+          ]
+        },
+        assignments: {
+          'default': [
+            {
+              serial: 'No Assignments',
+              weightage: 0,
+              obtainedMarks: '-',
+              totalMarks: '-',
+              average: '-',
+              min: '-',
+              max: '-'
+            }
+          ]
+        },
+        midterms: {
+          'default': [
+            {
+              serial: 'No Midterms',
+              weightage: 0,
+              obtainedMarks: '-',
+              totalMarks: '-',
+              average: '-',
+              min: '-',
+              max: '-'
+            }
+          ]
+        },
+        finals: {
+          'default': [
+            {
+              serial: 'No Finals',
+              weightage: 0,
+              obtainedMarks: '-',
+              totalMarks: '-',
+              average: '-',
+              min: '-',
+              max: '-'
+            }
+          ]
+        },
+        courseStats: {
+          'default': {
+            sectionMax: apiData.sectionStats?.maxWeightedMarks || 0,
+            sectionMin: apiData.sectionStats?.minWeightedMarks || 0
+          }
+        }
+      };
+    }
+
     const processedData = {
-      courses: courses,
+      courses: [],
       quizzes: {},
       assignments: {},
       midterms: {},
-      finals: {}
+      finals: {},
+      courseStats: {}
     };
-    
-    // Initialize course data for each assessment type
-    courses.forEach(course => {
+
+    // Extract unique courses from the grades
+    const uniqueCourses = new Set();
+    apiData.grades.forEach(grade => {
+      if (grade.registrationId?.courseId) {
+        uniqueCourses.add({
+          id: grade.registrationId.courseId._id,
+          name: `${grade.registrationId.courseId.code}: ${grade.registrationId.courseId.name}`
+        });
+      }
+    });
+
+    // Add courses to processed data
+    processedData.courses = Array.from(uniqueCourses);
+
+    // If no courses found, add a default course
+    if (processedData.courses.length === 0) {
+      processedData.courses.push({
+        id: 'default',
+        name: 'No Courses Available'
+      });
+    }
+
+    // Initialize data structures for each course
+    processedData.courses.forEach(course => {
       processedData.quizzes[course.id] = [];
       processedData.assignments[course.id] = [];
       processedData.midterms[course.id] = [];
       processedData.finals[course.id] = [];
-    });
-    
-    // Process the API data
-    apiData.forEach(item => {
-      const courseId = item.enrollmentId.sectionId.courseId._id;
-      const assessmentType = mapAssessmentType(item.type);
-      
-      // Skip if assessment type is unrecognized
-      if (!assessmentType) return;
-      
-      // Calculate class statistics (in a real scenario, these would come from the API)
-      // For this example, we'll simulate these values
-      const average = item.maxMarks * 0.85; // Simulated class average (85% of max)
-      const stdDev = item.maxMarks * 0.1; // Simulated standard deviation (10% of max)
-      const min = Math.max(0, item.maxMarks * 0.6); // Simulated minimum (60% of max)
-      const max = Math.min(item.maxMarks, item.maxMarks * 0.95); // Simulated maximum (95% of max)
-      
-      // Create the assessment item
-      const assessmentItem = {
-        serial: parseInt(item.title) || 1, // Use title as serial, fallback to 1
-        weightage: item.weightage,
-        obtainedMarks: item.obtainedMarks,
-        totalMarks: item.maxMarks,
-        average: average,
-        stdDev: stdDev,
-        min: min,
-        max: max
+      processedData.courseStats[course.id] = {
+        sectionMax: apiData.sectionStats?.maxWeightedMarks || 0,
+        sectionMin: apiData.sectionStats?.minWeightedMarks || 0
       };
-      
-      // Add to the appropriate array
-      processedData[assessmentType][courseId].push(assessmentItem);
+    });
+
+    // Group grades by course
+    const courseGrades = {};
+    apiData.grades.forEach(grade => {
+      const courseId = grade.registrationId?.courseId?._id;
+      if (!courseId) return;
+
+      if (!courseGrades[courseId]) {
+        courseGrades[courseId] = [];
+      }
+      courseGrades[courseId].push(grade);
+    });
+
+    // Process grades for each course
+    Object.entries(courseGrades).forEach(([courseId, grades]) => {
+      grades.forEach(grade => {
+        const assessmentType = grade.assessmentId?.type?.toLowerCase();
+        const gradeData = {
+          serial: grade.assessmentId?.title || 'Untitled Assessment',
+          weightage: grade.assessmentId?.weightage || 0,
+          obtainedMarks: grade.obtainedMarks || 0,
+          totalMarks: grade.assessmentId?.maxMarks || 0,
+          average: grade.stats?.average || 0,
+          min: grade.stats?.min || 0,
+          max: grade.stats?.max || 0
+        };
+
+        switch(assessmentType) {
+          case 'quiz':
+            processedData.quizzes[courseId].push(gradeData);
+            break;
+          case 'assignment':
+            processedData.assignments[courseId].push(gradeData);
+            break;
+          case 'midterm':
+            processedData.midterms[courseId].push(gradeData);
+            break;
+          case 'final':
+            processedData.finals[courseId].push(gradeData);
+            break;
+        }
+      });
+
+      // If no grades found for any category, add default entries
+      if (processedData.quizzes[courseId].length === 0) {
+        processedData.quizzes[courseId].push({
+          serial: 'No Quizzes',
+          weightage: 0,
+          obtainedMarks: '-',
+          totalMarks: '-',
+          average: '-',
+          min: '-',
+          max: '-'
+        });
+      }
+
+      if (processedData.assignments[courseId].length === 0) {
+        processedData.assignments[courseId].push({
+          serial: 'No Assignments',
+          weightage: 0,
+          obtainedMarks: '-',
+          totalMarks: '-',
+          average: '-',
+          min: '-',
+          max: '-'
+        });
+      }
+
+      if (processedData.midterms[courseId].length === 0) {
+        processedData.midterms[courseId].push({
+          serial: 'No Midterms',
+          weightage: 0,
+          obtainedMarks: '-',
+          totalMarks: '-',
+          average: '-',
+          min: '-',
+          max: '-'
+        });
+      }
+
+      if (processedData.finals[courseId].length === 0) {
+        processedData.finals[courseId].push({
+          serial: 'No Finals',
+          weightage: 0,
+          obtainedMarks: '-',
+          totalMarks: '-',
+          average: '-',
+          min: '-',
+          max: '-'
+        });
+      }
+    });
+
+    return processedData;
+  };
+  
+  // Helper function to calculate student's total weighted marks for a course
+  const calculateStudentWeightedMarks = (data, courseId) => {
+    const categories = ['quizzes', 'assignments', 'midterms', 'finals'];
+    let totalWeightedMarks = 0;
+    
+    categories.forEach(category => {
+      const categoryData = data[category][courseId];
+      if (categoryData && categoryData.length > 0) {
+        categoryData.forEach(item => {
+          const weightedMark = (item.obtainedMarks / item.totalMarks) * item.weightage;
+          totalWeightedMarks += weightedMark;
+        });
+      }
     });
     
-    return processedData;
+    return totalWeightedMarks;
   };
   
   // Map API assessment type to component assessment type
   const mapAssessmentType = (apiType) => {
+    if (!apiType) return 'quizzes'; // Default to quizzes if type is undefined
+    
     switch (apiType.toLowerCase()) {
       case 'quiz':
         return 'quizzes';
@@ -144,7 +304,8 @@ const Grading = () => {
       case 'final':
         return 'finals';
       default:
-        return null;
+        console.warn('Unknown assessment type:', apiType);
+        return 'quizzes'; // Default to quizzes for unknown types
     }
   };
 
@@ -152,17 +313,68 @@ const Grading = () => {
   const calculateTotals = (category, courseId) => {
     if (!marksData || !marksData[category] || !marksData[category][courseId]) return null;
     
-    const items = marksData[category][courseId];
-    if (items.length === 0) return null;
+    const categoryData = marksData[category][courseId];
+    if (categoryData.length === 0) return null;
+    
+    // Check if the data contains placeholder values
+    if (categoryData[0].obtainedMarks === '-') {
+      return {
+        totalWeightage: 0,
+        totalObtained: '-',
+        totalMarks: '-',
+        average: '-',
+        min: '-',
+        max: '-'
+      };
+    }
+    
+    let totalWeightage = 0;
+    let totalObtained = 0;
+    let totalMarks = 0;
+    let validAverages = [];
+    let validMins = [];
+    let validMaxs = [];
+    
+    categoryData.forEach(item => {
+      if (typeof item.obtainedMarks === 'number' && typeof item.totalMarks === 'number' && item.totalMarks > 0) {
+        totalWeightage += item.weightage;
+        totalObtained += item.obtainedMarks;
+        totalMarks += item.totalMarks;
+        
+        if (typeof item.average === 'number') {
+          validAverages.push(item.average);
+        }
+        
+        if (typeof item.min === 'number') {
+          validMins.push(item.min);
+        }
+        
+        if (typeof item.max === 'number') {
+          validMaxs.push(item.max);
+        }
+      }
+    });
+    
+    // Calculate average of averages
+    const average = validAverages.length > 0 
+      ? validAverages.reduce((sum, val) => sum + val, 0) / validAverages.length 
+      : 0;
+    
+    // Find min of mins and max of maxs
+    const min = validMins.length > 0 ? Math.min(...validMins) : 0;
+    const max = validMaxs.length > 0 ? Math.max(...validMaxs) : 0;
     
     return {
-      totalWeightage: items.reduce((sum, item) => sum + item.weightage, 0),
-      totalObtained: items.reduce((sum, item) => sum + item.obtainedMarks, 0),
-      totalMarks: items.reduce((sum, item) => sum + item.totalMarks, 0)
+      totalWeightage,
+      totalObtained,
+      totalMarks,
+      average,
+      min,
+      max
     };
   };
 
-  // Calculate grand total across all assessment types
+  // Calculate grand total for a course
   const calculateGrandTotal = (courseId) => {
     if (!marksData) return null;
     
@@ -170,40 +382,60 @@ const Grading = () => {
     let totalObtained = 0;
     let totalMarks = 0;
     let totalWeightage = 0;
-    let average = 0;
-    let min = 0;
-    let max = 0;
-    let categoryCount = 0;
+    let weightedMarks = 0;
+    let hasValidData = false;
     
     categories.forEach(category => {
       const categoryData = marksData[category][courseId];
       if (categoryData && categoryData.length > 0) {
-        totalObtained += categoryData.reduce((sum, item) => sum + item.obtainedMarks, 0);
-        totalMarks += categoryData.reduce((sum, item) => sum + item.totalMarks, 0);
-        totalWeightage += categoryData.reduce((sum, item) => sum + item.weightage, 0);
-        
-        // Calculate average, min, max across all items in the category
-        const avgSum = categoryData.reduce((sum, item) => sum + item.average, 0);
-        average += avgSum;
-        categoryCount += categoryData.length;
-        
-        const minVal = Math.min(...categoryData.map(item => item.min));
-        min = min === 0 ? minVal : Math.min(min, minVal);
-        
-        const maxVal = Math.max(...categoryData.map(item => item.max));
-        max = Math.max(max, maxVal);
+        // Check if the data contains placeholder values
+        if (categoryData[0].obtainedMarks !== '-') {
+          hasValidData = true;
+          // Calculate total obtained marks and weightage
+          categoryData.forEach(item => {
+            if (typeof item.obtainedMarks === 'number' && typeof item.totalMarks === 'number' && item.totalMarks > 0) {
+              totalObtained += item.obtainedMarks;
+              totalMarks += item.totalMarks;
+              totalWeightage += item.weightage;
+              
+              // Calculate weighted marks for this assessment
+              const weightedMark = (item.obtainedMarks / item.totalMarks) * item.weightage;
+              weightedMarks += weightedMark;
+            }
+          });
+        }
       }
     });
     
+    if (!hasValidData) {
+      return {
+        totalObtained: '-',
+        totalMarks: '-',
+        totalWeightage: 0,
+        percentage: '-',
+        maxPossible: '-',
+        minPossible: '-',
+        weightedMarks: '-'
+      };
+    }
+    
     if (totalMarks === 0) return null;
+    
+    // Calculate percentage based on total weightage
+    const percentage = totalWeightage > 0 ? (weightedMarks / totalWeightage) * 100 : 0;
+    
+    // Get section-wide stats from courseStats
+    const sectionMax = marksData.courseStats[courseId]?.sectionMax || 0;
+    const sectionMin = marksData.courseStats[courseId]?.sectionMin || 0;
     
     return {
       totalObtained,
       totalMarks,
       totalWeightage,
-      classAverage: categoryCount > 0 ? (average / categoryCount).toFixed(2) : 0,
-      min,
-      max
+      percentage: percentage.toFixed(2),
+      maxPossible: sectionMax.toFixed(2),
+      minPossible: sectionMin.toFixed(2),
+      weightedMarks: weightedMarks.toFixed(2)
     };
   };
 
@@ -276,13 +508,13 @@ const Grading = () => {
         <table className="marks-table">
           <thead>
             <tr>
-              <th>Serial #</th>
-              <th>Weightage</th>
-              <th>Obtained Marks</th>
+              <th>Assessment</th>
+              <th>Weightage (%)</th>
+              <th>Your Marks</th>
               <th>Total Marks</th>
-              <th>Average</th>
-              <th>Minimum</th>
-              <th>Maximum</th>
+              <th>Class Average</th>
+              <th>Min Marks</th>
+              <th>Max Marks</th>
             </tr>
           </thead>
           <tbody>
@@ -291,21 +523,23 @@ const Grading = () => {
                 {activeCategoryData.map((item, index) => (
                   <tr key={index}>
                     <td>{item.serial}</td>
-                    <td>{item.weightage}</td>
+                    <td>{item.weightage}%</td>
                     <td>{item.obtainedMarks}</td>
                     <td>{item.totalMarks}</td>
-                    <td>{item.average.toFixed(2)}</td>
-                    <td>{item.min.toFixed(2)}</td>
-                    <td>{item.max.toFixed(2)}</td>
+                    <td>{item.average === '-' ? '-' : item.average.toFixed(2)}</td>
+                    <td>{item.min}</td>
+                    <td>{item.max}</td>
                   </tr>
                 ))}
                 {totals && (
                   <tr className="total-row">
                     <td>Total</td>
-                    <td>{totals.totalWeightage}</td>
+                    <td>{totals.totalWeightage}%</td>
                     <td>{totals.totalObtained}</td>
                     <td>{totals.totalMarks}</td>
-                    <td colSpan={3}></td>
+                    <td>{totals.average === '-' ? '-' : totals.average.toFixed(2)}</td>
+                    <td>{totals.min}</td>
+                    <td>{totals.max}</td>
                   </tr>
                 )}
               </>
@@ -325,20 +559,18 @@ const Grading = () => {
           <table className="grand-total-table">
             <thead>
               <tr>
-                <th>Total Marks</th>
-                <th>Obtained Marks</th>
-                <th>Class Average</th>
-                <th>Min</th>
-                <th>Max</th>
+                <th>Total Weightage</th>
+                <th>Weighted Marks</th>
+                <th>Section Max</th>
+                <th>Section Min</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{grandTotal.totalMarks.toFixed(2)}</td>
-                <td>{grandTotal.totalObtained.toFixed(2)}</td>
-                <td>{grandTotal.classAverage}</td>
-                <td>{grandTotal.min.toFixed(2)}</td>
-                <td>{grandTotal.max.toFixed(2)}</td>
+                <td>{grandTotal.totalWeightage}%</td>
+                <td>{grandTotal.weightedMarks}</td>
+                <td>{grandTotal.maxPossible}%</td>
+                <td>{grandTotal.minPossible}%</td>
               </tr>
             </tbody>
           </table>
