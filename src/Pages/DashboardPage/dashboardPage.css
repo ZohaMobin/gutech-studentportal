@@ -710,15 +710,15 @@
 
 /* Font Awesome Icons Placeholder */
 .fas {
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+   /* No overrides - keep Font Awesome styling intact */
 }
-.fas.fa-ellipsis-h:before { content: "•••"; }
-.fas.fa-calendar-alt:before { content: "📅"; }
-.fas.fa-bell:before { content: "🔔"; }
-.fas.fa-chart-line:before { content: "📈"; }
-.fas.fa-check-circle:before { content: "✓"; }
-.fas.fa-star:before { content: "★"; }
-.fas.fa-clock:before { content: "⏱"; }
+.fas.fa-ellipsis-h:before { content: inherit; }
+.fas.fa-calendar-alt:before { content: inherit; }
+.fas.fa-bell:before { content: inherit; }
+.fas.fa-chart-line:before { content: inherit; }
+.fas.fa-check-circle:before { content: inherit; }
+.fas.fa-star:before { content: inherit; }
+.fas.fa-clock:before { content: inherit; }
 
 /* Circular chart for attendance */
 .circular-chart {
