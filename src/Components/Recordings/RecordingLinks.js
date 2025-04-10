@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaSearch, FaRegCalendarAlt } from "react-icons/fa";
 import { FaRegCirclePlay } from "react-icons/fa6";
 import "./RecordingLinks.css";
+import NoResultsFound from '../NoResultsFound';
 
 const RecordingLinksPage = () => {
   const location = useLocation();
@@ -98,7 +99,14 @@ const RecordingLinksPage = () => {
             </div>
           ))
         ) : (
-          <p className="no-results">No recordings found matching your search or filters.</p>
+          <NoResultsFound 
+            title="No Recordings Found"
+            message="No recordings match your current search or filter criteria. Try adjusting your search terms or filters."
+            icon="search"
+            actionButton={true}
+            actionButtonText="Clear Filters"
+            onActionButtonClick={handleClearFilters}
+          />
         )}
       </div>
     </div>

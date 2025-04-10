@@ -17,18 +17,18 @@ const Grading = () => {
         // Get the student ID from session storage
         const userData = sessionStorage.getItem('user');
         if (!userData) {
-          throw new Error('User data not found. Please log in again.');
+          throw new Error('Please log in again to view your marks');
         }
         
         const user = JSON.parse(userData);
         if (!user.studentId) {
-          throw new Error('Student ID not found. Please log in again.');
+          throw new Error('Student ID not found. Please log in again');
         }
 
         // Get the auth token from session storage
         const token = sessionStorage.getItem('token');
         if (!token) {
-          throw new Error('Authentication token not found. Please log in again.');
+          throw new Error('Authentication token not found. Please log in again');
         }
 
         const response = await fetch(`${apiUrl}/api/grades/student/${user.studentId}`, {
@@ -39,7 +39,15 @@ const Grading = () => {
         });
         
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          if (response.status === 401) {
+            throw new Error('Your session has expired. Please log in again');
+          } else if (response.status === 404) {
+            throw new Error('No marks data found for your account');
+          } else if (response.status === 500) {
+            throw new Error('Server error. Please try again later');
+          } else {
+            throw new Error(`Unable to load marks data (Error ${response.status})`);
+          }
         }
         
         const apiData = await response.json();
@@ -440,15 +448,109 @@ const Grading = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Loading marks data...</div>;
+    return (
+      <div className="marks-container">
+        <div className="page-header">
+          <h1>Marks Overview</h1>
+        </div>
+        <div className="loading-container">Loading marks data...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error-container">Error loading data: {error}</div>;
+    return (
+      <div className="marks-container">
+        <div className="page-header">
+          <h1>Marks Overview</h1>
+        </div>
+        <div className="error-container">
+          <div className="error-message">
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="retry-button">
+              Retry
+            </button>
+          </div>
+        </div>
+        
+        {/* Course Tabs - Show empty tabs when API fails */}
+        <div className="course-tabs">
+          <button className="course-tab active">No Courses Available</button>
+        </div>
+        
+        {/* Assessment Type Tabs - Show all tabs when API fails */}
+        <div className="assessment-tabs">
+          <button className={`assessment-tab ${activeTab === 'quizzes' ? 'active' : ''}`}>
+            Quizzes
+          </button>
+          <button className={`assessment-tab ${activeTab === 'assignments' ? 'active' : ''}`}>
+            Assignments
+          </button>
+          <button className={`assessment-tab ${activeTab === 'midterms' ? 'active' : ''}`}>
+            Midterms
+          </button>
+          <button className={`assessment-tab ${activeTab === 'finals' ? 'active' : ''}`}>
+            Finals
+          </button>
+        </div>
+        
+        {/* Marks Table - Show empty table when API fails */}
+        <div className="marks-table-container">
+          <table className="marks-table">
+            <thead>
+              <tr>
+                <th>Assessment</th>
+                <th>Weightage (%)</th>
+                <th>Your Marks</th>
+                <th>Total Marks</th>
+                <th>Class Average</th>
+                <th>Min Marks</th>
+                <th>Max Marks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan={7} className="no-data">Unable to load marks data</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        {/* Grand Total Section - Show empty section when API fails */}
+        <div className="grand-total-section">
+          <h2>Grand Total Marks</h2>
+          <table className="grand-total-table">
+            <thead>
+              <tr>
+                <th>Total Weightage</th>
+                <th>Weighted Marks</th>
+                <th>Section Max</th>
+                <th>Section Min</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
   }
 
   if (!marksData || !activeCourse) {
-    return <div className="no-data-container">No marks data available</div>;
+    return (
+      <div className="marks-container">
+        <div className="page-header">
+          <h1>Marks Overview</h1>
+        </div>
+        <div className="no-data-container">No marks data available</div>
+      </div>
+    );
   }
 
   const activeCategoryData = marksData[activeTab][activeCourse];

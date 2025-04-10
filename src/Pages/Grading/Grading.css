@@ -397,6 +397,57 @@
   font-weight: 500;
 }
 
+/* Error State */
+.error-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+}
+
+.error-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  color: #dc2626;
+  font-size: 0.9375rem;
+}
+
+.error-message p {
+  margin: 0;
+  flex: 1;
+}
+
+.retry-button {
+  background-color: #991D20;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  background-color: #7a1720;
+  transform: translateY(-1px);
+}
+
+/* Loading State */
+.loading-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9375rem;
+}
+
 
 
 

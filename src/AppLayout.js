@@ -10,8 +10,6 @@ import Timetable from './Pages/ClassSchedule/ClassSchedule.jsx';
 import Chat from "./Pages/Chat/Chat.js";
 import Transcript from './Pages/Transcript/Transcript.jsx';
 import ScholarshipPage from './Pages/JobOpportunities/Scholarship';
-import JobsAndBootcamps from './Pages/JobOpportunities/JobsAndBootcamps';
-import BootcampForm from './Pages/JobOpportunities/BootcampForm';
 import GradingPage from './Pages/Grading/Grading';
 import Fees from './Pages/Fees/Fees.js';
 import AddFee from './Pages/Fees/AddFee.js';
@@ -34,8 +32,6 @@ function AppLayout() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/transcript" element={<Transcript />} />
           <Route path="/scholarship" element={<ScholarshipPage />} />
-          <Route path="/jobs-and-bootcamps" element={<JobsAndBootcamps />} />
-          <Route path="/bootcamp-form" element={<BootcampForm />} />
           <Route path="/Grading" element={<GradingPage />} />
           <Route path="/fees" element={<Fees />} />
           <Route path='/add-fee' element={<AddFee />} />

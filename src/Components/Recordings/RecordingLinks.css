@@ -162,13 +162,7 @@ h3 {
     transform: scale(0.95);
 }
 
-/* No Results */
-.no-results {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #991D20;
-    margin-top: 20px;
-}
+/* No Results - Removed in favor of NoResultsFound component */
 
 /* Responsive Adjustments */
 @media screen and (max-width: 768px) {
