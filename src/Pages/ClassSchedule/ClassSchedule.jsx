@@ -1,127 +1,274 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
 import './ClassSchedule.css';
+import { toast } from 'react-hot-toast';
 
 const ClassSchedule = () => {
-  const [scheduleData, setScheduleData] = useState({
-    Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: []
-  });
+  const [schedule, setSchedule] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [teacherNames, setTeacherNames] = useState({});
+  const MAX_RETRIES = 3;
 
   const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
-  const timeSlots = [
-    '08:00', '09:00', '10:00', '11:00', '12:00',
-    '13:00', '14:00', '15:00', '16:00', '17:00'
-  ];
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-  useEffect(() => {
-    fetchSchedule();
-  }, []);
+  // Function to fetch teacher names
+  const fetchTeacherNames = async (teacherIds) => {
+    try {
+      const uniqueTeacherIds = [...new Set(teacherIds)];
+      const teacherNamesMap = {};
+
+      for (const teacherId of uniqueTeacherIds) {
+        if (!teacherNamesMap[teacherId]) {
+          const response = await axios.get(`${apiUrl}/api/teachers/${teacherId}`, {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+          });
+          
+          if (response.data && response.data.userId && response.data.userId.name) {
+            teacherNamesMap[teacherId] = response.data.userId.name;
+          } else {
+            teacherNamesMap[teacherId] = 'Teacher TBA';
+          }
+        }
+      }
+
+      setTeacherNames(teacherNamesMap);
+    } catch (err) {
+      console.error('Error fetching teacher names:', err);
+      // Don't throw error here, just log it and continue with default names
+    }
+  };
 
   const fetchSchedule = async () => {
     try {
-      setLoading(true);
       const userData = JSON.parse(sessionStorage.getItem('user'));
-      
       if (!userData || !userData.studentId) {
-        throw new Error('Student ID not found. Please log in again.');
+        throw new Error('Student ID not found');
       }
 
       const response = await axios.get(`${apiUrl}/api/section-schedules/student/${userData.studentId}`, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
       });
 
-      setScheduleData(response.data);
-    } catch (error) {
-      console.error('Error fetching schedule:', error);
-      setError(error.message || 'Failed to load schedule data');
-      toast.error(error.message || 'Failed to load schedule data');
-    } finally {
+      // Check if response data exists and has the expected structure
+      if (!response.data) {
+        throw new Error('No data received from server');
+      }
+
+      // Initialize empty schedule object with all days
+      const emptySchedule = {
+        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], 
+        Friday: []
+      };
+
+      let scheduleData;
+      // If response is an array and has data, use the first item
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        scheduleData = response.data[0];
+      } else if (typeof response.data === 'object') {
+        // If response is already an object with days, use it directly
+        scheduleData = response.data;
+      } else {
+        // If response format is unexpected, use empty schedule
+        scheduleData = emptySchedule;
+      }
+
+      setSchedule(scheduleData);
+
+      // Extract teacher IDs from the schedule data
+      const teacherIds = Object.values(scheduleData)
+        .flat()
+        .filter(schedule => schedule && schedule.teacherId && schedule.teacherId._id)
+        .map(schedule => schedule.teacherId._id);
+
+      // Fetch teacher names if we have any teacher IDs
+      if (teacherIds.length > 0) {
+        await fetchTeacherNames(teacherIds);
+      }
+
       setLoading(false);
+      setError(null);
+      setRetryCount(0); // Reset retry count on success
+    } catch (err) {
+      console.error('Error fetching schedule:', err);
+      setError(err.message || 'Failed to fetch schedule');
+      setLoading(false);
+
+      // Only retry if we haven't reached max retries
+      if (retryCount < MAX_RETRIES) {
+        const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+        setTimeout(() => {
+          setRetryCount(prev => prev + 1);
+          setLoading(true);
+          fetchSchedule();
+        }, delay);
+      } else {
+        // If max retries reached, show error toast
+        toast.error('Failed to load schedule after multiple attempts. Please try again later.');
+      }
     }
+  };
+
+  // Only fetch schedule once when component mounts
+  useEffect(() => {
+    let mounted = true;
+
+    const loadSchedule = async () => {
+      if (mounted) {
+        await fetchSchedule();
+      }
+    };
+
+    loadSchedule();
+
+    // Cleanup function to prevent memory leaks
+    return () => {
+      mounted = false;
+    };
+  }, []); // Empty dependency array means this effect runs once on mount
+
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  
+  // Define time slots with start and end times
+  const timeSlots = [
+    { start: '08:00', end: '09:00', label: '8:00 AM - 9:00 AM' },
+    { start: '09:00', end: '10:00', label: '9:00 AM - 10:00 AM' },
+    { start: '10:00', end: '11:00', label: '10:00 AM - 11:00 AM' },
+    { start: '11:00', end: '12:00', label: '11:00 AM - 12:00 PM' },
+    { start: '12:00', end: '13:00', label: '12:00 PM - 1:00 PM' },
+    { start: '13:00', end: '14:00', label: '1:00 PM - 2:00 PM' },
+    { start: '14:00', end: '15:00', label: '2:00 PM - 3:00 PM' },
+    { start: '15:00', end: '16:00', label: '3:00 PM - 4:00 PM' },
+    { start: '16:00', end: '17:00', label: '4:00 PM - 5:00 PM' },
+    { start: '17:00', end: '18:00', label: '5:00 PM - 6:00 PM' }
+  ];
+
+  // Function to format time in 12-hour format
+  const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
   };
 
   if (loading) {
     return (
-      <div className="schedule-container">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading your schedule...</p>
-        </div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading your schedule{retryCount > 0 ? ` (Attempt ${retryCount + 1}/${MAX_RETRIES + 1})` : ''}...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="schedule-container">
-        <div className="error-container">
-          <div className="error-message">
-            <p>{error}</p>
-            <button onClick={fetchSchedule}>Try Again</button>
-          </div>
+      <div className="error-container">
+        <div className="error-message">
+          <p>{error}</p>
+          <button 
+            onClick={() => {
+              setRetryCount(0);
+              setLoading(true);
+              fetchSchedule();
+            }}
+            disabled={retryCount >= MAX_RETRIES}
+            className={retryCount >= MAX_RETRIES ? 'disabled' : ''}
+          >
+            {retryCount >= MAX_RETRIES ? 'Max retries reached' : 'Try Again'}
+          </button>
         </div>
+      </div>
+    );
+  }
+
+  // Check if there are any schedules
+  const hasSchedules = Object.values(schedule).some(daySchedules => daySchedules && daySchedules.length > 0);
+  if (!hasSchedules) {
+    return (
+      <div className="no-schedule-message">
+        <p>No classes scheduled yet</p>
+        <p className="subtext">Your class schedule will appear here once it's available</p>
       </div>
     );
   }
 
   return (
     <div className="schedule-container">
-      <h1 className="heading">My Class Schedule</h1>
+      <h2 className="heading">Class Schedule</h2>
       <div className="table-responsive">
         <table className="schedule-table">
           <thead>
             <tr>
-              <th className="time-col"></th>
+              <th>Time</th>
               {days.map(day => (
                 <th key={day}>{day}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {timeSlots.map((time, i) => {
-              const nextTime = timeSlots[i + 1];
-              if (!nextTime) return null;
+            {timeSlots.map((timeSlot, index) => (
+              <tr key={timeSlot.start}>
+                <td className="time-cell">
+                  <div className="time-slot-label">{timeSlot.label}</div>
+                </td>
+                {days.map(day => {
+                  const daySchedules = schedule[day] || [];
+                  const scheduleForTime = daySchedules.find(s => 
+                    s.timeSlot.startTime === timeSlot.start || 
+                    (index > 0 && s.timeSlot.startTime === timeSlots[index - 1].start)
+                  );
 
-              return (
-                <tr key={time}>
-                  <td className="time-cell">{`${time} - ${nextTime}`}</td>
-                  {days.map(day => {
-                    const schedules = scheduleData[day].filter(schedule => 
-                      schedule.timeSlot.startTime === time &&
-                      schedule.timeSlot.endTime === nextTime
-                    );
+                  // Calculate rowspan for multi-hour classes
+                  const rowSpan = scheduleForTime && scheduleForTime.timeSlot.startTime === timeSlot.start ? 
+                    timeSlots.filter((ts, i) => 
+                      i >= index && 
+                      ts.start >= timeSlot.start && 
+                      ts.end <= scheduleForTime.timeSlot.endTime
+                    ).length : 1;
 
-                    return (
-                      <td key={day} className={schedules.length ? 'schedule-cell' : ''}>
-                        {schedules.map((schedule, index) => (
-                          <div key={index} className="class-item">
-                            <div className="course-info">
-                              <span className="course-code">{schedule.courseId.code}</span>
-                              <span className="course-name">{schedule.courseId.name}</span>
+                  // Skip rendering if this cell is part of a longer class
+                  if (index > 0 && scheduleForTime && 
+                      scheduleForTime.timeSlot.startTime === timeSlots[index - 1].start) {
+                    return null;
+                  }
+
+                  return (
+                    <td 
+                      key={`${day}-${timeSlot.start}`} 
+                      className="schedule-cell"
+                      rowSpan={rowSpan}
+                    >
+                      {scheduleForTime && scheduleForTime.timeSlot.startTime === timeSlot.start && (
+                        <div className="class-item">
+                          <div className="course-info">
+                            <span className="course-code">{scheduleForTime.courseId.code}</span>
+                            <span className="course-name">{scheduleForTime.courseId.name}</span>
+                          </div>
+                          <div className="schedule-details">
+                            <div className="teacher-info">
+                              {scheduleForTime.teacherId && scheduleForTime.teacherId._id 
+                                ? teacherNames[scheduleForTime.teacherId._id] || 'Loading...' 
+                                : 'Teacher TBA'}
                             </div>
-                            <div className="schedule-details">
-                              <div className="teacher-info">
-                                {schedule.teacherId.firstName} {schedule.teacherId.lastName}
-                              </div>
-                              <div className="room-info">
-                                {schedule.timeSlot.room}
-                              </div>
-                              <div className="section-info">
-                                Section {schedule.sectionId.section}
-                              </div>
+                            <div className="room-info">
+                              {scheduleForTime.timeSlot.room}
+                            </div>
+                            <div className="section-info">
+                              Section {scheduleForTime.sectionId.section}
+                            </div>
+                            <div className="time-info">
+                              {formatTime(scheduleForTime.timeSlot.startTime)} - {formatTime(scheduleForTime.timeSlot.endTime)}
                             </div>
                           </div>
-                        ))}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+                        </div>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
