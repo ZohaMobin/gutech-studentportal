@@ -133,12 +133,7 @@ const Grading = () => {
             }
           ]
         },
-        courseStats: {
-          'default': {
-            sectionMax: apiData.sectionStats?.maxWeightedMarks || 0,
-            sectionMin: apiData.sectionStats?.minWeightedMarks || 0
-          }
-        }
+        courseStats: {}
       };
     }
 
@@ -156,10 +151,12 @@ const Grading = () => {
     apiData.grades.forEach(grade => {
       if (grade.registrationId?.courseId) {
         const courseId = grade.registrationId.courseId._id;
+        const sectionId = grade.registrationId.sectionId;
         if (!uniqueCourses.has(courseId)) {
           uniqueCourses.set(courseId, {
             id: courseId,
-            name: `${grade.registrationId.courseId.code}: ${grade.registrationId.courseId.name}`
+            name: `${grade.registrationId.courseId.code}: ${grade.registrationId.courseId.name}`,
+            sectionId: sectionId
           });
         }
       }
@@ -182,9 +179,13 @@ const Grading = () => {
       processedData.assignments[course.id] = [];
       processedData.midterms[course.id] = [];
       processedData.finals[course.id] = [];
+      
+      // Get section stats for this course
+      const sectionStats = apiData.sectionStats[course.sectionId];
       processedData.courseStats[course.id] = {
-        sectionMax: apiData.sectionStats?.maxWeightedMarks || 0,
-        sectionMin: apiData.sectionStats?.minWeightedMarks || 0
+        sectionMax: sectionStats?.maxWeightedMarks || 0,
+        sectionMin: sectionStats?.minWeightedMarks || 0,
+        assessmentTypes: sectionStats?.assessmentTypes || {}
       };
     });
 
@@ -426,7 +427,7 @@ const Grading = () => {
         percentage: '-',
         maxPossible: '-',
         minPossible: '-',
-        weightedMarks: '-'
+        weightedMarks: 0
       };
     }
     
@@ -446,7 +447,7 @@ const Grading = () => {
       percentage: percentage.toFixed(2),
       maxPossible: sectionMax.toFixed(2),
       minPossible: sectionMin.toFixed(2),
-      weightedMarks: weightedMarks.toFixed(2)
+      weightedMarks
     };
   };
 
@@ -572,7 +573,7 @@ const Grading = () => {
         {marksData.courses.map(course => (
           <button
             key={course.id}
-            className={`course-tab ${activeCourse === course.id ? 'active' : ''}`}
+            className={`course-tab ${course.id === activeCourse ? 'active' : ''}`}
             onClick={() => setActiveCourse(course.id)}
           >
             {course.name}
@@ -582,28 +583,16 @@ const Grading = () => {
       
       {/* Assessment Type Tabs */}
       <div className="assessment-tabs">
-        <button
-          className={`assessment-tab ${activeTab === 'quizzes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('quizzes')}
-        >
+        <button className={`assessment-tab ${activeTab === 'quizzes' ? 'active' : ''}`} onClick={() => setActiveTab('quizzes')}>
           Quizzes
         </button>
-        <button
-          className={`assessment-tab ${activeTab === 'assignments' ? 'active' : ''}`}
-          onClick={() => setActiveTab('assignments')}
-        >
+        <button className={`assessment-tab ${activeTab === 'assignments' ? 'active' : ''}`} onClick={() => setActiveTab('assignments')}>
           Assignments
         </button>
-        <button
-          className={`assessment-tab ${activeTab === 'midterms' ? 'active' : ''}`}
-          onClick={() => setActiveTab('midterms')}
-        >
+        <button className={`assessment-tab ${activeTab === 'midterms' ? 'active' : ''}`} onClick={() => setActiveTab('midterms')}>
           Midterms
         </button>
-        <button
-          className={`assessment-tab ${activeTab === 'finals' ? 'active' : ''}`}
-          onClick={() => setActiveTab('finals')}
-        >
+        <button className={`assessment-tab ${activeTab === 'finals' ? 'active' : ''}`} onClick={() => setActiveTab('finals')}>
           Finals
         </button>
       </div>
@@ -623,36 +612,17 @@ const Grading = () => {
             </tr>
           </thead>
           <tbody>
-            {activeCategoryData && activeCategoryData.length > 0 ? (
-              <>
-                {activeCategoryData.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.serial}</td>
-                    <td>{item.weightage}%</td>
-                    <td>{item.obtainedMarks}</td>
-                    <td>{item.totalMarks}</td>
-                    <td>{item.average === '-' ? '-' : item.average.toFixed(2)}</td>
-                    <td>{item.min}</td>
-                    <td>{item.max}</td>
-                  </tr>
-                ))}
-                {totals && (
-                  <tr className="total-row">
-                    <td>Total</td>
-                    <td>{totals.totalWeightage}%</td>
-                    <td>{totals.totalObtained}</td>
-                    <td>{totals.totalMarks}</td>
-                    <td>{totals.average === '-' ? '-' : totals.average.toFixed(2)}</td>
-                    <td>{totals.min}</td>
-                    <td>{totals.max}</td>
-                  </tr>
-                )}
-              </>
-            ) : (
-              <tr>
-                <td colSpan={7} className="no-data">No data available for this category</td>
+            {activeCategoryData.map((item, index) => (
+              <tr key={index}>
+                <td>{item.serial}</td>
+                <td>{item.weightage}%</td>
+                <td>{item.obtainedMarks}</td>
+                <td>{item.totalMarks}</td>
+                <td>{item.average}</td>
+                <td>{item.min}</td>
+                <td>{item.max}</td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       </div>
@@ -673,9 +643,9 @@ const Grading = () => {
             <tbody>
               <tr>
                 <td>{grandTotal.totalWeightage}%</td>
-                <td>{grandTotal.weightedMarks}</td>
-                <td>{grandTotal.maxPossible}%</td>
-                <td>{grandTotal.minPossible}%</td>
+                <td>{typeof grandTotal.weightedMarks === 'number' ? grandTotal.weightedMarks.toFixed(2) : '0.00'}</td>
+                <td>{marksData.courseStats[activeCourse]?.sectionMax.toFixed(2)}</td>
+                <td>{marksData.courseStats[activeCourse]?.sectionMin.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>

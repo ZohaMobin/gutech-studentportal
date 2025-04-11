@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Toaster } from 'react-hot-toast';
+import { showToast, TOAST_TYPES } from '../../Components/Toast/Toast';
 import './ClassSchedule.css';
-import { toast } from 'react-hot-toast';
 
 const ClassSchedule = () => {
   const [schedule, setSchedule] = useState({});
@@ -9,6 +10,7 @@ const ClassSchedule = () => {
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
   const [teacherNames, setTeacherNames] = useState({});
+  const [sectionColors, setSectionColors] = useState({});
   const MAX_RETRIES = 3;
 
   const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
@@ -40,44 +42,85 @@ const ClassSchedule = () => {
     }
   };
 
+  // Generate a consistent color for each course
+  const generateSectionColor = (courseId) => {
+    // Predefined very light pastel colors
+    const distinctColors = [
+      'hsl(0, 60%, 95%)',     // Very light red
+      'hsl(120, 60%, 95%)',   // Very light green
+      'hsl(240, 60%, 95%)',   // Very light blue
+      'hsl(60, 60%, 95%)',    // Very light yellow
+      'hsl(300, 60%, 95%)',   // Very light purple
+      'hsl(180, 60%, 95%)',   // Very light cyan
+      'hsl(30, 60%, 95%)',    // Very light orange
+      'hsl(270, 60%, 95%)',   // Very light indigo
+      'hsl(150, 60%, 95%)',   // Very light teal
+      'hsl(330, 60%, 95%)',   // Very light pink
+      'hsl(90, 60%, 95%)',    // Very light lime
+      'hsl(210, 60%, 95%)',   // Very light sky blue
+      'hsl(0, 50%, 90%)',     // Extra light red
+      'hsl(120, 50%, 90%)',   // Extra light green
+      'hsl(240, 50%, 90%)',   // Extra light blue
+    ];
+    
+    // Use a hash of the course ID to select a color
+    const hash = courseId.split('').reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+    
+    // Select a color from the predefined palette
+    const colorIndex = Math.abs(hash) % distinctColors.length;
+    return distinctColors[colorIndex];
+  };
+
+  // Get course color for a schedule
+  const getSectionColor = (schedule) => {
+    if (!schedule || !schedule.courseId) return '#f8f9fa';
+    
+    const courseId = typeof schedule.courseId === 'string' 
+      ? schedule.courseId 
+      : schedule.courseId._id;
+      
+    return sectionColors[courseId] || '#f8f9fa';
+  };
+
   const fetchSchedule = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      
       const userData = JSON.parse(sessionStorage.getItem('user'));
       if (!userData || !userData.studentId) {
         throw new Error('Student ID not found');
       }
-
+      
       const response = await axios.get(`${apiUrl}/api/section-schedules/student/${userData.studentId}`, {
         headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
       });
-
-      // Check if response data exists and has the expected structure
+      
       if (!response.data) {
-        throw new Error('No data received from server');
+        throw new Error('Invalid response data structure');
       }
-
-      // Initialize empty schedule object with all days
-      const emptySchedule = {
-        Monday: [], Tuesday: [], Wednesday: [], Thursday: [], 
-        Friday: []
-      };
-
-      let scheduleData;
-      // If response is an array and has data, use the first item
-      if (Array.isArray(response.data) && response.data.length > 0) {
-        scheduleData = response.data[0];
-      } else if (typeof response.data === 'object') {
-        // If response is already an object with days, use it directly
-        scheduleData = response.data;
-      } else {
-        // If response format is unexpected, use empty schedule
-        scheduleData = emptySchedule;
-      }
-
-      setSchedule(scheduleData);
+      
+      // Generate colors for sections
+      const newSectionColors = {};
+      Object.values(response.data).forEach(daySchedules => {
+        daySchedules.forEach(schedule => {
+          const sectionId = schedule.sectionId._id;
+          if (!newSectionColors[sectionId]) {
+            newSectionColors[sectionId] = generateSectionColor(sectionId);
+          }
+        });
+      });
+      setSectionColors(newSectionColors);
+      
+      setSchedule(response.data);
+      setLoading(false);
+      setError(null);
+      setRetryCount(0);
 
       // Extract teacher IDs from the schedule data
-      const teacherIds = Object.values(scheduleData)
+      const teacherIds = Object.values(response.data)
         .flat()
         .filter(schedule => schedule && schedule.teacherId && schedule.teacherId._id)
         .map(schedule => schedule.teacherId._id);
@@ -86,31 +129,24 @@ const ClassSchedule = () => {
       if (teacherIds.length > 0) {
         await fetchTeacherNames(teacherIds);
       }
-
-      setLoading(false);
-      setError(null);
-      setRetryCount(0); // Reset retry count on success
     } catch (err) {
       console.error('Error fetching schedule:', err);
       setError(err.message || 'Failed to fetch schedule');
       setLoading(false);
-
-      // Only retry if we haven't reached max retries
+      
       if (retryCount < MAX_RETRIES) {
-        const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+        const delay = Math.pow(2, retryCount) * 1000;
         setTimeout(() => {
           setRetryCount(prev => prev + 1);
           setLoading(true);
           fetchSchedule();
         }, delay);
       } else {
-        // If max retries reached, show error toast
-        toast.error('Failed to load schedule after multiple attempts. Please try again later.');
+        showToast('Failed to load schedule after multiple attempts. Please try again later.', TOAST_TYPES.ERROR);
       }
     }
   };
 
-  // Only fetch schedule once when component mounts
   useEffect(() => {
     let mounted = true;
 
@@ -122,13 +158,12 @@ const ClassSchedule = () => {
 
     loadSchedule();
 
-    // Cleanup function to prevent memory leaks
     return () => {
       mounted = false;
     };
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   
   // Define time slots with start and end times
   const timeSlots = [
@@ -196,7 +231,7 @@ const ClassSchedule = () => {
 
   return (
     <div className="schedule-container">
-      <h2 className="heading">Class Schedule</h2>
+      <h2 className="heading">My Class Schedule</h2>
       <div className="table-responsive">
         <table className="schedule-table">
           <thead>
@@ -241,7 +276,10 @@ const ClassSchedule = () => {
                       rowSpan={rowSpan}
                     >
                       {scheduleForTime && scheduleForTime.timeSlot.startTime === timeSlot.start && (
-                        <div className="class-item">
+                        <div 
+                          className="class-item"
+                          style={{ backgroundColor: getSectionColor(scheduleForTime) }}
+                        >
                           <div className="course-info">
                             <span className="course-code">{scheduleForTime.courseId.code}</span>
                             <span className="course-name">{scheduleForTime.courseId.name}</span>
@@ -253,7 +291,7 @@ const ClassSchedule = () => {
                                 : 'Teacher TBA'}
                             </div>
                             <div className="room-info">
-                              {scheduleForTime.timeSlot.room}
+                              Room: {scheduleForTime.timeSlot.room}
                             </div>
                             <div className="section-info">
                               Section {scheduleForTime.sectionId.section}
