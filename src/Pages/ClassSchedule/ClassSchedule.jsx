@@ -1,115 +1,68 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 import './ClassSchedule.css';
 
 const ClassSchedule = () => {
-  // State to store schedule data (would be populated from API in production)
-  const [scheduleData, setScheduleData] = useState([]);
+  const [scheduleData, setScheduleData] = useState({
+    Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: []
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Dummy data - this would be replaced with API call
-  const dummyScheduleData = [
-    {
-      day: 'Monday',
-      slots: [
-        { time: '09:00 - 10:15 AM', subject: 'Problem Solving & Programming Fundamentals', teacher: 'Sir Twaha Minai', room: 'Room 201', classColor: 'yellow-cell' },
-        { time: '10:25 - 11:40 AM', subject: 'Web Technologies', teacher: 'Dr. Khubaib Ahmed', room: 'Lab 3', classColor: 'blue-cell' },
-        { time: '11:50 - 01:20 PM', subject: 'Discrete Structures', teacher: 'Dr. Shehzad', room: 'Room 105', classColor: 'purple-cell' },
-        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK', teacher: '', room: 'Prayer Hall', classColor: 'green-cell' },
-        { time: '01:45 - 03:00 PM', subject: 'Design Thinking', teacher: 'Dr. Rauf Malik & Dr. Javaid Ghani', room: 'Room 301', classColor: 'orange-cell' }
-      ]
-    },
-    {
-      day: 'Tuesday',
-      slots: [
-        { time: '09:00 - 10:15 AM', subject: '', teacher: '', room: '', classColor: '' },
-        { time: '10:25 - 11:40 AM', subject: '', teacher: '', room: '', classColor: '' },
-        { time: '11:50 - 01:20 PM', subject: '', teacher: '', room: '', classColor: '' },
-        { time: '01:20 - 01:45 PM', subject: '', teacher: '', room: '', classColor: '' },
-        { time: '01:45 - 03:00 PM', subject: '', teacher: '', room: '', classColor: '' }
-      ]
-    },
-    {
-      day: 'Wednesday',
-      slots: [
-        { time: '09:00 - 10:15 AM', subject: 'Problem Solving & Programming Fundamentals', teacher: 'Sir Twaha Minai', room: 'Room 201', classColor: 'yellow-cell' },
-        { time: '10:25 - 11:40 AM', subject: 'Web Technologies', teacher: 'Dr. Khubaib Ahmed', room: 'Room 104', classColor: 'blue-cell' },
-        { time: '11:50 - 01:20 PM', subject: 'Web Technologies Lab', teacher: 'Ms. Zoha Mobin', room: 'Lab 2', classColor: 'dark-blue-cell' },
-        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK', teacher: '', room: 'Prayer Hall', classColor: 'green-cell' },
-        { time: '01:45 - 03:00 PM', subject: 'Web Technologies Lab', teacher: 'Ms. Zoha Mobin', room: 'Lab 2', classColor: 'dark-blue-cell' }
-      ]
-    },
-    {
-      day: 'Thursday',
-      slots: [
-        { time: '09:00 - 10:15 AM', subject: 'Problem Solving & Programming Fundamentals Lab', teacher: 'Ms. Zoha Mobin', room: 'Lab 1', classColor: 'dark-yellow-cell' },
-        { time: '10:25 - 11:40 AM', subject: 'Problem Solving & Programming Fundamentals Lab', teacher: 'Ms. Zoha Mobin', room: 'Lab 1', classColor: 'dark-yellow-cell' },
-        { time: '11:50 - 01:20 PM', subject: 'Discrete Structures', teacher: 'Dr. Shehzad', room: 'Room 105', classColor: 'purple-cell' },
-        { time: '01:20 - 01:45 PM', subject: 'NAMAZ BREAK', teacher: '', room: 'Prayer Hall', classColor: 'green-cell' },
-        { time: '01:45 - 03:00 PM', subject: 'Design Thinking', teacher: 'Dr. Rauf Malik & Dr. Javaid Ghani', room: 'Room 301', classColor: 'orange-cell' }
-      ]
-    },
-    {
-      day: 'Friday',
-      slots: [
-        { time: '09:00 - 10:15 AM', subject: 'English', teacher: 'Dr. Samra Javed & Mr. Ali Dossa', room: 'Room 203', classColor: 'aqua-cell' },
-        { time: '10:25 - 11:40 AM', subject: 'English', teacher: 'Dr. Samra Javed & Mr. Ali Dossa', room: 'Room 203', classColor: 'aqua-cell' },
-        { time: '11:50 - 01:20 PM', subject: 'English', teacher: 'Dr. Samra Javed & Mr. Ali Dossa', room: 'Room 203', classColor: 'aqua-cell' },
-        { time: '01:20 - 01:45 PM', subject: '', teacher: '', room: '', classColor: '' },
-        { time: '01:45 - 03:00 PM', subject: '', teacher: '', room: '', classColor: '' }
-      ]
-    }
+  const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+  const timeSlots = [
+    '08:00', '09:00', '10:00', '11:00', '12:00',
+    '13:00', '14:00', '15:00', '16:00', '17:00'
   ];
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-  // Simulating API call
   useEffect(() => {
-    // Function to fetch schedule data from API
-    const fetchScheduleData = async () => {
-      try {
-        setLoading(true);
-        
-        // In a real application, this would be an API call:
-        // const response = await fetch('api/schedule');
-        // const data = await response.json();
-        
-        // For now, use our dummy data and simulate network delay
-        setTimeout(() => {
-          setScheduleData(dummyScheduleData);
-          setLoading(false);
-        }, 500);
-      } catch (err) {
-        setError('Failed to load schedule data');
-        setLoading(false);
-        console.error('Error fetching schedule:', err);
-      }
-    };
-
-    fetchScheduleData();
+    fetchSchedule();
   }, []);
 
-  // Time slots for header (could also come from API)
-  const timeSlots = [
-    '09:00 - 10:15 AM',
-    '10:25 - 11:40 AM',
-    '11:50 - 01:20 PM',
-    '01:20 - 01:45 PM',
-    '01:45 - 03:00 PM'
-  ];
+  const fetchSchedule = async () => {
+    try {
+      setLoading(true);
+      const userData = JSON.parse(sessionStorage.getItem('user'));
+      
+      if (!userData || !userData.studentId) {
+        throw new Error('Student ID not found. Please log in again.');
+      }
 
-  // Loading state
+      const response = await axios.get(`${apiUrl}/api/section-schedules/student/${userData.studentId}`, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+      });
+
+      setScheduleData(response.data);
+    } catch (error) {
+      console.error('Error fetching schedule:', error);
+      setError(error.message || 'Failed to load schedule data');
+      toast.error(error.message || 'Failed to load schedule data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
-       <div className="loading-container">Loading Schedule...</div>
+      <div className="schedule-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading your schedule...</p>
+        </div>
+      </div>
     );
   }
 
-  // Error state
   if (error) {
     return (
-      <div className="schedule-container error-container">
-        <div className="error-message">
-          <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Try Again</button>
+      <div className="schedule-container">
+        <div className="error-container">
+          <div className="error-message">
+            <p>{error}</p>
+            <button onClick={fetchSchedule}>Try Again</button>
+          </div>
         </div>
       </div>
     );
@@ -117,42 +70,58 @@ const ClassSchedule = () => {
 
   return (
     <div className="schedule-container">
-      <h1 className="heading">CLASS SCHEDULE (BSCS SEM 01)</h1>
+      <h1 className="heading">My Class Schedule</h1>
       <div className="table-responsive">
         <table className="schedule-table">
           <thead>
             <tr>
               <th className="time-col"></th>
-              {timeSlots.map((time, index) => (
-                <th key={index}>{time}</th>
+              {days.map(day => (
+                <th key={day}>{day}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {scheduleData.map((day, index) => (
-              <tr key={index}>
-                <td className="days">{day.day}</td>
-                {day.slots.map((slot, idx) => (
-                  <td key={idx} className={`schedule-cell ${slot.classColor}`}>
-                    {slot.subject && (
-                      <>
-                        <div className="subject">{slot.subject}</div>
-                        {slot.teacher && slot.subject !== 'NAMAZ BREAK' && (
-                          <div className="teacher">{slot.teacher}</div>
-                        )}
-                        {slot.room && (
-                          <div className="room">
-                            <span className="room-label">
-                              {slot.room}
-                            </span>
+            {timeSlots.map((time, i) => {
+              const nextTime = timeSlots[i + 1];
+              if (!nextTime) return null;
+
+              return (
+                <tr key={time}>
+                  <td className="time-cell">{`${time} - ${nextTime}`}</td>
+                  {days.map(day => {
+                    const schedules = scheduleData[day].filter(schedule => 
+                      schedule.timeSlot.startTime === time &&
+                      schedule.timeSlot.endTime === nextTime
+                    );
+
+                    return (
+                      <td key={day} className={schedules.length ? 'schedule-cell' : ''}>
+                        {schedules.map((schedule, index) => (
+                          <div key={index} className="class-item">
+                            <div className="course-info">
+                              <span className="course-code">{schedule.courseId.code}</span>
+                              <span className="course-name">{schedule.courseId.name}</span>
+                            </div>
+                            <div className="schedule-details">
+                              <div className="teacher-info">
+                                {schedule.teacherId.firstName} {schedule.teacherId.lastName}
+                              </div>
+                              <div className="room-info">
+                                {schedule.timeSlot.room}
+                              </div>
+                              <div className="section-info">
+                                Section {schedule.sectionId.section}
+                              </div>
+                            </div>
                           </div>
-                        )}
-                      </>
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
+                        ))}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
