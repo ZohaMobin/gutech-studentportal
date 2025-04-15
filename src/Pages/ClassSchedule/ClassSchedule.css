@@ -30,7 +30,7 @@
 .schedule-table th,
 .schedule-table td {
   padding: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #d0d0d0;
   text-align: left;
 }
 
@@ -61,11 +61,15 @@
   border-radius: 6px;
   margin: 4px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: calc(100% - 8px);
 }
 
 .class-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+  border-color: rgba(0, 0, 0, 0.25);
 }
 
 .course-info {
@@ -73,28 +77,31 @@
 }
 
 .course-code {
-  font-weight: 600;
+  font-weight: 700;
   color: #2c3e50;
   font-size: 1rem;
   display: block;
 }
 
 .course-name {
-  color: #666;
+  color: #444;
   font-size: 0.9rem;
   display: block;
   margin-top: 2px;
+  font-weight: 500;
 }
 
 .schedule-details {
   font-size: 0.85rem;
-  color: #555;
+  color: #444;
 }
 
 .room-info,
 .section-info,
-.time-info {
+.time-info,
+.teacher-info {
   margin: 4px 0;
+  font-weight: 500;
 }
 
 .loading-container {
@@ -181,6 +188,53 @@
   font-size: 1rem;
 }
 
+/* Dashboard integration styles */
+.dashboard-schedule-container .schedule-container {
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+
+.dashboard-schedule-container .heading {
+  display: none; /* Hide the duplicate heading in dashboard context */
+}
+
+.dashboard-schedule-container .table-responsive {
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.dashboard-schedule-container .no-schedule-message {
+  box-shadow: none;
+  margin: 0;
+  max-width: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dashboard-schedule-container .loading-container,
+.dashboard-schedule-container .error-container {
+  min-height: 200px;
+}
+
+.dashboard-schedule-container .class-item {
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  margin: 3px;
+}
+
+.dashboard-schedule-container .schedule-table {
+  min-width: 750px;
+}
+
+.dashboard-schedule-container .schedule-table th,
+.dashboard-schedule-container .schedule-table td {
+  padding: 8px;
+}
+
 @media (max-width: 768px) {
   .schedule-container {
     padding: 10px;
@@ -213,5 +267,60 @@
 
   .schedule-details {
     font-size: 0.75rem;
+  }
+  
+  /* Dashboard mobile adjustments */
+  .dashboard-schedule-container .schedule-container {
+    padding: 0;
+  }
+  
+  .dashboard-schedule-container .time-cell {
+    width: 100px;
+  }
+  
+  .dashboard-schedule-container .time-slot-label {
+    font-size: 0.75rem;
+  }
+  
+  .dashboard-schedule-container .schedule-table th,
+  .dashboard-schedule-container .schedule-table td {
+    padding: 6px;
+  }
+  
+  .dashboard-schedule-container .class-item {
+    padding: 6px;
+    margin: 2px;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-schedule-container .time-cell {
+    width: 80px;
+  }
+  
+  .dashboard-schedule-container .time-slot-label {
+    font-size: 0.7rem;
+  }
+  
+  .dashboard-schedule-container .schedule-table th,
+  .dashboard-schedule-container .schedule-table td {
+    padding: 4px;
+  }
+  
+  .dashboard-schedule-container .class-item {
+    padding: 4px;
+    margin: 1px;
+  }
+  
+  .dashboard-schedule-container .course-code {
+    font-size: 0.8rem;
+  }
+  
+  .dashboard-schedule-container .course-name {
+    font-size: 0.7rem;
+  }
+  
+  .dashboard-schedule-container .schedule-details {
+    font-size: 0.65rem;
   }
 }

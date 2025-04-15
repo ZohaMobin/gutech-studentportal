@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { showToast, TOAST_TYPES } from '../../Components/Toast/Toast';
 import './ClassSchedule.css';
 
-const ClassSchedule = () => {
+const ClassSchedule = ({ isDashboard }) => {
   const [schedule, setSchedule] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,29 +44,35 @@ const ClassSchedule = () => {
 
   // Generate a consistent color for each course
   const generateSectionColor = (courseId) => {
-    // Predefined very light pastel colors
+    // Predefined distinct vibrant pastel colors
     const distinctColors = [
-      'hsl(0, 60%, 95%)',     // Very light red
-      'hsl(120, 60%, 95%)',   // Very light green
-      'hsl(240, 60%, 95%)',   // Very light blue
-      'hsl(60, 60%, 95%)',    // Very light yellow
-      'hsl(300, 60%, 95%)',   // Very light purple
-      'hsl(180, 60%, 95%)',   // Very light cyan
-      'hsl(30, 60%, 95%)',    // Very light orange
-      'hsl(270, 60%, 95%)',   // Very light indigo
-      'hsl(150, 60%, 95%)',   // Very light teal
-      'hsl(330, 60%, 95%)',   // Very light pink
-      'hsl(90, 60%, 95%)',    // Very light lime
-      'hsl(210, 60%, 95%)',   // Very light sky blue
-      'hsl(0, 50%, 90%)',     // Extra light red
-      'hsl(120, 50%, 90%)',   // Extra light green
-      'hsl(240, 50%, 90%)',   // Extra light blue
+      '#ffcccb',  // Light red
+      '#c1e1c1',  // Mint green
+      '#c4c3e0',  // Lavender
+      '#ffdab9',  // Peach
+      '#b0e0e6',  // Powder blue
+      '#ffffcc',  // Light yellow
+      '#d8bfd8',  // Thistle
+      '#ffdead',  // Navajo white
+      '#98fb98',  // Pale green
+      '#afeeee',  // Pale turquoise
+      '#ffc0cb',  // Pink
+      '#dda0dd',  // Plum
+      '#ffefd5',  // Papaya whip
+      '#87ceeb',  // Sky blue
+      '#f0e68c',  // Khaki
     ];
     
+    // For empty or invalid IDs, return a default color
+    if (!courseId || courseId.length < 3) {
+      return '#f9f9f9';
+    }
+    
     // Use a hash of the course ID to select a color
-    const hash = courseId.split('').reduce((acc, char) => {
-      return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
+    let hash = 0;
+    for (let i = 0; i < courseId.length; i++) {
+      hash = courseId.charCodeAt(i) + ((hash << 5) - hash);
+    }
     
     // Select a color from the predefined palette
     const colorIndex = Math.abs(hash) % distinctColors.length;
@@ -77,11 +83,28 @@ const ClassSchedule = () => {
   const getSectionColor = (schedule) => {
     if (!schedule || !schedule.courseId) return '#f8f9fa';
     
-    const courseId = typeof schedule.courseId === 'string' 
-      ? schedule.courseId 
-      : schedule.courseId._id;
+    // Get the course ID or code from the schedule
+    let courseIdentifier = '';
+    
+    if (typeof schedule.courseId === 'object') {
+      // Prioritize course code (ICT101) over internal ID when available for more visible colors
+      courseIdentifier = schedule.courseId.code || schedule.courseId._id || '';
+    } else if (typeof schedule.courseId === 'string') {
+      courseIdentifier = schedule.courseId;
+    }
+    
+    // If we have a course identifier, use or generate a color for it
+    if (courseIdentifier) {
+      // First try to use a predetermined color from sectionColors
+      if (sectionColors[courseIdentifier]) {
+        return sectionColors[courseIdentifier];
+      }
       
-    return sectionColors[courseId] || '#f8f9fa';
+      // If we don't have a color yet, generate one
+      return generateSectionColor(courseIdentifier);
+    }
+    
+    return '#f8f9f9'; // Default color if no identifier found
   };
 
   const fetchSchedule = async () => {
@@ -102,16 +125,28 @@ const ClassSchedule = () => {
         throw new Error('Invalid response data structure');
       }
       
-      // Generate colors for sections
+      // Generate colors by course ID, not section ID
       const newSectionColors = {};
       Object.values(response.data).forEach(daySchedules => {
         daySchedules.forEach(schedule => {
-          const sectionId = schedule.sectionId._id;
-          if (!newSectionColors[sectionId]) {
-            newSectionColors[sectionId] = generateSectionColor(sectionId);
+          // Extract course ID or code correctly to ensure consistent colors
+          let courseIdentifier = '';
+          
+          if (typeof schedule.courseId === 'object') {
+            // Prioritize course code (ICT101) for more distinct colors
+            courseIdentifier = schedule.courseId.code || schedule.courseId._id || '';
+          } else if (typeof schedule.courseId === 'string') {
+            courseIdentifier = schedule.courseId;
+          }
+          
+          if (courseIdentifier && !newSectionColors[courseIdentifier]) {
+            newSectionColors[courseIdentifier] = generateSectionColor(courseIdentifier);
+            console.log(`Assigned color for course ${courseIdentifier}:`, newSectionColors[courseIdentifier]);
           }
         });
       });
+      
+      console.log('Generated course colors:', newSectionColors);
       setSectionColors(newSectionColors);
       
       setSchedule(response.data);
@@ -188,6 +223,15 @@ const ClassSchedule = () => {
     return `${hour12}:${minutes} ${ampm}`;
   };
 
+  // Define more compact time display for dashboard
+  const getTimeLabel = (timeSlot) => {
+    if (isDashboard) {
+      // Simplified display for dashboard
+      return `${formatTime(timeSlot.start)}`;
+    }
+    return timeSlot.label;
+  };
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -231,14 +275,15 @@ const ClassSchedule = () => {
 
   return (
     <div className="schedule-container">
-      <h2 className="heading">My Class Schedule</h2>
+      {/* Only show the heading when not in dashboard mode */}
+      {!isDashboard && <h2 className="heading">My Class Schedule</h2>}
       <div className="table-responsive">
         <table className="schedule-table">
           <thead>
             <tr>
               <th>Time</th>
               {days.map(day => (
-                <th key={day}>{day}</th>
+                <th key={day}>{isDashboard && window.innerWidth < 576 ? day.substring(0, 3) : day}</th>
               ))}
             </tr>
           </thead>
@@ -246,7 +291,7 @@ const ClassSchedule = () => {
             {timeSlots.map((timeSlot, index) => (
               <tr key={timeSlot.start}>
                 <td className="time-cell">
-                  <div className="time-slot-label">{timeSlot.label}</div>
+                  <div className="time-slot-label">{getTimeLabel(timeSlot)}</div>
                 </td>
                 {days.map(day => {
                   const daySchedules = schedule[day] || [];
@@ -296,9 +341,11 @@ const ClassSchedule = () => {
                             <div className="section-info">
                               Section {scheduleForTime.sectionId.section}
                             </div>
-                            <div className="time-info">
-                              {formatTime(scheduleForTime.timeSlot.startTime)} - {formatTime(scheduleForTime.timeSlot.endTime)}
-                            </div>
+                            {!isDashboard && (
+                              <div className="time-info">
+                                {formatTime(scheduleForTime.timeSlot.startTime)} - {formatTime(scheduleForTime.timeSlot.endTime)}
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}

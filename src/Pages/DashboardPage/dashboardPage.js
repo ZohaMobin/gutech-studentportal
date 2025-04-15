@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './dashboardPage.css'; // Import the CSS file
 import axios from 'axios';
+import ClassSchedule from '../ClassSchedule/ClassSchedule'; // Import the ClassSchedule component
 
 const Dashboard = () => {
   // State to track viewport size
@@ -42,18 +43,20 @@ const Dashboard = () => {
 
         console.log("Fetching student details for ID:", user.studentId);
         
-        const response = await axios.get(`${apiUrl}/api/students/${user.studentId}`, {
+        // Fetch student details
+        const studentResponse = await axios.get(`${apiUrl}/api/students/${user.studentId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
 
-        console.log("API response:", response.data);
+        console.log("API response:", studentResponse.data);
 
         // Handle the API response format - it's a single object, not an array
-        if (response.data && response.data._id) {
-          const studentInfo = response.data;
+        if (studentResponse.data && studentResponse.data._id) {
+          const studentInfo = studentResponse.data;
+
           setStudentData({
             name: studentInfo.userId?.name || user.name || 'Student',
             id: studentInfo.rollNumber || user.studentId,
@@ -66,12 +69,7 @@ const Dashboard = () => {
               overall: 0,
               subjects: []
             },
-            courses: [],
-            timetable: {
-              days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-              timeSlots: ["9:00 AM", "11:00 AM", "1:00 PM", "3:00 PM"],
-              classes: []
-            }
+            courses: []
           });
           setApiCalled(true);
         } else {
@@ -118,14 +116,6 @@ const Dashboard = () => {
       return day.substring(0, 3);
     }
     return day;
-  };
-
-  // Simplify time format for mobile
-  const getTimeLabel = (time) => {
-    if (isMobile) {
-      return time.replace(':00', '').replace(' AM', 'a').replace(' PM', 'p');
-    }
-    return time;
   };
 
   // Optimized subject name display based on screen size
@@ -182,12 +172,6 @@ const Dashboard = () => {
     return 'F';
   };
 
-  const getClassByTimeAndDay = (day, time) => {
-    return studentData.timetable.classes.find(
-      cls => cls.day === day && cls.time === time
-    );
-  };
-
   const getClassColor = (subject) => {
     switch (subject) {
       case "Data Structures":
@@ -201,31 +185,6 @@ const Dashboard = () => {
       default:
         return "var(--light-bg)";
     }
-  };
-
-  // Responsively choose which days to display based on screen size
-  const displayDays = () => {
-    if (windowWidth < 576) {
-      // For very small screens, show only current day + next day
-      const today = new Date().getDay(); // 0=Sunday, 1=Monday, ...
-      const dayIndex = today === 0 || today > 5 ? 0 : today - 1; // Adjust to match our days array (0=Monday)
-      const nextDayIndex = (dayIndex + 1) % 5;
-      return [studentData.timetable.days[dayIndex], studentData.timetable.days[nextDayIndex]];
-    }
-    if (windowWidth < 768) {
-      // For medium-small screens, show 3 days
-      return studentData.timetable.days.slice(0, 3);
-    }
-    // For larger screens, show all days
-    return studentData.timetable.days;
-  };
-
-  // Calculate average score from courses
-  const calculateAverageScore = () => {
-    if (studentData.courses.length === 0) return 0;
-    
-    const sum = studentData.courses.reduce((acc, course) => acc + course.marks, 0);
-    return Math.round(sum / studentData.courses.length);
   };
 
   if (loading) {
@@ -273,7 +232,7 @@ const Dashboard = () => {
 
           <div className="dashboard-card timetable-card">
             <div className="card-header">
-              <h3>{windowWidth < 576 ? "Schedule" : "Weekly Timetable"}</h3>
+              <h3>{windowWidth < 576 ? "Schedule" : "Class Schedule"}</h3>
               <div className="card-actions">
                 <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
               </div>
@@ -334,7 +293,7 @@ const Dashboard = () => {
 
           <div className="dashboard-card timetable-card">
             <div className="card-header">
-              <h3>{windowWidth < 576 ? "Schedule" : "Weekly Timetable"}</h3>
+              <h3>{windowWidth < 576 ? "Schedule" : "Class Schedule"}</h3>
               <div className="card-actions">
                 <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
               </div>
@@ -465,56 +424,14 @@ const Dashboard = () => {
 
         <div className="dashboard-card timetable-card">
           <div className="card-header">
-            <h3>{windowWidth < 576 ? "Schedule" : "Weekly Timetable"}</h3>
+            <h3>{windowWidth < 576 ? "Schedule" : "Class Schedule"}</h3>
             <div className="card-actions">
               <button className="card-action-button" aria-label="More options"><i className="fas fa-ellipsis-h"></i></button>
             </div>
           </div>
-          {studentData.timetable.classes.length === 0 ? (
-            <div className="empty-timetable">
-              <div className="empty-icon">
-                <i className="fas fa-calendar-week"></i>
-              </div>
-              <p>No timetable available</p>
-              <p className="empty-subtext">Your class schedule will appear here once available</p>
-            </div>
-          ) : (
-            <div className="timetable-container">
-              <div className="timetable-grid">
-                <div className="timetable-column time-column">
-                  <div className="timetable-cell day-cell"></div>
-                  {studentData.timetable.timeSlots.map((time, index) => (
-                    <div key={index} className="timetable-cell time-cell">{getTimeLabel(time)}</div>
-                  ))}
-                </div>
-
-                {displayDays().map((day, dayIndex) => (
-                  <div key={dayIndex} className="timetable-column">
-                    <div className="timetable-cell day-cell">{getDayLabel(day)}</div>
-                    {studentData.timetable.timeSlots.map((time, timeIndex) => {
-                      const classItem = getClassByTimeAndDay(day, time);
-                      return (
-                        <div key={timeIndex} className="timetable-cell class-cell">
-                          {classItem && (
-                            <div
-                              className="class-item"
-                              style={{ backgroundColor: getClassColor(classItem.subject) }}
-                            >
-                              <div className="class-subject">{getSubjectLabel(classItem.subject)}</div>
-                              <div className="class-details">
-                                <span>{classItem.location}</span>
-                                <span>{classItem.duration}</span>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <div className="dashboard-schedule-container">
+            <ClassSchedule isDashboard={true} />
+          </div>
         </div>
       </div>
     </div>
