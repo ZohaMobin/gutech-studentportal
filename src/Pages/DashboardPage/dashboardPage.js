@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [apiCalled, setApiCalled] = useState(false);
+  const [gradesData, setGradesData] = useState(null);
 
   const getUserFromStorage = () => {
     try {
@@ -51,41 +52,117 @@ const Dashboard = () => {
           }
         });
 
-        console.log("API response:", studentResponse.data);
+        // Fetch grades data
+        const gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${user.studentId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log("Grades API response:", gradesResponse.data);
 
-        // Handle the API response format - it's a single object, not an array
-        if (studentResponse.data && studentResponse.data._id) {
-          const studentInfo = studentResponse.data;
+        // Process grades data
+        const processedGrades = processGradesData(gradesResponse.data);
+        console.log("Processed grades:", processedGrades);
+        setGradesData(processedGrades);
 
-          setStudentData({
-            name: studentInfo.userId?.name || user.name || 'Student',
-            id: studentInfo.rollNumber || user.studentId,
-            rollNumber: studentInfo.rollNumber || 'N/A',
-            program: studentInfo.program || 'N/A',
-            semester: studentInfo.currentSemester || 'N/A',
-            year: Math.ceil(studentInfo.currentSemester / 2) || 'N/A',
-            cgpa: studentInfo.CGPA || 0,
-            attendance: {
-              overall: 0,
-              subjects: []
-            },
-            courses: []
-          });
-          setApiCalled(true);
-        } else {
-          // If API response is empty or missing required data
-          setError("No student data available");
-        }
-      } catch (err) {
-        console.error("Error fetching student details:", err);
-        setError(err.message || "Failed to fetch student data");
+        // Update student data with grades
+        const updatedStudentData = {
+          ...studentResponse.data,
+          attendance: {
+            overall: 0,
+            subjects: []
+          },
+          courses: processedGrades.courses.map(course => {
+            console.log("Mapping course:", course);
+            return {
+              name: course.name,
+              marks: course.totalObtainedMarks || 0,
+              total: course.totalMaxMarks || 100,
+              weightedMarks: course.weightedMarks || 0,
+              totalWeightage: course.totalWeightage || 100
+            };
+          })
+        };
+        console.log("Updated student data courses:", updatedStudentData.courses);
+
+        setStudentData(updatedStudentData);
+        setApiCalled(true);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error.message || 'Failed to load student data');
       } finally {
         setLoading(false);
       }
     };
 
     fetchStudentDetails();
-  }, [user?.studentId, apiCalled]);
+  }, [user, apiCalled]);
+
+  // Process grades data
+  const processGradesData = (apiData) => {
+    console.log("Processing grades data:", apiData);
+    
+    // Check if apiData is an array or an object
+    const data = Array.isArray(apiData) ? apiData[0] : apiData;
+    
+    if (!data || !data.grades || !Array.isArray(data.grades)) {
+      console.log("No valid grades data found");
+      return { courses: [] };
+    }
+
+    const courseMap = new Map();
+
+    // Process each grade
+    data.grades.forEach(grade => {
+      if (!grade.registrationId || !grade.registrationId.courseId) {
+        console.log("Invalid grade data:", grade);
+        return;
+      }
+      
+      const courseId = grade.registrationId.courseId._id;
+      const courseName = grade.registrationId.courseId.name;
+      const courseCode = grade.registrationId.courseId.code;
+      const sectionId = grade.registrationId.sectionId;
+      
+      if (!courseMap.has(courseId)) {
+        courseMap.set(courseId, {
+          id: courseId,
+          name: `${courseCode} - ${courseName}`,
+          totalObtainedMarks: 0,
+          totalMaxMarks: 0,
+          totalWeightage: 0,
+          weightedMarks: 0,
+          sectionId: sectionId
+        });
+      }
+
+      const course = courseMap.get(courseId);
+      
+      // Add the marks to the course totals
+      if (grade.obtainedMarks !== undefined && grade.maxMarks !== undefined) {
+        // Get the weightage from the assessment
+        const weightage = grade.assessmentId?.weightage || 0;
+        
+        // Calculate weighted marks
+        const weightedMark = (grade.obtainedMarks / grade.maxMarks) * weightage;
+        
+        // Update course totals
+        course.totalObtainedMarks += grade.obtainedMarks;
+        course.totalMaxMarks += grade.maxMarks;
+        course.totalWeightage += weightage;
+        course.weightedMarks += weightedMark;
+      }
+    });
+
+    const courses = Array.from(courseMap.values());
+    console.log("Processed courses:", courses);
+    
+    return {
+      courses: courses
+    };
+  };
 
   // Improved window resize handler with debounce
   useEffect(() => {
@@ -157,18 +234,19 @@ const Dashboard = () => {
 
   const getGradeColor = (marks, total) => {
     const percentage = (marks / total) * 100;
-    if (percentage >= 90) return "var(--success-color)";
-    if (percentage >= 80) return "var(--success-light)";
-    if (percentage >= 70) return "var(--warning-color)";
-    if (percentage >= 60) return "var(--warning-light)";
-    return "var(--danger-color)";
+    if (percentage >= 90) return '#22c55e'; // A grade - green
+    if (percentage >= 80) return '#3b82f6'; // B grade - blue
+    if (percentage >= 70) return '#8b5cf6'; // C grade - purple
+    if (percentage >= 60) return '#f59e0b'; // D grade - yellow
+    return '#ef4444'; // F grade - red
   };
 
-  const getGradeLetter = (marks) => {
-    if (marks >= 90) return 'A';
-    if (marks >= 80) return 'B';
-    if (marks >= 70) return 'C';
-    if (marks >= 60) return 'D';
+  const getGradeLetter = (marks, total) => {
+    const percentage = (marks / total) * 100;
+    if (percentage >= 90) return 'A';
+    if (percentage >= 80) return 'B';
+    if (percentage >= 70) return 'C';
+    if (percentage >= 60) return 'D';
     return 'F';
   };
 
@@ -395,29 +473,36 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="course-performance">
-            {studentData.courses.length === 0 ? (
+            {!studentData || !studentData.courses || studentData.courses.length === 0 ? (
               <div className="no-data-message">No course data available</div>
             ) : (
-              studentData.courses.map((course, index) => (
-                <div key={index} className="course-item">
-                  <div className="course-header">
-                    <span className="course-name">{getSubjectLabel(course.name)}</span>
-                    <span className="course-marks">{course.marks}/{course.total}</span>
+              studentData.courses.map((course, index) => {
+                const percentage = course.totalWeightage > 0 
+                  ? ((course.weightedMarks / course.totalWeightage) * 100).toFixed(1)
+                  : 0;
+                return (
+                  <div key={index} className="course-item">
+                    <div className="course-header">
+                      <span className="course-name">{getSubjectLabel(course.name)}</span>
+                      <span className="course-marks">
+                        {course.weightedMarks.toFixed(1)}/{course.totalWeightage.toFixed(1)} ({percentage}%)
+                      </span>
+                    </div>
+                    <div className="course-progress-container">
+                      <div
+                        className="course-progress"
+                        style={{
+                          width: `${percentage}%`,
+                          backgroundColor: getGradeColor(course.weightedMarks, course.totalWeightage)
+                        }}
+                      ></div>
+                    </div>
+                    <div className="grade-indicator">
+                      {getGradeLetter(course.weightedMarks, course.totalWeightage)}
+                    </div>
                   </div>
-                  <div className="course-progress-container">
-                    <div
-                      className="course-progress"
-                      style={{
-                        width: `${(course.marks / course.total) * 100}%`,
-                        backgroundColor: getGradeColor(course.marks, course.total)
-                      }}
-                    ></div>
-                  </div>
-                  <div className="grade-indicator">
-                    {getGradeLetter(course.marks)}
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
