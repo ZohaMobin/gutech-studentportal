@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { requestPasswordReset, verifyResetCode, resetPassword } from "../../Services/auth";
 import "./ForgotPassword.css";
 
 const ForgotPassword = () => {
@@ -11,32 +12,71 @@ const ForgotPassword = () => {
   const [confirm, setConfirm] = useState("");
   const [showPass, setShowPass] = useState(false); // Toggle for new password
   const [showConfirmPass, setShowConfirmPass] = useState(false); // Toggle for confirm password
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleEmailSubmit = () => {
-    if (email.includes("@agu.edu.pk")) {
-      setErrorMessage(" ");
-      setStep(2);
-    } else {
-      setErrorMessage("ERROR ! Enter your agu email!");
+  const handleEmailSubmit = async () => {
+    if (!email) {
+      setErrorMessage("Please enter your email address");
+      return;
     }
-  };
 
-  const handleCodeSubmit = () => {
-    if (otp === "1234") {
+    try {
+      setIsSubmitting(true);
       setErrorMessage("");
-      setStep(3);
-    } else {
-      setErrorMessage("ERROR ! Incorrect code");
+      await requestPasswordReset(email);
+      setStep(2);
+    } catch (error) {
+      setErrorMessage(error.message || "Failed to send reset code. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handlePasswordSubmit = () => {
-    if (pass === confirm) {
+  const handleCodeSubmit = async () => {
+    if (!otp) {
+      setErrorMessage("Please enter the verification code");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setErrorMessage("");
+      await verifyResetCode(email, otp);
+      setStep(3);
+    } catch (error) {
+      setErrorMessage(error.message || "Invalid verification code");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handlePasswordSubmit = async () => {
+    if (!pass || !confirm) {
+      setErrorMessage("Please fill in all fields");
+      return;
+    }
+
+    if (pass !== confirm) {
+      setErrorMessage("ERROR ! Passwords do not match");
+      return;
+    }
+
+    if (pass.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setErrorMessage("");
+      await resetPassword(email, otp, pass);
       alert("Password reset successfully!");
       navigate("/");
-    } else {
-      setErrorMessage("ERROR ! Passwords do not match");
+    } catch (error) {
+      setErrorMessage(error.message || "Failed to reset password. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -56,10 +96,11 @@ const ForgotPassword = () => {
             placeholder="GU-Tech E-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={isSubmitting}
           />
           {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="button" onClick={handleEmailSubmit}>
-            Submit
+          <button type="button" onClick={handleEmailSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Submit"}
           </button>
         </div>
       )}
@@ -69,15 +110,16 @@ const ForgotPassword = () => {
         <div className="step step-active">
           <p>Enter the code sent to your email.</p>
           <input
-            type="number"
+            type="text"
             className="otp"
             placeholder="Enter Code"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
+            disabled={isSubmitting}
           />
           {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="button" onClick={handleCodeSubmit}>
-            Submit
+          <button type="button" onClick={handleCodeSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "Verifying..." : "Submit"}
           </button>
         </div>
       )}
@@ -93,6 +135,7 @@ const ForgotPassword = () => {
               placeholder="New Password"
               value={pass}
               onChange={(e) => setPass(e.target.value)}
+              disabled={isSubmitting}
             />
             <span
               className="eyess"
@@ -112,6 +155,7 @@ const ForgotPassword = () => {
               placeholder="Confirm Password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
+              disabled={isSubmitting}
             />
             <span
               className="eyess"
@@ -125,8 +169,8 @@ const ForgotPassword = () => {
             </span>
           </div>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="button" onClick={handlePasswordSubmit}>
-            Submit
+          <button type="button" onClick={handlePasswordSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "Resetting..." : "Submit"}
           </button>
         </div>
       )}

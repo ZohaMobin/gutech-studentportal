@@ -1,17 +1,20 @@
 import axios from 'axios';
-import { useAuth } from './components/AuthContext'; // Import the useAuth hook
 
-// Create an axios instance
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_URL,
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// Request interceptor to add token to requests
+// Add request interceptor to include auth token
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -20,16 +23,12 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle unauthorized access
+// Add response interceptor to handle token expiration
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Token is invalid or expired
-      sessionStorage.removeItem('token');
-      sessionStorage.removeItem('user');
-      
-      // Use window location as a fallback, but prefer React Router navigation
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
       window.location.href = '/';
     }
     return Promise.reject(error);

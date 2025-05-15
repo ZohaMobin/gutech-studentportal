@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, BrowserRouter } from 
 import { AuthProvider } from './Components/AuthContext';
 import PrivateRoute from './Components/PrivateRoute';
 import Signup from './Pages/LoginSignUp/Signup';
+import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 import MainLayout from './Pages/MainLayout/ MainLayout';
 import GradingPage from './Pages/Grading/Grading';
 import ClassSchedule from './Pages/ClassSchedule/ClassSchedule';
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             
             {/* Protected Routes */}
             <Route element={<PrivateRoute />}>
