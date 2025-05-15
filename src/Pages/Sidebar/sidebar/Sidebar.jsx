@@ -13,7 +13,7 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
     { id: 'marks', label: 'Marks', icon: '📄', path: '/main/marks' },
     { id: 'transcript', label: 'Transcript', icon: '📜', path: '/main/transcript' },
     { id: 'timetable', label: 'Timetable', icon: '📆', path: '/main/timetable' },
-    { id: 'settings', label: 'Settings', icon: '⚙️', path: '/main/settings' }
+    { id: 'settings', label: 'Settings', icon: '⚙️', path: null }
   ];
   
   return (
@@ -35,8 +35,10 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
             className={`sidebar-nav-item ${activePage === item.id ? 'active' : ''}`}
             onClick={(e) => {
               e.preventDefault();
-              navigate(item.path);
-              onNavClick(item.id); // Call the handler from parent
+              if (item.path) {
+                navigate(item.path);
+                onNavClick(item.id);
+              }
             }}
           >
             <span className="sidebar-nav-icon">{item.icon}</span>
