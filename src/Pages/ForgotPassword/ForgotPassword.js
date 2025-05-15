@@ -81,99 +81,101 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password-container">
-      <button className="back-button" onClick={() => navigate("/")}>
-        ←
-      </button>
+    <div className="forgot-password-page">
+      <div className="forgot-password-container">
+        <button className="back-button" onClick={() => navigate("/")}>
+          ←
+        </button>
 
-      {/* EMAIL */}
-      {step === 1 && (
-        <div className="step step-active">
-          <h1>Forgot Password</h1>
-          <p className="descriptionMail">Enter your registered email address to reset your password.</p>
-          <input
-            type="email"
-            placeholder="GU-Tech E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isSubmitting}
-          />
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="button" onClick={handleEmailSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Submit"}
-          </button>
-        </div>
-      )}
-
-      {/* OTP */}
-      {step === 2 && (
-        <div className="step step-active">
-          <p>Enter the code sent to your email.</p>
-          <input
-            type="text"
-            className="otp"
-            placeholder="Enter Code"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            disabled={isSubmitting}
-          />
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="button" onClick={handleCodeSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Verifying..." : "Submit"}
-          </button>
-        </div>
-      )}
-
-      {/* PASSWORD */}
-      {step === 3 && (
-        <div className="step step-active">
-          <p>Enter your new password.</p>
-          <div className="password-container">
+        {/* EMAIL */}
+        {step === 1 && (
+          <div className="step step-active">
+            <h1>Forgot Password</h1>
+            <p className="descriptionMail">Enter your registered email address to reset your password.</p>
             <input
-              type={showPass ? "text" : "password"}
-              className="otp"
-              placeholder="New Password"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
+              type="email"
+              placeholder="GU-Tech E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
             />
-            <span
-              className="eyess"
-              onClick={() => setShowPass(!showPass)}
-            >
-              {showPass ? (
-                <i className="fas fa-eye-slash"></i>
-              ) : (
-                <i className="fas fa-eye"></i>
-              )}
-            </span>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <button type="button" onClick={handleEmailSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Sending..." : "Submit"}
+            </button>
           </div>
-          <div className="password-container">
+        )}
+
+        {/* OTP */}
+        {step === 2 && (
+          <div className="step step-active">
+            <p>Enter the code sent to your email.</p>
             <input
-              type={showConfirmPass ? "text" : "password"}
+              type="text"
               className="otp"
-              placeholder="Confirm Password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
+              placeholder="Enter Code"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
               disabled={isSubmitting}
             />
-            <span
-              className="eyess"
-              onClick={() => setShowConfirmPass(!showConfirmPass)}
-            >
-              {showConfirmPass ? (
-                <i className="fas fa-eye-slash"></i>
-              ) : (
-                <i className="fas fa-eye"></i>
-              )}
-            </span>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <button type="button" onClick={handleCodeSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Verifying..." : "Submit"}
+            </button>
           </div>
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="button" onClick={handlePasswordSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Resetting..." : "Submit"}
-          </button>
-        </div>
-      )}
+        )}
+
+        {/* PASSWORD */}
+        {step === 3 && (
+          <div className="step step-active">
+            <p>Enter your new password.</p>
+            <div className="password-container">
+              <input
+                type={showPass ? "text" : "password"}
+                className="otp"
+                placeholder="New Password"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+                disabled={isSubmitting}
+              />
+              <span
+                className="eyess"
+                onClick={() => setShowPass(!showPass)}
+              >
+                {showPass ? (
+                  <i className="fas fa-eye-slash"></i>
+                ) : (
+                  <i className="fas fa-eye"></i>
+                )}
+              </span>
+            </div>
+            <div className="password-container">
+              <input
+                type={showConfirmPass ? "text" : "password"}
+                className="otp"
+                placeholder="Confirm Password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                disabled={isSubmitting}
+              />
+              <span
+                className="eyess"
+                onClick={() => setShowConfirmPass(!showConfirmPass)}
+              >
+                {showConfirmPass ? (
+                  <i className="fas fa-eye-slash"></i>
+                ) : (
+                  <i className="fas fa-eye"></i>
+                )}
+              </span>
+            </div>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <button type="button" onClick={handlePasswordSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Resetting..." : "Submit"}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
