@@ -83,7 +83,7 @@ const ForgotPassword = () => {
   return (
     <div className="forgot-password-container">
       <button className="back-button" onClick={() => navigate("/")}>
-        ← Back to Sign In
+        ←
       </button>
 
       {/* EMAIL */}
