@@ -1,246 +1,412 @@
-import React, { useState, useEffect } from "react";
-import "./Attendance.css"
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Calendar, Search, Users, CheckCircle, XCircle, Clock, AlertCircle, BookOpen } from 'lucide-react';
+import './Attendance.css';
+
 const Attendance = () => {
-  const subjects = {
-    "PSPF": {
-      name: "PSPF",
-      professor: "by Twaha Ahmed",
-      data: [
-        { date: "2025-01-10", day: "Monday", status: "Present", remarks: "-" },
-        { date: "2025-01-09", day: "Sunday", status: "Absent", remarks: "Sick Leave" },
-        { date: "2025-01-08", day: "Saturday", status: "Late", remarks: "Arrived late" },
-      ],
-      classAverage: 85
-    },
-    "Design Thinking": {
-      name: "Design Thinking",
-      professor: "by Dr. Rauf Malick",
-      data: [
-        { date: "2025-01-10", day: "Monday", status: "Present", remarks: "-" },
-        { date: "2025-01-09", day: "Sunday", status: "Late", remarks: "Arrived late" },
-        { date: "2025-01-08", day: "Saturday", status: "Absent", remarks: "Sick Leave" },
-      ],
-      classAverage: 88
-    },
-    "Functional English": {
-      name: "Functional English",
-      professor: "by Sultan Jawaid",
-      data: [
-        { date: "2025-01-11", day: "Tuesday", status: "Present", remarks: "-" },
-        { date: "2025-01-10", day: "Monday", status: "Absent", remarks: "Sick Leave" },
-        { date: "2025-01-09", day: "Sunday", status: "Late", remarks: "Arrived late" },
-      ],
-      classAverage: 82
-    },
-    "Discrete Maths": {
-      name: "Discrete Maths",
-      professor: "by Dr. Shahzad",
-      data: [
-        { date: "2025-01-11", day: "Tuesday", status: "Present", remarks: "-" },
-        { date: "2025-01-10", day: "Monday", status: "Late", remarks: "Arrived late" },
-        { date: "2025-01-09", day: "Sunday", status: "Absent", remarks: "Sick Leave" },
-      ],
-      classAverage: 79
-    },
-    "WebTech": {
-      name: "WebTech",
-      professor: "by Dr. Khubaib",
-      data: [
-        { date: "2025-01-12", day: "Wednesday", status: "Present", remarks: "-" },
-        { date: "2025-01-11", day: "Tuesday", status: "Late", remarks: "Arrived late" },
-        { date: "2025-01-10", day: "Monday", status: "Absent", remarks: "Sick Leave" },
-      ],
-      classAverage: 86
-    },
-    "PSPF Lab": {
-      name: "PSPF Lab",
-      professor: "by Zoha Mobin",
-      data: [
-        { date: "2025-01-13", day: "Thursday", status: "Present", remarks: "-" },
-        { date: "2025-01-12", day: "Wednesday", status: "Late", remarks: "Arrived late" },
-        { date: "2025-01-11", day: "Tuesday", status: "Absent", remarks: "Sick Leave" },
-      ],
-      classAverage: 90
-    },
-    "WebTech Lab": {
-      name: "WebTech Lab",
-      professor: "by Zoha Mobin",
-      data: [
-        { date: "2025-01-14", day: "Friday", status: "Present", remarks: "-" },
-        { date: "2025-01-13", day: "Thursday", status: "Late", remarks: "Arrived late" },
-        { date: "2025-01-12", day: "Wednesday", status: "Absent", remarks: "Sick Leave" },
-      ],
-      classAverage: 88
+  // State variables
+  const [courses, setCourses] = useState([]);
+  const [activeCourse, setActiveCourse] = useState(null);
+  const [attendanceRecords, setAttendanceRecords] = useState([]);
+  const [attendanceSummary, setAttendanceSummary] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredRecords, setFilteredRecords] = useState([]);
+  const [markedDates, setMarkedDates] = useState([]);
+
+  // API URL from environment variable
+  const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+  
+  // Get auth token from session storage
+  const getAuthToken = () => {
+    return sessionStorage.getItem('token');
+  };
+
+  // Get student ID from session storage
+  const getStudentId = () => {
+    const userData = sessionStorage.getItem('user');
+    const token = sessionStorage.getItem('token');
+
+    if (!userData || !token) {
+      console.error('Missing user data or token in session');
+      return null;
+    }
+
+    try {
+      const user = JSON.parse(userData);
+      if (!user || !user.studentId) {
+        console.error('Invalid user data structure:', user);
+        return null;
+      }
+      return user.studentId;
+    } catch (e) {
+      console.error('Error parsing user data:', e);
+      return null;
     }
   };
 
-  const [selectedSubject, setSelectedSubject] = useState("PSPF");
-  const [filterDate, setFilterDate] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [filteredAttendance, setFilteredAttendance] = useState(subjects[selectedSubject].data);
-  const [percentage, setPercentage] = useState(0);
-
-  const calculatePercentage = (subjectData) => {
-    const totalDays = subjectData.length;
-    const presentDays = subjectData.filter((item) => item.status === "Present").length;
-    return Math.round((presentDays / totalDays) * 100);
+  // Error handling utility
+  const handleApiError = (error) => {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        setError("Course or attendance not found.");
+      } else if (error.response?.status === 403) {
+        setError("You don't have permission to view this attendance.");
+      } else if (error.response?.status === 400) {
+        setError(error.response.data.message || "Invalid request.");
+      } else {
+        setError("Network error. Please check your connection.");
+      }
+    } else {
+      setError("An unexpected error occurred. Please try again.");
+    }
+    console.error("API Error:", error);
   };
 
-  useEffect(() => {
-    let filtered = subjects[selectedSubject].data;
+  // Fetch student's enrolled courses using grades API (same approach as marks page)
+  const fetchStudentCourses = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const studentId = getStudentId();
+      if (!studentId) {
+        setError("Student ID not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
 
-    if (filterType === "date" && filterDate) {
-      filtered = filtered.filter((item) => item.date === filterDate);
-    } else if (filterType === "month" && filterDate) {
-      const [year, month] = filterDate.split("-");
-      filtered = filtered.filter((item) => item.date.startsWith(`${year}-${month}`));
-    } else if (filterType === "week" && filterDate) {
-      const selectedDate = new Date(filterDate);
-      const weekStart = new Date(selectedDate);
-      weekStart.setDate(selectedDate.getDate() - selectedDate.getDay());
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-
-      filtered = filtered.filter((item) => {
-        const itemDate = new Date(item.date);
-        return itemDate >= weekStart && itemDate <= weekEnd;
+      // Use grades API to get courses (same as marks page)
+      const gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${studentId}`, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`
+        }
       });
+
+      if (gradesResponse.data && gradesResponse.data.grades) {
+        // Extract unique courses from grades
+        const courseMap = new Map();
+        
+        gradesResponse.data.grades.forEach(grade => {
+          if (grade.registrationId && grade.registrationId.courseId) {
+            const courseData = grade.registrationId.courseId;
+            const courseId = courseData._id ? courseData._id.toString() : courseData.toString();
+            
+            if (!courseMap.has(courseId)) {
+              courseMap.set(courseId, {
+                id: courseId,
+                name: courseData.name || 'Unknown Course',
+                code: courseData.code || '',
+                creditHours: courseData.creditHours || 0
+              });
+            }
+          }
+        });
+        
+        const activeCourses = Array.from(courseMap.values());
+        setCourses(activeCourses);
+        
+        if (activeCourses.length > 0 && !activeCourse) {
+          setActiveCourse(activeCourses[0]);
+          fetchCourseAttendance(activeCourses[0].id);
+        }
+      }
+    } catch (error) {
+      handleApiError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch attendance for a specific course
+  const fetchCourseAttendance = async (courseId) => {
+    if (!courseId) return;
+    
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await axios.get(`${apiUrl}/api/students/attendance/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`
+        }
+      });
+
+      if (response.data) {
+        // Format dates and sort by date (newest first)
+        const records = response.data.records.map(record => {
+          const dateObj = new Date(record.date);
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const day = String(dateObj.getDate()).padStart(2, '0');
+          const dateStr = `${year}-${month}-${day}`;
+          
+          return {
+            date: dateStr,
+            dateObj: dateObj,
+            day: dateObj.toLocaleDateString('en-US', { weekday: 'long' }),
+            status: record.status
+          };
+        }).sort((a, b) => b.dateObj - a.dateObj);
+
+        setAttendanceRecords(records);
+        setFilteredRecords(records);
+        setAttendanceSummary(response.data.summary);
+        
+        // Extract marked dates for calendar highlighting
+        const dates = records.map(r => r.date);
+        setMarkedDates(dates);
+      }
+    } catch (error) {
+      handleApiError(error);
+      setAttendanceRecords([]);
+      setFilteredRecords([]);
+      setAttendanceSummary(null);
+      setMarkedDates([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle course change
+  const handleCourseChange = (course) => {
+    setActiveCourse(course);
+    setSearchTerm('');
+    setSelectedDate(null);
+    fetchCourseAttendance(course.id);
+  };
+
+  // Handle date filter change
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    if (date) {
+      const dateStr = date.toISOString().split('T')[0];
+      const filtered = attendanceRecords.filter(record => record.date === dateStr);
+      setFilteredRecords(filtered);
+    } else {
+      setFilteredRecords(attendanceRecords);
+    }
+  };
+
+  // Filter records based on search term
+  useEffect(() => {
+    if (!searchTerm) {
+      if (selectedDate) {
+        const dateStr = selectedDate.toISOString().split('T')[0];
+        setFilteredRecords(attendanceRecords.filter(record => record.date === dateStr));
+      } else {
+        setFilteredRecords(attendanceRecords);
+      }
+      return;
     }
 
-    setFilteredAttendance(filtered);
-    setPercentage(calculatePercentage(filtered));
-  }, [selectedSubject, filterDate, filterType]);
+    const filtered = attendanceRecords.filter(record => {
+      const dateMatch = record.date.includes(searchTerm);
+      const dayMatch = record.day.toLowerCase().includes(searchTerm.toLowerCase());
+      const statusMatch = record.status.toLowerCase().includes(searchTerm.toLowerCase());
+      return dateMatch || dayMatch || statusMatch;
+    });
+    
+    setFilteredRecords(filtered);
+  }, [searchTerm, attendanceRecords, selectedDate]);
+
+  // Initialize component
+  useEffect(() => {
+    fetchStudentCourses();
+  }, []);
+
+  // Format status for display
+  const formatStatus = (status) => {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
+  // Get status badge class
+  const getStatusBadgeClass = (status) => {
+    switch(status) {
+      case 'present':
+        return 'present';
+      case 'absent':
+        return 'absent';
+      case 'late':
+        return 'late';
+      default:
+        return '';
+    }
+  };
 
   return (
     <div className="attendance-container">
-      <header className="header">
+      <div className="attendance-header">
         <div className="header-content">
-          <h1>Attendance Dashboard</h1>
-          <div className="subject-info">
-            <div className="flex flex-col items-end">
-              <span className="text-white font-semibold">{subjects[selectedSubject].name}</span>
-              <span className="text-gray-200 text-sm mt-1">{subjects[selectedSubject].professor}</span>
-            </div>
-          </div>
+          <h1>Attendance</h1>
+          <p>View your attendance records for each course</p>
         </div>
-      </header>
+      </div>
 
-      <div className="main-content">
-        <div className="sidebar">
-          <nav className="subject-tabs">
-            {Object.entries(subjects).map(([key, subject]) => (
-              <button
-                key={key}
-                className={`tab ${selectedSubject === key ? "active" : ""}`}
-                onClick={() => setSelectedSubject(key)}
-              >
-                <div className="flex flex-col items-start w-full">
-                  <span className="subject-name">{subject.name}</span>
-                  <span className="professor-name">{subject.professor}</span>
-                </div>
-              </button>
-            ))}
-          </nav>
+      {error && (
+        <div className="error-message">
+          <AlertCircle size={16} />
+          <span>{error}</span>
         </div>
+      )}
 
-        <div className="content-area">
-          <div className="stats-cards">
-            <div className="stat-card attendance-circle">
-              <div className="circle-wrapper">
-                <svg viewBox="0 0 150 150">
-                  <circle cx="75" cy="75" r="65" className="circle-bg" />
-                  <circle
-                    cx="75"
-                    cy="75"
-                    r="65"
-                    className="circle-progress"
-                    style={{
-                      strokeDashoffset: `${408 - (408 * percentage) / 100}px`,
-                    }}
-                  />
-                </svg>
-                <div className="circle-content">
-                  <span className="percentage">{percentage}%</span>
-                  <span className="label">Your Attendance</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="stat-card attendance-circle">
-              <div className="circle-wrapper">
-                <svg viewBox="0 0 150 150">
-                  <circle cx="75" cy="75" r="65" className="circle-bg" />
-                  <circle
-                    cx="75"
-                    cy="75"
-                    r="65"
-                    className="circle-progress class-average"
-                    style={{
-                      strokeDashoffset: `${408 - (408 * subjects[selectedSubject].classAverage) / 100}px`,
-                    }}
-                  />
-                </svg>
-                <div className="circle-content">
-                  <span className="percentage">{subjects[selectedSubject].classAverage}%</span>
-                  <span className="label">Class Average</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="filter-container">
-            <div className="filter-header">
-              <h3>Filter Records</h3>
-            </div>
-            <div className="filter-controls">
-              <select
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">All Records</option>
-                <option value="date">By Date</option>
-                <option value="month">By Month</option>
-                <option value="week">By Week</option>
-              </select>
-
-              {filterType !== "all" && (
-                <input
-                  type={filterType === "date" ? "date" : "month"}
-                  value={filterDate}
-                  onChange={(e) => setFilterDate(e.target.value)}
-                  className="filter-input"
-                />
+      <div className="attendance-content">
+        <div className="attendance-sidebar">
+          <div className="section-selector">
+            <h3>
+              <BookOpen size={16} /> My Courses
+            </h3>
+            <div className="section-list">
+              {loading && courses.length === 0 ? (
+                <div className="loading-text">Loading courses...</div>
+              ) : courses.length === 0 ? (
+                <div className="empty-text">No courses available</div>
+              ) : (
+                courses.map(course => (
+                  <div 
+                    key={course.id}
+                    className={`section-item ${activeCourse?.id === course.id ? 'active' : ''}`}
+                    onClick={() => handleCourseChange(course)}
+                  >
+                    <div className="section-info">
+                      <div className="section-name">
+                        {course.name}
+                      </div>
+                      <div className="section-code">
+                        {course.code}
+                      </div>
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
+        </div>
 
-          <div className="table-container">
-            <table className="attendance-table">
+        <div className="attendance-main">
+          {loading && !activeCourse ? (
+            <div className="loading">Loading...</div>
+          ) : !activeCourse ? (
+            <div className="empty-state">
+              <Users size={48} />
+              <p>Select a course to view attendance</p>
+                </div>
+          ) : (
+            <>
+              {/* Date Filter and Search */}
+              <div className="attendance-controls">
+                <div className="date-selector">
+                  <label>
+                    <Calendar size={16} /> Filter by Date
+                  </label>
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={handleDateChange}
+                    maxDate={new Date()}
+                    dateFormat="yyyy-MM-dd"
+                    className="date-input"
+                    placeholderText="Select a date to filter"
+                    isClearable
+                    highlightDates={markedDates.map(dateStr => {
+                      const [year, month, day] = dateStr.split('-');
+                      return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                    })}
+                    dayClassName={(date) => {
+                      const year = date.getFullYear();
+                      const month = String(date.getMonth() + 1).padStart(2, '0');
+                      const day = String(date.getDate()).padStart(2, '0');
+                      const dateStr = `${year}-${month}-${day}`;
+                      return markedDates.includes(dateStr) ? 'marked-date' : '';
+                    }}
+                  />
+                  {markedDates.length > 0 && (
+                    <div className="date-legend">
+                      <span className="legend-dot"></span>
+                      <span className="legend-text">Dates with attendance</span>
+                </div>
+                  )}
+            </div>
+
+                <div className="search-container">
+                  <Search className="search-icon" size={16} />
+                  <input
+                    type="text"
+                    placeholder="Search by date, day, or status..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                  />
+                </div>
+              </div>
+
+              {/* Statistics */}
+              {attendanceSummary && (
+                <div className="attendance-stats">
+                  <div className="stat-card total">
+                    <div className="stat-value">{attendanceSummary.totalClasses}</div>
+                    <div className="stat-label">Total Classes</div>
+                  </div>
+                  <div className="stat-card present">
+                    <div className="stat-value">{attendanceSummary.present}</div>
+                    <div className="stat-label">Present</div>
+                  </div>
+                  <div className="stat-card absent">
+                    <div className="stat-value">{attendanceSummary.absent}</div>
+                    <div className="stat-label">Absent</div>
+                  </div>
+                  <div className="stat-card late">
+                    <div className="stat-value">{attendanceSummary.late}</div>
+                    <div className="stat-label">Late</div>
+                  </div>
+                  <div className="stat-card percentage">
+                    <div className="stat-value">{attendanceSummary.percentage.toFixed(1)}%</div>
+                    <div className="stat-label">Attendance %</div>
+            </div>
+          </div>
+              )}
+
+              {/* Attendance Records Table */}
+              <div className="students-table-container">
+                <table className="students-table">
               <thead>
                 <tr>
                   <th>Date</th>
                   <th>Day</th>
                   <th>Status</th>
-                  <th>Remarks</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredAttendance.map((item, index) => (
+                    {filteredRecords.length > 0 ? (
+                      filteredRecords.map((record, index) => (
                   <tr key={index}>
-                    <td>{item.date}</td>
-                    <td>{item.day}</td>
-                    <td>
-                      <span className={`status-badge ${item.status.toLowerCase()}`}>
-                        {item.status}
+                          <td className="date-cell">{record.date}</td>
+                          <td className="day-cell">{record.day}</td>
+                          <td className="status-cell">
+                            <span className={`status-badge ${getStatusBadgeClass(record.status)}`}>
+                              {formatStatus(record.status)}
                       </span>
                     </td>
-                    <td>{item.remarks}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="3" className="no-results">
+                          {searchTerm || selectedDate 
+                            ? 'No attendance records match your search' 
+                            : 'No attendance records available for this course'}
+                        </td>
                   </tr>
-                ))}
+                    )}
               </tbody>
             </table>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>

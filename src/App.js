@@ -9,6 +9,7 @@ import GradingPage from './Pages/Grading/Grading';
 import ClassSchedule from './Pages/ClassSchedule/ClassSchedule';
 import Transcript from './Pages/Transcript/Transcript';
 import Dashboard from './Pages/DashboardPage/dashboardPage';
+import Attendance from './Pages/Attendance/Attendance';
 import ComingSoonPage from './Pages/ComingSoon/comingsoon';
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
                 <Route path="timetable" element={<ClassSchedule />} />
                 <Route path="transcript" element={<Transcript />} />
                 <Route path="fees" element={<ComingSoonPage />} />
-                <Route path="attendance" element={<ComingSoonPage />} />
+                <Route path="attendance" element={<Attendance />} />
               </Route>
             </Route>
             
