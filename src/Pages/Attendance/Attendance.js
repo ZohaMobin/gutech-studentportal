@@ -68,7 +68,7 @@ const Attendance = () => {
     console.error("API Error:", error);
   };
 
-  // Fetch student's enrolled courses using grades API (same approach as marks page)
+  // Fetch student's enrolled courses for the current academic year
   const fetchStudentCourses = async () => {
     setLoading(true);
     setError(null);
@@ -81,40 +81,30 @@ const Attendance = () => {
         return;
       }
 
-      // Use grades API to get courses (same as marks page)
-      const gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${studentId}`, {
+      // Get active registered courses for the student in the current academic year
+      // The API filters by current academic year by default
+      const response = await axios.get(`${apiUrl}/api/course-registrations/student/${studentId}/courses`, {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`
         }
       });
 
-      if (gradesResponse.data && gradesResponse.data.grades) {
-        // Extract unique courses from grades
-        const courseMap = new Map();
+      if (response.data && response.data.courses) {
+        const activeCourses = response.data.courses.map(course => ({
+          id: course.id,
+          name: course.name || 'Unknown Course',
+          code: course.code || '',
+          creditHours: course.creditHours || 0
+        }));
         
-        gradesResponse.data.grades.forEach(grade => {
-          if (grade.registrationId && grade.registrationId.courseId) {
-            const courseData = grade.registrationId.courseId;
-            const courseId = courseData._id ? courseData._id.toString() : courseData.toString();
-            
-            if (!courseMap.has(courseId)) {
-              courseMap.set(courseId, {
-                id: courseId,
-                name: courseData.name || 'Unknown Course',
-                code: courseData.code || '',
-                creditHours: courseData.creditHours || 0
-              });
-            }
-          }
-        });
-        
-        const activeCourses = Array.from(courseMap.values());
         setCourses(activeCourses);
         
         if (activeCourses.length > 0 && !activeCourse) {
-          setActiveCourse(activeCourses[0]);
+          setActiveCourse(activeCourses[0].id);
           fetchCourseAttendance(activeCourses[0].id);
         }
+      } else {
+        setCourses([]);
       }
     } catch (error) {
       handleApiError(error);

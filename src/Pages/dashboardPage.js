@@ -49,15 +49,16 @@ const processCoursePerformance = (grades) => {
         };
       }
 
-      if (grade.obtainedMarks !== undefined && grade.maxMarks !== undefined) {
-        coursePerformance[courseId].totalMarks += grade.maxMarks;
+      if (grade.obtainedMarks !== undefined && grade.assessmentId?.maxMarks !== undefined) {
+        const maxMarks = grade.assessmentId.maxMarks;
+        coursePerformance[courseId].totalMarks += maxMarks;
         coursePerformance[courseId].obtainedMarks += grade.obtainedMarks;
 
         coursePerformance[courseId].assessments.push({
-          title: grade.assessmentId || "Untitled Assessment",
-          type: grade.type || "Unknown",
+          title: grade.assessmentId?.title || "Untitled Assessment",
+          type: grade.assessmentId?.type || "Unknown",
           obtainedMarks: grade.obtainedMarks,
-          maxMarks: grade.maxMarks,
+          maxMarks: maxMarks,
           date: grade.gradedAt || new Date(),
           feedback: grade.feedback || "",
         });

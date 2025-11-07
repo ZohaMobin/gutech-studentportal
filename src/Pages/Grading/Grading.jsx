@@ -31,27 +31,48 @@ const Grading = () => {
           throw new Error('Authentication token not found. Please log in again');
         }
 
-        const response = await fetch(`${apiUrl}/api/grades/student/${user.studentId}`, {
+        // First, fetch all registered courses for the student (current academic year)
+        const coursesResponse = await fetch(`${apiUrl}/api/course-registrations/student/${user.studentId}/courses`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!coursesResponse.ok) {
+          if (coursesResponse.status === 401) {
+            throw new Error('Your session has expired. Please log in again');
+          } else if (coursesResponse.status === 404) {
+            // No courses registered yet, but continue to show empty state
+            const processedData = createEmptyDataStructure();
+            setMarksData(processedData);
+            setLoading(false);
+            return;
+          } else {
+            throw new Error(`Unable to load courses (Error ${coursesResponse.status})`);
+          }
+        }
+
+        const coursesData = await coursesResponse.json();
+        
+        // Then, fetch grades for the student - filters by current academic year by default
+        const gradesResponse = await fetch(`${apiUrl}/api/grades/student/${user.studentId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
         
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Your session has expired. Please log in again');
-          } else if (response.status === 404) {
-            throw new Error('No marks data found for your account');
-          } else if (response.status === 500) {
-            throw new Error('Server error. Please try again later');
-          } else {
-            throw new Error(`Unable to load marks data (Error ${response.status})`);
-          }
+        let gradesData = null;
+        if (gradesResponse.ok) {
+          gradesData = await gradesResponse.json();
+        } else if (gradesResponse.status !== 404) {
+          // Only throw error if it's not a 404 (no grades is acceptable)
+          throw new Error(`Unable to load grades (Error ${gradesResponse.status})`);
         }
         
-        const apiData = await response.json();
-        const processedData = processApiData(apiData);
+        // Process data combining courses and grades
+        const processedData = processApiData(coursesData, gradesData);
         setMarksData(processedData);
         
         // Set active course to the first course in the list
@@ -70,73 +91,73 @@ const Grading = () => {
     fetchData();
   }, []);
 
-  // Process API data to match the component's expected structure
-  const processApiData = (apiData) => {
-    // If apiData is empty or not in the expected format, create a default structure
-    if (!apiData || !apiData.grades || !Array.isArray(apiData.grades) || apiData.grades.length === 0) {
-      return {
-        courses: [
+  // Create empty data structure
+  const createEmptyDataStructure = () => {
+    return {
+      courses: [
+        {
+          id: 'default',
+          name: 'No Courses Available'
+        }
+      ],
+      quizzes: {
+        'default': [
           {
-            id: 'default',
-            name: 'No Courses Available'
+            serial: 'No Quizzes',
+            weightage: 0,
+            obtainedMarks: '-',
+            totalMarks: '-',
+            average: '-',
+            min: '-',
+            max: '-'
           }
-        ],
-        quizzes: {
-          'default': [
-            {
-              serial: 'No Quizzes',
-              weightage: 0,
-              obtainedMarks: '-',
-              totalMarks: '-',
-              average: '-',
-              min: '-',
-              max: '-'
-            }
-          ]
-        },
-        assignments: {
-          'default': [
-            {
-              serial: 'No Assignments',
-              weightage: 0,
-              obtainedMarks: '-',
-              totalMarks: '-',
-              average: '-',
-              min: '-',
-              max: '-'
-            }
-          ]
-        },
-        midterms: {
-          'default': [
-            {
-              serial: 'No Midterms',
-              weightage: 0,
-              obtainedMarks: '-',
-              totalMarks: '-',
-              average: '-',
-              min: '-',
-              max: '-'
-            }
-          ]
-        },
-        finals: {
-          'default': [
-            {
-              serial: 'No Finals',
-              weightage: 0,
-              obtainedMarks: '-',
-              totalMarks: '-',
-              average: '-',
-              min: '-',
-              max: '-'
-            }
-          ]
-        },
-        courseStats: {}
-      };
-    }
+        ]
+      },
+      assignments: {
+        'default': [
+          {
+            serial: 'No Assignments',
+            weightage: 0,
+            obtainedMarks: '-',
+            totalMarks: '-',
+            average: '-',
+            min: '-',
+            max: '-'
+          }
+        ]
+      },
+      midterms: {
+        'default': [
+          {
+            serial: 'No Midterms',
+            weightage: 0,
+            obtainedMarks: '-',
+            totalMarks: '-',
+            average: '-',
+            min: '-',
+            max: '-'
+          }
+        ]
+      },
+      finals: {
+        'default': [
+          {
+            serial: 'No Finals',
+            weightage: 0,
+            obtainedMarks: '-',
+            totalMarks: '-',
+            average: '-',
+            min: '-',
+            max: '-'
+          }
+        ]
+      },
+      courseStats: {}
+    };
+  };
 
+  // Process API data to match the component's expected structure
+  const processApiData = (coursesData, gradesData) => {
     const processedData = {
       courses: [],
       quizzes: {},
@@ -146,31 +167,20 @@ const Grading = () => {
       courseStats: {}
     };
 
-    // Extract unique courses from the grades
-    const uniqueCourses = new Map();
-    apiData.grades.forEach(grade => {
-      if (grade.registrationId?.courseId) {
-        const courseId = grade.registrationId.courseId._id;
-        const sectionId = grade.registrationId.sectionId;
-        if (!uniqueCourses.has(courseId)) {
-          uniqueCourses.set(courseId, {
-            id: courseId,
-            name: `${grade.registrationId.courseId.code}: ${grade.registrationId.courseId.name}`,
-            sectionId: sectionId
-          });
-        }
-      }
-    });
-
-    // Add courses to processed data
-    processedData.courses = Array.from(uniqueCourses.values());
-
-    // If no courses found, add a default course
-    if (processedData.courses.length === 0) {
-      processedData.courses.push({
-        id: 'default',
-        name: 'No Courses Available'
+    // Extract courses from registered courses (not just from grades)
+    if (coursesData && coursesData.courses && Array.isArray(coursesData.courses)) {
+      coursesData.courses.forEach(course => {
+        processedData.courses.push({
+          id: course.id,
+          name: `${course.code || ''}: ${course.name || 'Unknown Course'}`.trim(),
+          sectionId: course.sectionId || null
+        });
       });
+    }
+
+    // If no courses found, return empty structure
+    if (processedData.courses.length === 0) {
+      return createEmptyDataStructure();
     }
 
     // Initialize data structures for each course
@@ -180,57 +190,78 @@ const Grading = () => {
       processedData.midterms[course.id] = [];
       processedData.finals[course.id] = [];
       
-      // Get section stats for this course
-      const sectionStats = apiData.sectionStats[course.sectionId];
+      // Initialize course stats (will be populated from grades data if available)
       processedData.courseStats[course.id] = {
-        sectionMax: sectionStats?.maxWeightedMarks || 0,
-        sectionMin: sectionStats?.minWeightedMarks || 0,
-        assessmentTypes: sectionStats?.assessmentTypes || {}
+        sectionMax: 0,
+        sectionMin: 0,
+        assessmentTypes: {}
       };
     });
 
-    // Group grades by course
-    const courseGrades = {};
-    apiData.grades.forEach(grade => {
-      const courseId = grade.registrationId?.courseId?._id;
-      if (!courseId) return;
-
-      if (!courseGrades[courseId]) {
-        courseGrades[courseId] = [];
+    // Process grades if available
+    if (gradesData && gradesData.grades && Array.isArray(gradesData.grades) && gradesData.grades.length > 0) {
+      // Get section stats from grades data
+      if (gradesData.sectionStats) {
+        processedData.courses.forEach(course => {
+          if (course.sectionId && gradesData.sectionStats[course.sectionId]) {
+            const sectionStats = gradesData.sectionStats[course.sectionId];
+            processedData.courseStats[course.id] = {
+              sectionMax: sectionStats?.maxWeightedMarks || 0,
+              sectionMin: sectionStats?.minWeightedMarks || 0,
+              assessmentTypes: sectionStats?.assessmentTypes || {}
+            };
+          }
+        });
       }
-      courseGrades[courseId].push(grade);
-    });
 
-    // Process grades for each course
-    Object.entries(courseGrades).forEach(([courseId, grades]) => {
-      grades.forEach(grade => {
-        const assessmentType = grade.assessmentId?.type?.toLowerCase();
-        const gradeData = {
-          serial: grade.assessmentId?.title || 'Untitled Assessment',
-          weightage: grade.assessmentId?.weightage || 0,
-          obtainedMarks: grade.obtainedMarks || 0,
-          totalMarks: grade.assessmentId?.maxMarks || 0,
-          average: grade.stats?.average || 0,
-          min: grade.stats?.min || 0,
-          max: grade.stats?.max || 0
-        };
+      // Group grades by course
+      const courseGrades = {};
+      gradesData.grades.forEach(grade => {
+        const courseId = grade.registrationId?.courseId?._id;
+        if (!courseId) return;
 
-        switch(assessmentType) {
-          case 'quiz':
-            processedData.quizzes[courseId].push(gradeData);
-            break;
-          case 'assignment':
-            processedData.assignments[courseId].push(gradeData);
-            break;
-          case 'midterm':
-            processedData.midterms[courseId].push(gradeData);
-            break;
-          case 'final':
-            processedData.finals[courseId].push(gradeData);
-            break;
+        if (!courseGrades[courseId]) {
+          courseGrades[courseId] = [];
         }
+        courseGrades[courseId].push(grade);
       });
 
+      // Process grades for each course
+      Object.entries(courseGrades).forEach(([courseId, grades]) => {
+        grades.forEach(grade => {
+          const assessmentType = grade.assessmentId?.type?.toLowerCase();
+          const gradeData = {
+            serial: grade.assessmentId?.title || 'Untitled Assessment',
+            weightage: grade.assessmentId?.weightage || 0,
+            obtainedMarks: grade.obtainedMarks || 0,
+            totalMarks: grade.assessmentId?.maxMarks || 0,
+            average: grade.stats?.average || 0,
+            min: grade.stats?.min || 0,
+            max: grade.stats?.max || 0
+          };
+
+          switch(assessmentType) {
+            case 'quiz':
+              processedData.quizzes[courseId].push(gradeData);
+              break;
+            case 'assignment':
+              processedData.assignments[courseId].push(gradeData);
+              break;
+            case 'midterm':
+              processedData.midterms[courseId].push(gradeData);
+              break;
+            case 'final':
+              processedData.finals[courseId].push(gradeData);
+              break;
+          }
+        });
+      });
+    }
+
+    // For courses without grades, add default "No data" entries
+    processedData.courses.forEach(course => {
+      const courseId = course.id;
+      
       // If no grades found for any category, add default entries
       if (processedData.quizzes[courseId].length === 0) {
         processedData.quizzes[courseId].push({

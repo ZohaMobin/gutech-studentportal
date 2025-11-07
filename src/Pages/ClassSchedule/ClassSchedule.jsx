@@ -152,15 +152,33 @@ const ClassSchedule = ({ isDashboard }) => {
       setError(null);
       setRetryCount(0);
 
-      // Extract teacher IDs from the schedule data
-      const teacherIds = Object.values(response.data)
-        .flat()
-        .filter(schedule => schedule && schedule.teacherId && schedule.teacherId._id)
-        .map(schedule => schedule.teacherId._id);
+      // Extract teacher names from schedule data (if populated) or fetch separately
+      const teacherNamesMap = {};
+      const teacherIdsToFetch = [];
+      
+      Object.values(response.data).flat().forEach(schedule => {
+        if (schedule && schedule.teacherId && schedule.teacherId._id) {
+          const teacherId = schedule.teacherId._id;
+          // If teacher name is already populated, use it
+          if (schedule.teacherId.userId && schedule.teacherId.userId.name) {
+            teacherNamesMap[teacherId] = schedule.teacherId.userId.name;
+          } else {
+            // Otherwise, add to list to fetch separately
+            if (!teacherIdsToFetch.includes(teacherId)) {
+              teacherIdsToFetch.push(teacherId);
+            }
+          }
+        }
+      });
 
-      // Fetch teacher names if we have any teacher IDs
-      if (teacherIds.length > 0) {
-        await fetchTeacherNames(teacherIds);
+      // Set teacher names from populated data
+      if (Object.keys(teacherNamesMap).length > 0) {
+        setTeacherNames(prev => ({ ...prev, ...teacherNamesMap }));
+      }
+
+      // Fetch remaining teacher names if needed
+      if (teacherIdsToFetch.length > 0) {
+        await fetchTeacherNames(teacherIdsToFetch);
       }
     } catch (err) {
       console.error('Error fetching schedule:', err);
@@ -330,7 +348,7 @@ const ClassSchedule = ({ isDashboard }) => {
                           <div className="schedule-details">
                             <div className="teacher-info">
                               {scheduleForTime.teacherId && scheduleForTime.teacherId._id 
-                                ? teacherNames[scheduleForTime.teacherId._id] || 'Loading...' 
+                                ? (scheduleForTime.teacherId.userId?.name || teacherNames[scheduleForTime.teacherId._id] || 'Loading...')
                                 : 'Teacher TBA'}
                             </div>
                             <div className="room-info">
