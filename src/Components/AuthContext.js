@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
     const loadAuthState = () => {
       const storedToken = sessionStorage.getItem('token');
       const storedUser = sessionStorage.getItem('user');
-      console.log("Checking session storage: ", storedToken, storedUser);
 
       if (storedToken && storedUser) {
         try {

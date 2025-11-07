@@ -42,8 +42,6 @@ const Dashboard = () => {
           throw new Error('Authentication token not found. Please log in again.');
         }
 
-        console.log("Fetching student details for ID:", user.studentId);
-        
         // Fetch student details
         const studentResponse = await axios.get(`${apiUrl}/api/students/${user.studentId}`, {
           headers: {
@@ -60,11 +58,8 @@ const Dashboard = () => {
           }
         });
         
-        console.log("Grades API response:", gradesResponse.data);
-
         // Process grades data
         const processedGrades = processGradesData(gradesResponse.data);
-        console.log("Processed grades:", processedGrades);
         setGradesData(processedGrades);
 
         // Update student data with grades
@@ -75,7 +70,6 @@ const Dashboard = () => {
             subjects: []
           },
           courses: processedGrades.courses.map(course => {
-            console.log("Mapping course:", course);
             return {
               name: course.name,
               marks: course.totalObtainedMarks || 0,
@@ -85,7 +79,6 @@ const Dashboard = () => {
             };
           })
         };
-        console.log("Updated student data courses:", updatedStudentData.courses);
 
         setStudentData(updatedStudentData);
         setApiCalled(true);
@@ -102,13 +95,10 @@ const Dashboard = () => {
 
   // Process grades data
   const processGradesData = (apiData) => {
-    console.log("Processing grades data:", apiData);
-    
     // Check if apiData is an array or an object
     const data = Array.isArray(apiData) ? apiData[0] : apiData;
     
     if (!data || !data.grades || !Array.isArray(data.grades)) {
-      console.log("No valid grades data found");
       return { courses: [] };
     }
 
@@ -117,7 +107,6 @@ const Dashboard = () => {
     // Process each grade
     data.grades.forEach(grade => {
       if (!grade.registrationId || !grade.registrationId.courseId) {
-        console.log("Invalid grade data:", grade);
         return;
       }
       
@@ -157,7 +146,6 @@ const Dashboard = () => {
     });
 
     const courses = Array.from(courseMap.values());
-    console.log("Processed courses:", courses);
     
     return {
       courses: courses

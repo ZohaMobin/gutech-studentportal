@@ -78,7 +78,6 @@ const Signup = () => {
         password: signupForm.password,
       });
       
-      console.log('Registration successful:', response.data);
       
       // Reset form after successful registration
       setSignupForm({

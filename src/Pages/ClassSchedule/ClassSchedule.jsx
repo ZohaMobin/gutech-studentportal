@@ -141,12 +141,10 @@ const ClassSchedule = ({ isDashboard }) => {
           
           if (courseIdentifier && !newSectionColors[courseIdentifier]) {
             newSectionColors[courseIdentifier] = generateSectionColor(courseIdentifier);
-            console.log(`Assigned color for course ${courseIdentifier}:`, newSectionColors[courseIdentifier]);
           }
         });
       });
       
-      console.log('Generated course colors:', newSectionColors);
       setSectionColors(newSectionColors);
       
       setSchedule(response.data);
