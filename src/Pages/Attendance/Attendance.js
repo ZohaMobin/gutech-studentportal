@@ -20,7 +20,7 @@ const Attendance = () => {
   const [markedDates, setMarkedDates] = useState([]);
 
   // API URL from environment variable
-  const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
   
   // Get auth token from session storage
   const getAuthToken = () => {

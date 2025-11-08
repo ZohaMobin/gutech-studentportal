@@ -13,7 +13,7 @@ const ClassSchedule = ({ isDashboard }) => {
   const [sectionColors, setSectionColors] = useState({});
   const MAX_RETRIES = 3;
 
-  const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
   // Function to fetch teacher names
   const fetchTeacherNames = async (teacherIds) => {
