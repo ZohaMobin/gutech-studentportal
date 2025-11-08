@@ -130,14 +130,38 @@ const Attendance = () => {
       if (response.data) {
         // Format dates and sort by date (newest first)
         const records = response.data.records.map(record => {
-          const dateObj = new Date(record.date);
-          const year = dateObj.getFullYear();
-          const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-          const day = String(dateObj.getDate()).padStart(2, '0');
-          const dateStr = `${year}-${month}-${day}`;
+          // Parse date string directly to avoid timezone issues
+          // API returns dates like "2025-10-07T00:00:00.000Z"
+          const dateStr = record.date;
+          let year, month, day;
+          
+          if (typeof dateStr === 'string') {
+            // Extract date parts from ISO string (YYYY-MM-DD)
+            const dateMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (dateMatch) {
+              year = dateMatch[1];
+              month = dateMatch[2];
+              day = dateMatch[3];
+            } else {
+              // Fallback to Date parsing with UTC methods
+              const dateObj = new Date(dateStr);
+              year = String(dateObj.getUTCFullYear());
+              month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+              day = String(dateObj.getUTCDate()).padStart(2, '0');
+            }
+          } else {
+            // If it's already a Date object, use UTC methods
+            const dateObj = new Date(dateStr);
+            year = String(dateObj.getUTCFullYear());
+            month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+            day = String(dateObj.getUTCDate()).padStart(2, '0');
+          }
+          
+          const formattedDateStr = `${year}-${month}-${day}`;
+          const dateObj = new Date(`${year}-${month}-${day}T12:00:00`); // Use noon to avoid timezone issues
           
           return {
-            date: dateStr,
+            date: formattedDateStr,
             dateObj: dateObj,
             day: dateObj.toLocaleDateString('en-US', { weekday: 'long' }),
             status: record.status

@@ -109,25 +109,39 @@ const Transcript = () => {
         });
 
         // Fetch all course registrations (all academic years)
-        const registrationsResponse = await axios.get(`${apiUrl}/api/course-registrations/student/${user.studentId}/courses?includeAll=true`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        let registrationsResponse;
+        try {
+          registrationsResponse = await axios.get(`${apiUrl}/api/course-registrations/student/${user.studentId}/courses?includeAll=true`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+        } catch (err) {
+          // If registrations API fails, treat as no data
+          console.warn("Failed to fetch course registrations:", err);
+          registrationsResponse = { data: { registrations: [] } };
+        }
 
         // Fetch all grades (all academic years)
-        const gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${user.studentId}?includeAll=true`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        let gradesResponse;
+        try {
+          gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${user.studentId}?includeAll=true`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+        } catch (err) {
+          // If grades API fails, treat as no data
+          console.warn("Failed to fetch grades:", err);
+          gradesResponse = { data: { grades: [] } };
+        }
 
         // Process the data
         const student = studentResponse.data;
-        const registrations = registrationsResponse.data.registrations || [];
-        const gradesData = gradesResponse.data;
+        const registrations = registrationsResponse?.data?.registrations || [];
+        const gradesData = gradesResponse?.data || {};
 
         // Group registrations by academic year
         const academicYearMap = new Map();
@@ -284,6 +298,21 @@ const Transcript = () => {
           return a.semester - b.semester;
         });
 
+        // Check if there's no transcript data
+        if (semesters.length === 0 || !registrations || registrations.length === 0) {
+          // Extract name from userId for the empty state
+          const studentName =
+            student.userId?.name || (student.userId?.firstName && student.userId?.lastName ? `${student.userId.firstName} ${student.userId.lastName}`.trim() : student.name || "N/A");
+          
+          setStudentData({
+            name: studentName,
+            studentId: student.rollNumber || user.studentId,
+            hasNoData: true, // Flag to indicate no transcript data
+          });
+          setLoading(false);
+          return;
+        }
+
         // Calculate CGPA and totals
         const allCourses = semesters.flatMap((s) => s.courses);
         const cgpa = calculateGPA(allCourses);
@@ -340,6 +369,28 @@ const Transcript = () => {
         <div className="transcript-container">
           <div style={{ padding: "2rem", textAlign: "center" }}>
             <p style={{ color: "red" }}>{error || "Failed to load transcript data"}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if there's no transcript data available
+  if (studentData.hasNoData || !studentData.semesters || studentData.semesters.length === 0) {
+    return (
+      <div className="print-wrapper">
+        <div className="transcript-container">
+          <div className="no-transcript-message" style={{ padding: "4rem 2rem", textAlign: "center" }}>
+            <div style={{ fontSize: "48px", marginBottom: "1rem", color: "#ccc" }}>📄</div>
+            <h2 style={{ fontSize: "24px", marginBottom: "1rem", color: "#333" }}>No Transcript Available</h2>
+            <p style={{ fontSize: "16px", color: "#666", lineHeight: "1.6" }}>
+              There is no transcript data available for this student at this time.
+            </p>
+            {studentData.name && (
+              <p style={{ fontSize: "14px", color: "#999", marginTop: "1rem" }}>
+                Student: {studentData.name} ({studentData.studentId})
+              </p>
+            )}
           </div>
         </div>
       </div>

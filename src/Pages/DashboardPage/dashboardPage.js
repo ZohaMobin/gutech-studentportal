@@ -28,8 +28,11 @@ const Dashboard = () => {
   // Fetch student details from API
   useEffect(() => {
     const fetchStudentDetails = async () => {
+      // Get user from storage inside the effect to avoid dependency issues
+      const currentUser = getUserFromStorage();
+      
       // Skip if no user or already called API
-      if (!user || !user.studentId || apiCalled) {
+      if (!currentUser || !currentUser.studentId || apiCalled) {
         return;
       }
 
@@ -43,27 +46,12 @@ const Dashboard = () => {
         }
 
         // Fetch student details
-        const studentResponse = await axios.get(`${apiUrl}/api/students/${user.studentId}`, {
+        const studentResponse = await axios.get(`${apiUrl}/api/students/${currentUser.studentId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-
-        // Fetch grades data - filters by current academic year by default
-        const gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${user.studentId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        // Process grades data
-        const processedGrades = processGradesData(gradesResponse.data);
-        setGradesData(processedGrades);
-
-        // Fetch attendance data for all courses
-        const attendanceData = await fetchAttendanceData(apiUrl, token, processedGrades.courses);
 
         // Extract name from userId
         const studentName =
@@ -73,20 +61,52 @@ const Dashboard = () => {
             : studentResponse.data.name || "Student");
 
         // Extract program name if it's an object
-        const programName = typeof studentResponse.data.program === "object" ? studentResponse.data.program.name : studentResponse.data.program;
+        const programName = typeof studentResponse.data.program === "object" 
+          ? (studentResponse.data.program?.name || studentResponse.data.program) 
+          : studentResponse.data.program;
 
         // Extract department name if it's an object
-        const departmentName = typeof studentResponse.data.department === "object" ? studentResponse.data.department.name : studentResponse.data.department;
+        const departmentName = typeof studentResponse.data.department === "object" 
+          ? (studentResponse.data.department?.name || studentResponse.data.department) 
+          : studentResponse.data.department;
 
-        // Update student data with grades and attendance
-        const updatedStudentData = {
+        // Extract semester
+        const semester = studentResponse.data.currentSemester || studentResponse.data.semester || null;
+
+        // Initialize student data with basic info first
+        let updatedStudentData = {
           ...studentResponse.data,
-          name: studentName, // Add name from userId
-          program: programName, // Store as string instead of object
-          department: departmentName, // Store department name
-          semester: studentResponse.data.currentSemester || studentResponse.data.semester, // Use currentSemester from API
-          attendance: attendanceData,
-          courses: processedGrades.courses.map((course) => {
+          name: studentName,
+          program: programName,
+          department: departmentName,
+          semester: semester,
+          rollNumber: studentResponse.data.rollNumber || null,
+          attendance: {
+            overall: 0,
+            subjects: [],
+          },
+          courses: [],
+        };
+
+        // Try to fetch grades data - don't fail if this errors
+        try {
+          const gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${currentUser.studentId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          // Process grades data
+          const processedGrades = processGradesData(gradesResponse.data);
+          setGradesData(processedGrades);
+
+          // Fetch attendance data for all courses
+          const attendanceData = await fetchAttendanceData(apiUrl, token, processedGrades.courses);
+
+          // Update with grades and attendance
+          updatedStudentData.attendance = attendanceData;
+          updatedStudentData.courses = processedGrades.courses.map((course) => {
             return {
               name: course.name,
               marks: course.totalObtainedMarks || 0,
@@ -94,8 +114,11 @@ const Dashboard = () => {
               weightedMarks: course.weightedMarks || 0,
               totalWeightage: course.totalWeightage || 100,
             };
-          }),
-        };
+          });
+        } catch (gradesError) {
+          console.warn("Error fetching grades/attendance data:", gradesError);
+          // Continue with basic student data even if grades fail
+        }
 
         setStudentData(updatedStudentData);
         setApiCalled(true);
@@ -108,7 +131,8 @@ const Dashboard = () => {
     };
 
     fetchStudentDetails();
-  }, [user, apiCalled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run once on mount
 
   // Fetch attendance data for all courses
   const fetchAttendanceData = async (apiUrl, token, courses) => {
