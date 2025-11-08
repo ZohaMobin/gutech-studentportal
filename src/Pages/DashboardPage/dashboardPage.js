@@ -62,17 +62,17 @@ const Dashboard = () => {
         const processedGrades = processGradesData(gradesResponse.data);
         setGradesData(processedGrades);
 
+        // Fetch attendance data for all courses
+        const attendanceData = await fetchAttendanceData(apiUrl, token, processedGrades.courses);
+
         // Extract program name if it's an object
         const programName = typeof studentResponse.data.program === "object" ? studentResponse.data.program.name : studentResponse.data.program;
 
-        // Update student data with grades
+        // Update student data with grades and attendance
         const updatedStudentData = {
           ...studentResponse.data,
           program: programName, // Store as string instead of object
-          attendance: {
-            overall: 0,
-            subjects: [],
-          },
+          attendance: attendanceData,
           courses: processedGrades.courses.map((course) => {
             return {
               name: course.name,
@@ -96,6 +96,73 @@ const Dashboard = () => {
 
     fetchStudentDetails();
   }, [user, apiCalled]);
+
+  // Fetch attendance data for all courses
+  const fetchAttendanceData = async (apiUrl, token, courses) => {
+    if (!courses || courses.length === 0) {
+      return {
+        overall: 0,
+        subjects: [],
+      };
+    }
+
+    try {
+      const attendancePromises = courses.map(async (course) => {
+        try {
+          const response = await axios.get(`${apiUrl}/api/students/attendance/${course.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (response.data && response.data.summary) {
+            const summary = response.data.summary;
+            const percentage = parseFloat(summary.percentage) || 0;
+            return {
+              name: course.name,
+              percentage: Math.round(percentage),
+              totalClasses: summary.totalClasses || 0,
+              present: summary.present || 0,
+              absent: summary.absent || 0,
+              late: summary.late || 0,
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error(`Error fetching attendance for course ${course.id}:`, error);
+          return null;
+        }
+      });
+
+      const attendanceResults = await Promise.all(attendancePromises);
+      const validAttendance = attendanceResults.filter((item) => item !== null);
+
+      // Calculate overall attendance
+      let totalClasses = 0;
+      let totalPresent = 0;
+      let totalLate = 0;
+
+      validAttendance.forEach((subject) => {
+        totalClasses += subject.totalClasses;
+        totalPresent += subject.present;
+        totalLate += subject.late;
+      });
+
+      const overallPercentage = totalClasses > 0 ? Math.round(((totalPresent + totalLate) / totalClasses) * 100) : 0;
+
+      return {
+        overall: overallPercentage,
+        subjects: validAttendance,
+      };
+    } catch (error) {
+      console.error("Error fetching attendance data:", error);
+      return {
+        overall: 0,
+        subjects: [],
+      };
+    }
+  };
 
   // Process grades data
   const processGradesData = (apiData) => {
@@ -488,30 +555,6 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="attendance-overview">
-              <div className="attendance-circle">
-                <svg viewBox="0 0 36 36" className="circular-chart">
-                  <path
-                    className="circle-bg"
-                    d="M18 2.0845
-                       a 15.9155 15.9155 0 0 1 0 31.831
-                       a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="circle"
-                    strokeDasharray={`${studentData.attendance.overall}, 100`}
-                    d="M18 2.0845
-                       a 15.9155 15.9155 0 0 1 0 31.831
-                       a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <text x="18" y="20.35" className="percentage-value">
-                    {studentData.attendance.overall}
-                  </text>
-                  <text x="18" y="24.5" className="percentage-symbol">
-                    %
-                  </text>
-                </svg>
-                <div className="attendance-label">Overall</div>
-              </div>
               <div className="attendance-details">
                 {studentData.attendance.subjects.map((subject, index) => (
                   <div key={index} className="subject-attendance">

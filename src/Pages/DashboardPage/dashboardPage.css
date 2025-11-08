@@ -260,34 +260,14 @@
 .attendance-overview {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
-}
-
-.attendance-circle {
-    width: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
 }
 
 .attendance-details {
     width: 100%;
-}
-
-@media (min-width: 576px) {
-    .attendance-overview {
-        flex-direction: row;
-        align-items: flex-start;
-    }
-    
-    .attendance-circle {
-        width: 120px;
-    }
-    
-    .attendance-details {
-        flex: 1;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .subject-attendance {
@@ -338,6 +318,7 @@
     .attendance-bar {
         border-radius: 4px;
     }
+
 }
 
 /* Course Performance - Responsive design */
@@ -945,4 +926,5 @@
     padding: 0.15rem;
   }
 }
+
 
