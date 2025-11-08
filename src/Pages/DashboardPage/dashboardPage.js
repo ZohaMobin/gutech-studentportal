@@ -65,13 +65,26 @@ const Dashboard = () => {
         // Fetch attendance data for all courses
         const attendanceData = await fetchAttendanceData(apiUrl, token, processedGrades.courses);
 
+        // Extract name from userId
+        const studentName =
+          studentResponse.data.userId?.name ||
+          (studentResponse.data.userId?.firstName && studentResponse.data.userId?.lastName
+            ? `${studentResponse.data.userId.firstName} ${studentResponse.data.userId.lastName}`.trim()
+            : studentResponse.data.name || "Student");
+
         // Extract program name if it's an object
         const programName = typeof studentResponse.data.program === "object" ? studentResponse.data.program.name : studentResponse.data.program;
+
+        // Extract department name if it's an object
+        const departmentName = typeof studentResponse.data.department === "object" ? studentResponse.data.department.name : studentResponse.data.department;
 
         // Update student data with grades and attendance
         const updatedStudentData = {
           ...studentResponse.data,
+          name: studentName, // Add name from userId
           program: programName, // Store as string instead of object
+          department: departmentName, // Store department name
+          semester: studentResponse.data.currentSemester || studentResponse.data.semester, // Use currentSemester from API
           attendance: attendanceData,
           courses: processedGrades.courses.map((course) => {
             return {
@@ -524,11 +537,13 @@ const Dashboard = () => {
               </div>
               <div className="detail-item">
                 <span className="detail-label">Semester:</span>
-                <span className="detail-value">{studentData?.semester || "N/A"}</span>
+                <span className="detail-value">{studentData?.semester || studentData?.currentSemester || "N/A"}</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">Year:</span>
-                <span className="detail-value">{studentData?.year || "N/A"}</span>
+                <span className="detail-label">Department:</span>
+                <span className="detail-value">
+                  {isMobile ? studentData?.department?.code || studentData?.department || "N/A" : studentData?.department?.name || studentData?.department || "N/A"}
+                </span>
               </div>
             </div>
           </div>
