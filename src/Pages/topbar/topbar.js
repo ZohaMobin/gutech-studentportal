@@ -37,9 +37,9 @@ const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
 
         {/* Right navigation */}
         <nav className="header-nav">
-          <a href="#" className="header-nav-item">
+          <button type="button" className="header-nav-item">
             Support
-          </a>
+          </button>
 
           {/* User profile */}
           <div className="user-profile">
@@ -55,9 +55,9 @@ const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
                   <span className="profile-email">{user?.email}</span>
                 </div>
 
-                <a href="#" className="profile-menu-item logout" onClick={handleLogout}>
+                <button type="button" className="profile-menu-item logout" onClick={handleLogout}>
                   Logout
-                </a>
+                </button>
               </div>
             )}
           </div>

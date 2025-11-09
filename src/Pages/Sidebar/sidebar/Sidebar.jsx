@@ -29,12 +29,11 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
       {/* Navigation Links */}
       <nav className="sidebar-nav">
         {navigationItems.map(item => (
-          <a 
+          <button
+            type="button"
             key={item.id}
-            href="#"
             className={`sidebar-nav-item ${activePage === item.id ? 'active' : ''}`}
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               if (item.path) {
                 navigate(item.path);
                 onNavClick(item.id);
@@ -43,7 +42,7 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
           >
             <span className="sidebar-nav-icon">{item.icon}</span>
             <span className="sidebar-nav-text">{item.label}</span>
-          </a>
+          </button>
         ))}
       </nav>
       
@@ -55,7 +54,7 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
           </div>
           <div className="user-info">
             <span className="user-name-small">{user?.name}</span>
-            <a href="#" className="user-profile-link">View Profile</a>
+            <button type="button" className="user-profile-link">View Profile</button>
           </div>
         </div>
       </div>

@@ -7,7 +7,6 @@ const Transcript = () => {
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [gradingScale, setGradingScale] = useState(null);
 
   // Helper function to get grade from percentage using grading scale
   const getGradeFromPercentage = (percentage, scale) => {
@@ -98,7 +97,6 @@ const Transcript = () => {
           },
         });
         const gradingScaleData = gradingScaleResponse.data.gradingScale;
-        setGradingScale(gradingScaleData);
 
         // Fetch student details
         const studentResponse = await axios.get(`${apiUrl}/api/students/${user.studentId}`, {

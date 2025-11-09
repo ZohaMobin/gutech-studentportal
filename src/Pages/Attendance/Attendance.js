@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Calendar, Search, Users, CheckCircle, XCircle, Clock, AlertCircle, BookOpen } from 'lucide-react';
+import { Calendar, Search, Users, AlertCircle, BookOpen } from 'lucide-react';
 import './Attendance.css';
 
 const Attendance = () => {
@@ -232,6 +231,7 @@ const Attendance = () => {
   // Initialize component
   useEffect(() => {
     fetchStudentCourses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Format status for display

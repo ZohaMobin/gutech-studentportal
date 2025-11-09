@@ -11,7 +11,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [apiCalled, setApiCalled] = useState(false);
-  const [gradesData, setGradesData] = useState(null);
 
   const getUserFromStorage = () => {
     try {
@@ -99,7 +98,6 @@ const Dashboard = () => {
 
           // Process grades data
           const processedGrades = processGradesData(gradesResponse.data);
-          setGradesData(processedGrades);
 
           // Fetch attendance data for all courses
           const attendanceData = await fetchAttendanceData(apiUrl, token, processedGrades.courses);
@@ -284,13 +282,6 @@ const Dashboard = () => {
     };
   }, []);
 
-  // Use abbreviated days for mobile
-  const getDayLabel = (day) => {
-    if (isMobile) {
-      return day.substring(0, 3);
-    }
-    return day;
-  };
 
   // Optimized subject name display based on screen size
   const getSubjectLabel = (subject) => {
@@ -357,20 +348,6 @@ const Dashboard = () => {
     return "F";
   };
 
-  const getClassColor = (subject) => {
-    switch (subject) {
-      case "Data Structures":
-        return "var(--primary-light)";
-      case "Algorithm Design":
-        return "var(--secondary-light)";
-      case "Web Development":
-        return "var(--accent-light)";
-      case "Database Systems":
-        return "var(--success-light)";
-      default:
-        return "var(--light-bg)";
-    }
-  };
 
   if (loading) {
     return (

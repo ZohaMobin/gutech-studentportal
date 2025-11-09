@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
+import { Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './Components/AuthContext';
 import PrivateRoute from './Components/PrivateRoute';
 import Signup from './Pages/LoginSignUp/Signup';

@@ -89,6 +89,7 @@ const Grading = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Create empty data structure
@@ -253,6 +254,9 @@ const Grading = () => {
             case 'final':
               processedData.finals[courseId].push(gradeData);
               break;
+            default:
+              // Unknown assessment type, skip
+              break;
           }
         });
       });
@@ -315,42 +319,6 @@ const Grading = () => {
     return processedData;
   };
   
-  // Helper function to calculate student's total weighted marks for a course
-  const calculateStudentWeightedMarks = (data, courseId) => {
-    const categories = ['quizzes', 'assignments', 'midterms', 'finals'];
-    let totalWeightedMarks = 0;
-    
-    categories.forEach(category => {
-      const categoryData = data[category][courseId];
-      if (categoryData && categoryData.length > 0) {
-        categoryData.forEach(item => {
-          const weightedMark = (item.obtainedMarks / item.totalMarks) * item.weightage;
-          totalWeightedMarks += weightedMark;
-        });
-      }
-    });
-    
-    return totalWeightedMarks;
-  };
-  
-  // Map API assessment type to component assessment type
-  const mapAssessmentType = (apiType) => {
-    if (!apiType) return 'quizzes'; // Default to quizzes if type is undefined
-    
-    switch (apiType.toLowerCase()) {
-      case 'quiz':
-        return 'quizzes';
-      case 'assignment':
-        return 'assignments';
-      case 'midterm':
-        return 'midterms';
-      case 'final':
-        return 'finals';
-      default:
-        console.warn('Unknown assessment type:', apiType);
-        return 'quizzes'; // Default to quizzes for unknown types
-    }
-  };
 
   // Calculate totals for a specific category and course
   const calculateTotals = (category, courseId) => {
@@ -589,7 +557,6 @@ const Grading = () => {
   }
 
   const activeCategoryData = marksData[activeTab][activeCourse];
-  const totals = calculateTotals(activeTab, activeCourse);
   const grandTotal = calculateGrandTotal(activeCourse);
 
   return (
