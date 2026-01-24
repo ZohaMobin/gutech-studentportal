@@ -250,7 +250,7 @@ const Transcript = () => {
                   ...course,
                   grade: gradeInfo.grade,
                   points: gradeInfo.gradePoints,
-                  percentage: percentage.toFixed(1),
+                  percentage: percentage.toFixed(2),
                 };
               } else {
                 // No grades yet even though locked
@@ -457,7 +457,7 @@ const Transcript = () => {
                       <td>{course.code}</td>
                       <td>{course.name}</td>
                       <td>{course.creditUnits}</td>
-                      <td>{typeof course.points === "number" ? course.points.toFixed(1) : course.points}</td>
+                      <td>{typeof course.points === "number" ? course.points.toFixed(2) : course.points}</td>
                       <td>{course.grade}</td>
                     </tr>
                   ))}

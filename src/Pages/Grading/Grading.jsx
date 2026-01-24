@@ -616,7 +616,7 @@ const Grading = () => {
                 <td>{item.weightage}%</td>
                 <td>{item.obtainedMarks}</td>
                 <td>{item.totalMarks}</td>
-                <td>{item.average}</td>
+                <td>{typeof item.average === 'number' ? item.average.toFixed(2) : item.average}</td>
                 <td>{item.min}</td>
                 <td>{item.max}</td>
               </tr>
