@@ -236,9 +236,9 @@ const Grading = () => {
             weightage: grade.assessmentId?.weightage || 0,
             obtainedMarks: grade.obtainedMarks || 0,
             totalMarks: grade.assessmentId?.maxMarks || 0,
-            average: grade.stats?.average || 0,
-            min: grade.stats?.min || 0,
-            max: grade.stats?.max || 0
+            average: typeof grade.stats?.average === 'number' ? parseFloat(grade.stats.average.toFixed(2)) : (grade.stats?.average || 0),
+            min: typeof grade.stats?.min === 'number' ? parseFloat(grade.stats.min.toFixed(2)) : (grade.stats?.min || 0),
+            max: typeof grade.stats?.max === 'number' ? parseFloat(grade.stats.max.toFixed(2)) : (grade.stats?.max || 0)
           };
 
           switch(assessmentType) {
@@ -368,12 +368,12 @@ const Grading = () => {
     
     // Calculate average of averages
     const average = validAverages.length > 0 
-      ? validAverages.reduce((sum, val) => sum + val, 0) / validAverages.length 
+      ? parseFloat((validAverages.reduce((sum, val) => sum + val, 0) / validAverages.length).toFixed(2))
       : 0;
     
     // Find min of mins and max of maxs
-    const min = validMins.length > 0 ? Math.min(...validMins) : 0;
-    const max = validMaxs.length > 0 ? Math.max(...validMaxs) : 0;
+    const min = validMins.length > 0 ? parseFloat(Math.min(...validMins).toFixed(2)) : 0;
+    const max = validMaxs.length > 0 ? parseFloat(Math.max(...validMaxs).toFixed(2)) : 0;
     
     return {
       totalWeightage,
