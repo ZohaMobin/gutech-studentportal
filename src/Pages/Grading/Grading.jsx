@@ -153,6 +153,19 @@ const Grading = () => {
           }
         ]
       },
+      projects: {
+        'default': [
+          {
+            serial: 'No Projects',
+            weightage: 0,
+            obtainedMarks: '-',
+            totalMarks: '-',
+            average: '-',
+            min: '-',
+            max: '-'
+          }
+        ]
+      },
       courseStats: {}
     };
   };
@@ -165,6 +178,7 @@ const Grading = () => {
       assignments: {},
       midterms: {},
       finals: {},
+      projects: {},
       courseStats: {}
     };
 
@@ -190,6 +204,7 @@ const Grading = () => {
       processedData.assignments[course.id] = [];
       processedData.midterms[course.id] = [];
       processedData.finals[course.id] = [];
+      processedData.projects[course.id] = [];
       
       // Initialize course stats (will be populated from grades data if available)
       processedData.courseStats[course.id] = {
@@ -254,6 +269,9 @@ const Grading = () => {
             case 'final':
               processedData.finals[courseId].push(gradeData);
               break;
+            case 'project':
+              processedData.projects[courseId].push(gradeData);
+              break;
             default:
               // Unknown assessment type, skip
               break;
@@ -306,6 +324,18 @@ const Grading = () => {
       if (processedData.finals[courseId].length === 0) {
         processedData.finals[courseId].push({
           serial: 'No Finals',
+          weightage: 0,
+          obtainedMarks: '-',
+          totalMarks: '-',
+          average: '-',
+          min: '-',
+          max: '-'
+        });
+      }
+
+      if (processedData.projects[courseId].length === 0) {
+        processedData.projects[courseId].push({
+          serial: 'No Projects',
           weightage: 0,
           obtainedMarks: '-',
           totalMarks: '-',
@@ -389,7 +419,7 @@ const Grading = () => {
   const calculateGrandTotal = (courseId) => {
     if (!marksData) return null;
     
-    const categories = ['quizzes', 'assignments', 'midterms', 'finals'];
+    const categories = ['quizzes', 'assignments', 'midterms', 'finals', 'projects'];
     let totalObtained = 0;
     let totalMarks = 0;
     let totalWeightage = 0;
@@ -492,6 +522,9 @@ const Grading = () => {
           <button className={`assessment-tab ${activeTab === 'midterms' ? 'active' : ''}`}>
             Midterms
           </button>
+          <button className={`assessment-tab ${activeTab === 'projects' ? 'active' : ''}`}>
+            Projects
+          </button>
           <button className={`assessment-tab ${activeTab === 'finals' ? 'active' : ''}`}>
             Finals
           </button>
@@ -589,6 +622,9 @@ const Grading = () => {
         </button>
         <button className={`assessment-tab ${activeTab === 'midterms' ? 'active' : ''}`} onClick={() => setActiveTab('midterms')}>
           Midterms
+        </button>
+        <button className={`assessment-tab ${activeTab === 'projects' ? 'active' : ''}`} onClick={() => setActiveTab('projects')}>
+          Projects
         </button>
         <button className={`assessment-tab ${activeTab === 'finals' ? 'active' : ''}`} onClick={() => setActiveTab('finals')}>
           Finals
