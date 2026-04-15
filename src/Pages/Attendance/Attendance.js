@@ -163,9 +163,14 @@ const Attendance = () => {
             date: formattedDateStr,
             dateObj: dateObj,
             day: dateObj.toLocaleDateString('en-US', { weekday: 'long' }),
+            slotNumber: record.slotNumber || 1,
+            durationMinutes: record.durationMinutes || 75,
             status: record.status
           };
-        }).sort((a, b) => b.dateObj - a.dateObj);
+        }).sort((a, b) => {
+          if (b.dateObj - a.dateObj !== 0) return b.dateObj - a.dateObj;
+          return (b.slotNumber || 1) - (a.slotNumber || 1);
+        });
 
         setAttendanceRecords(records);
         setFilteredRecords(records);
@@ -222,7 +227,8 @@ const Attendance = () => {
       const dateMatch = record.date.includes(searchTerm);
       const dayMatch = record.day.toLowerCase().includes(searchTerm.toLowerCase());
       const statusMatch = record.status.toLowerCase().includes(searchTerm.toLowerCase());
-      return dateMatch || dayMatch || statusMatch;
+      const slotMatch = `slot ${record.slotNumber}`.includes(searchTerm.toLowerCase());
+      return dateMatch || dayMatch || statusMatch || slotMatch;
     });
     
     setFilteredRecords(filtered);
@@ -391,6 +397,8 @@ const Attendance = () => {
                 <tr>
                   <th>Date</th>
                   <th>Day</th>
+                  <th className="slot-header">Slot</th>
+                  <th className="duration-header">Duration</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -400,6 +408,8 @@ const Attendance = () => {
                   <tr key={index}>
                           <td className="date-cell">{record.date}</td>
                           <td className="day-cell">{record.day}</td>
+                          <td className="slot-cell">Slot {record.slotNumber}</td>
+                          <td className="duration-cell">{record.durationMinutes} min</td>
                           <td className="status-cell">
                             <span className={`status-badge ${getStatusBadgeClass(record.status)}`}>
                               {formatStatus(record.status)}
@@ -409,7 +419,7 @@ const Attendance = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="3" className="no-results">
+                        <td colSpan="5" className="no-results">
                           {searchTerm || selectedDate 
                             ? 'No attendance records match your search' 
                             : 'No attendance records available for this course'}
