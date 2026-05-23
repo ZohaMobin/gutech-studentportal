@@ -70,7 +70,7 @@ const Dashboard = () => {
           : studentResponse.data.department;
 
         // Extract semester
-        const semester = studentResponse.data.currentSemester || studentResponse.data.semester || null;
+        const semester = studentResponse.data.currentSemester ?? studentResponse.data.semester ?? null;
 
         // Initialize student data with basic info first
         let updatedStudentData = {
@@ -538,7 +538,7 @@ const Dashboard = () => {
               </div>
               <div className="detail-item">
                 <span className="detail-label">Semester:</span>
-                <span className="detail-value">{studentData?.semester || studentData?.currentSemester || "N/A"}</span>
+                <span className="detail-value">{studentData?.semester ?? studentData?.currentSemester ?? "N/A"}</span>
               </div>
               <div className="detail-item">
                 <span className="detail-label">Department:</span>

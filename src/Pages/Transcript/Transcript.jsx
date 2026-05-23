@@ -151,7 +151,7 @@ const Transcript = () => {
 
           const yearKey = academicYear._id || academicYear.id || academicYear;
           const yearName = academicYear.displayName || academicYear.academicYearString || `${academicYear.semesterType} ${academicYear.year}`;
-          const semester = reg.semester || 1;
+          const semester = reg.semester ?? 0;
 
           if (!academicYearMap.has(yearKey)) {
             academicYearMap.set(yearKey, {
