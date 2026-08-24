@@ -15,11 +15,11 @@ const Transcript = () => {
       return { grade: "F", gradePoints: 0, remarks: "Fail" };
     }
 
-    // Sort ranges by minPercentage descending to check highest ranges first
+    // Inclusive lower bounds (e.g. 50–<54 = D); first match wins when sorted desc
     const sortedRanges = [...scale.gradeRanges].filter((r) => !r.isSpecialGrade).sort((a, b) => b.minPercentage - a.minPercentage);
 
     for (const range of sortedRanges) {
-      if (percentage >= range.minPercentage && percentage <= range.maxPercentage) {
+      if (percentage >= range.minPercentage) {
         return {
           grade: range.grade,
           gradePoints: range.gradePoints || 0,
@@ -207,9 +207,12 @@ const Transcript = () => {
             const weightage = grade.assessmentId.weightage || 0;
             const maxMarks = grade.assessmentId.maxMarks || 100;
             const weightedMark = (grade.obtainedMarks / maxMarks) * weightage;
+            const isBonus = Boolean(grade.assessmentId.isBonus);
 
             courseGrade.totalWeightedMarks += weightedMark;
-            courseGrade.totalWeightage += weightage;
+            if (!isBonus) {
+              courseGrade.totalWeightage += weightage;
+            }
           }
         });
 
@@ -244,7 +247,7 @@ const Transcript = () => {
               const courseGrade = courseGradesMap.get(regId);
 
               if (courseGrade && courseGrade.totalWeightage > 0) {
-                const percentage = (courseGrade.totalWeightedMarks / courseGrade.totalWeightage) * 100;
+                const percentage = Math.min(100, (courseGrade.totalWeightedMarks / courseGrade.totalWeightage) * 100);
                 const gradeInfo = getGradeFromPercentage(percentage, gradingScaleData);
                 return {
                   ...course,

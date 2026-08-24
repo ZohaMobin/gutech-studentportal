@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./dashboardPage.css"; // Import the CSS file
 import axios from "axios";
 import ClassSchedule from "../ClassSchedule/ClassSchedule"; // Import the ClassSchedule component
+import { getGradeLetter, getGradeColor } from "../../utils/gradingScale";
 
 const Dashboard = () => {
   // State to track viewport size
@@ -240,14 +241,17 @@ const Dashboard = () => {
         // Get the weightage and maxMarks from the assessment
         const weightage = grade.assessmentId?.weightage || 0;
         const maxMarks = grade.assessmentId.maxMarks;
+        const isBonus = Boolean(grade.assessmentId?.isBonus);
 
         // Calculate weighted marks
         const weightedMark = (grade.obtainedMarks / maxMarks) * weightage;
 
-        // Update course totals
+        // Update course totals — bonus adds to score but not denominator
         course.totalObtainedMarks += grade.obtainedMarks;
         course.totalMaxMarks += maxMarks;
-        course.totalWeightage += weightage;
+        if (!isBonus) {
+          course.totalWeightage += weightage;
+        }
         course.weightedMarks += weightedMark;
       }
     });
@@ -329,25 +333,6 @@ const Dashboard = () => {
     }
     return subject;
   };
-
-  const getGradeColor = (marks, total) => {
-    const percentage = (marks / total) * 100;
-    if (percentage >= 90) return "#22c55e"; // A grade - green
-    if (percentage >= 80) return "#3b82f6"; // B grade - blue
-    if (percentage >= 70) return "#8b5cf6"; // C grade - purple
-    if (percentage >= 60) return "#f59e0b"; // D grade - yellow
-    return "#ef4444"; // F grade - red
-  };
-
-  const getGradeLetter = (marks, total) => {
-    const percentage = (marks / total) * 100;
-    if (percentage >= 90) return "A";
-    if (percentage >= 80) return "B";
-    if (percentage >= 70) return "C";
-    if (percentage >= 60) return "D";
-    return "F";
-  };
-
 
   if (loading) {
     return (
@@ -608,7 +593,8 @@ const Dashboard = () => {
               <div className="no-data-message">No course data available</div>
             ) : (
               studentData.courses.map((course, index) => {
-                const percentage = course.totalWeightage > 0 ? ((course.weightedMarks / course.totalWeightage) * 100).toFixed(1) : 0;
+                const rawPercentage = course.totalWeightage > 0 ? ((course.weightedMarks / course.totalWeightage) * 100) : 0;
+                const percentage = Math.min(100, rawPercentage).toFixed(1);
                 return (
                   <div key={index} className="course-item">
                     <div className="course-header">

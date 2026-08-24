@@ -249,6 +249,7 @@ const Grading = () => {
           const gradeData = {
             serial: grade.assessmentId?.title || 'Untitled Assessment',
             weightage: grade.assessmentId?.weightage || 0,
+            isBonus: Boolean(grade.assessmentId?.isBonus),
             obtainedMarks: grade.obtainedMarks || 0,
             totalMarks: grade.assessmentId?.maxMarks || 0,
             average: typeof grade.stats?.average === 'number' ? parseFloat(grade.stats.average.toFixed(2)) : (grade.stats?.average || 0),
@@ -378,7 +379,9 @@ const Grading = () => {
     
     categoryData.forEach(item => {
       if (typeof item.obtainedMarks === 'number' && typeof item.totalMarks === 'number' && item.totalMarks > 0) {
-        totalWeightage += item.weightage;
+        if (!item.isBonus) {
+          totalWeightage += item.weightage;
+        }
         totalObtained += item.obtainedMarks;
         totalMarks += item.totalMarks;
         
@@ -437,7 +440,10 @@ const Grading = () => {
             if (typeof item.obtainedMarks === 'number' && typeof item.totalMarks === 'number' && item.totalMarks > 0) {
               totalObtained += item.obtainedMarks;
               totalMarks += item.totalMarks;
-              totalWeightage += item.weightage;
+              // Bonus adds to score but not to course weightage denominator
+              if (!item.isBonus) {
+                totalWeightage += item.weightage;
+              }
               
               // Calculate weighted marks for this assessment
               const weightedMark = (item.obtainedMarks / item.totalMarks) * item.weightage;
@@ -462,8 +468,10 @@ const Grading = () => {
     
     if (totalMarks === 0) return null;
     
-    // Calculate percentage based on total weightage
-    const percentage = totalWeightage > 0 ? (weightedMarks / totalWeightage) * 100 : 0;
+    // Percentage out of course weightage (bonus included in numerator), clamp at 100
+    const percentage = totalWeightage > 0
+      ? Math.min(100, (weightedMarks / totalWeightage) * 100)
+      : 0;
     
     // Get section-wide stats from courseStats
     const sectionMax = marksData.courseStats[courseId]?.sectionMax || 0;
@@ -647,9 +655,14 @@ const Grading = () => {
           </thead>
           <tbody>
             {activeCategoryData.map((item, index) => (
-              <tr key={index}>
-                <td>{item.serial}</td>
-                <td>{item.weightage}%</td>
+              <tr key={index} className={item.isBonus ? 'bonus-row' : undefined}>
+                <td>
+                  <span className="assessment-title-cell">
+                    {item.serial}
+                    {item.isBonus ? <span className="bonus-badge">Bonus</span> : null}
+                  </span>
+                </td>
+                <td>{item.isBonus ? `+${item.weightage}%` : `${item.weightage}%`}</td>
                 <td>{item.obtainedMarks}</td>
                 <td>{item.totalMarks}</td>
                 <td>{typeof item.average === 'number' ? item.average.toFixed(2) : item.average}</td>

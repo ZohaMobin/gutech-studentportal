@@ -448,6 +448,32 @@
   font-size: 0.9375rem;
 }
 
+/* Bonus assessments */
+.assessment-title-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 
+.bonus-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+}
 
+.marks-table tbody tr.bonus-row {
+  background: #fffbeb;
+}
 
+.marks-table tbody tr.bonus-row:hover {
+  background: #fef3c7;
+}
