@@ -367,33 +367,29 @@ const Grading = () => {
       {/* Grand Total Section: every figure is calculated by the server */}
       {stats && (
         <div className="grand-total-section">
-          <h2>Grand Total Marks</h2>
+          <h2>Total So Far</h2>
           <table className="grand-total-table">
             <thead>
               <tr>
-                <th>Weightage Graded</th>
-                <th>Weighted Marks</th>
-                <th>Percentage So Far</th>
-                <th>Section Max</th>
-                <th>Section Min</th>
-                <th>Official Grade</th>
+                <th>Your Total</th>
+                <th>Percentage</th>
+                <th>Class Highest</th>
+                <th>Class Lowest</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{hasMarks ? `${stats.totals.gradedWeight}% of ${stats.totals.ordinaryWeight}%` : '-'}</td>
-                <td>{hasMarks ? stats.totals.weightedMarks.toFixed(2) : '-'}</td>
+                <td>{hasMarks ? `${stats.totals.weightedMarks.toFixed(2)} out of ${stats.totals.gradedWeight}` : '-'}</td>
                 <td>{typeof stats.totals.percentageSoFar === 'number' ? `${stats.totals.percentageSoFar.toFixed(2)}%` : '-'}</td>
                 <td>{stats.sectionMax.toFixed(2)}</td>
                 <td>{stats.sectionMin.toFixed(2)}</td>
-                <td>{stats.official ? stats.official.grade : 'Not released'}</td>
               </tr>
             </tbody>
           </table>
           <p className="grand-total-note">
-            {stats.official
-              ? 'Results are final for this course.'
-              : 'Percentage so far is provisional: it only reflects the assessments marked to date. Your official grade appears here once results are finalised.'}
+            {hasMarks && stats.totals.gradedWeight < stats.totals.ordinaryWeight
+              ? `Based on the assessments marked so far (${stats.totals.gradedWeight} of the course's ${stats.totals.ordinaryWeight} marks). This is provisional and will change as more marks are added.`
+              : 'This is provisional. Final grades are published on your Transcript once results are finalised.'}
           </p>
         </div>
       )}
