@@ -542,7 +542,7 @@ const Dashboard = () => {
                       <div
                         className="course-progress"
                         style={{
-                          width: `${Math.min(100, Number(percentage))}%`, // the bar stops at full; the number does not
+                          width: `${percentage}%`,
                           backgroundColor: "var(--primary-color)",
                         }}
                       ></div>
