@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Grading.css";
 
 const Grading = () => {
@@ -13,23 +14,9 @@ const Grading = () => {
     const fetchData = async () => {
       try {
         const apiUrl = process.env.REACT_APP_BACKEND_URL;
-        const token = sessionStorage.getItem('token');
-        if (!token) {
-          throw new Error('Authentication token not found. Please log in again');
-        }
-
-        const response = await fetch(`${apiUrl}/api/results/me`, {
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Your session has expired. Please log in again');
-          }
-          throw new Error(`Unable to load marks (Error ${response.status})`);
-        }
-
-        const results = await response.json();
+        // Sent through axios so the portal's shared interceptor adds the token and handles an expired session.
+        const response = await axios.get(`${apiUrl}/api/results/me`);
+        const results = response.data;
         const processedData = processResults(results);
         setMarksData(processedData);
         if (processedData.courses.length > 0) {
@@ -38,7 +25,7 @@ const Grading = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(err.message);
+        setError(err.response?.data?.message || err.message || "Unable to load marks");
         setLoading(false);
       }
     };
