@@ -60,3 +60,24 @@ test("nothing on the transcript mentions an upgrade", async () => {
   await show(transcript());
   expect(container.textContent).not.toMatch(/upgrade|raw|adjust/i);
 });
+
+test("a repeated course shows every attempt in order, marks the replaced one with R, and explains it", async () => {
+  await show(transcript({ semesters: [
+    semester([{ code: "CS101", name: "Programming", creditHours: 3, grade: "F", gradePoints: 0, attempt: 1, attemptsTotal: 2, repeated: true }]),
+    { ...semester([{ code: "CS101", name: "Programming", creditHours: 3, grade: "C", gradePoints: 2, attempt: 2, attemptsTotal: 2, repeated: false }]), name: "Spring 2027 - Semester 2" },
+  ] }));
+  const rows = [...container.querySelectorAll(".course-table tbody tr")];
+  expect(rows[0].className).toContain("repeated-row");
+  expect(rows[0].textContent).toContain("Attempt 1 of 2");
+  expect(rows[0].querySelector(".repeat-tag").textContent).toBe("R");
+  expect(rows[1].textContent).toContain("Attempt 2 of 2");
+  expect(rows[1].querySelector(".repeat-tag")).toBeNull();
+  expect(container.querySelector(".grade-legend").textContent).toContain("R = repeated");
+});
+
+test("a course taken once carries no attempt note and no R", async () => {
+  await show(transcript());
+  expect(container.querySelector(".attempt-note")).toBeNull();
+  expect(container.querySelector(".repeat-tag")).toBeNull();
+  expect(container.textContent).not.toContain("R = repeated");
+});

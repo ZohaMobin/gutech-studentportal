@@ -303,3 +303,7 @@ h2 {
 .no-transcript-message p { margin: 0 auto; max-width: 460px; font-size: 15px; color: #666; line-height: 1.6; }
 .no-transcript-student { margin-top: 14px !important; font-size: 13px !important; color: #999 !important; }
 .grade-legend { margin: 6px 0 22px; font-size: 13px; color: #666; }
+.grade-legend p { margin: 0 0 4px; }
+.attempt-note { display: block; font-size: 12px; color: #888; font-style: italic; }
+.repeated-row td { color: #8a8a8a; }
+.repeat-tag { display: inline-block; margin-left: 6px; padding: 0 5px; border: 1px solid #b9a0a0; border-radius: 4px; font-size: 11px; font-weight: 700; color: #991D20; line-height: 1.4; vertical-align: 1px; }

@@ -54,6 +54,9 @@ const Transcript = () => {
               creditUnits: course.creditHours,
               grade: course.grade,
               points: course.gradePoints ?? "-",
+              attempt: course.attempt,
+              attemptsTotal: course.attemptsTotal,
+              repeated: course.repeated === true,
             })),
           })),
           cgpa: transcript.cgpa,
@@ -111,6 +114,7 @@ const Transcript = () => {
     );
   }
 
+  const hasRepeats = studentData.semesters.some((semester) => semester.courses.some((course) => course.repeated));
   const hasAnyGrade = studentData.semesters.some((semester) => semester.courses.some((course) => course.grade !== "-"));
   const legend = [...new Set(studentData.semesters.flatMap((semester) => semester.courses.map((course) => course.grade)))].filter((grade) => GRADE_NOTES[grade]).map((grade) => GRADE_NOTES[grade]);
 
@@ -172,12 +176,12 @@ const Transcript = () => {
                 </thead>
                 <tbody>
                   {semester.courses.map((course, idx) => (
-                    <tr key={idx}>
+                    <tr key={idx} className={course.repeated ? "repeated-row" : undefined}>
                       <td>{course.code}</td>
-                      <td>{course.name}</td>
+                      <td>{course.name}{course.attemptsTotal > 1 && <small className="attempt-note">Attempt {course.attempt} of {course.attemptsTotal}</small>}</td>
                       <td>{course.creditUnits}</td>
                       <td>{typeof course.points === "number" ? course.points.toFixed(2) : course.points}</td>
-                      <td>{course.grade}</td>
+                      <td>{course.grade}{course.repeated && <span className="repeat-tag" title="Repeated: replaced by a later attempt">R</span>}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -197,7 +201,12 @@ const Transcript = () => {
           ))}
         </div>
 
-        {legend.length > 0 && <p className="grade-legend">{legend.join("   ·   ")}. These carry no grade points.</p>}
+        {(legend.length > 0 || hasRepeats) && (
+          <div className="grade-legend">
+            {legend.length > 0 && <p>{legend.join("   ·   ")}. These carry no grade points.</p>}
+            {hasRepeats && <p>R = repeated. The course was taken again, so this attempt stays on the record but is not counted in the GPA or the credits earned.</p>}
+          </div>
+        )}
 
         <div className="academic-summary">
           <h2>ACADEMIC SUMMARY</h2>
