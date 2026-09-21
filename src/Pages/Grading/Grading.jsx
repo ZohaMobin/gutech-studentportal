@@ -347,6 +347,9 @@ const Grading = () => {
             ))}
           </tbody>
         </table>
+        {activeCategoryData.some((item) => item.isBonus) && (
+          <p className="bonus-note">Bonus marks are extra credit on top of the course's 100%.</p>
+        )}
       </div>
       
       {/* Grand Total Section: every figure is calculated by the server */}
