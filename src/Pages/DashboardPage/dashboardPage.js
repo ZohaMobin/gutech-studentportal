@@ -1,3 +1,4 @@
+import Loading from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from "react";
 import "./dashboardPage.css"; // Import the CSS file
 import axios from "axios";
@@ -315,7 +316,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="loading-indicator">Loading attendance data...</div>
+            <Loading variant="inline" label="Loading attendance" />
           </div>
 
           <div className="dashboard-card marks-card">
@@ -327,7 +328,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="loading-indicator">Loading grades data...</div>
+            <Loading variant="inline" label="Loading grades" />
           </div>
 
           <div className="dashboard-card timetable-card">
@@ -339,7 +340,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="loading-indicator">Loading timetable data...</div>
+            <Loading variant="inline" label="Loading timetable" />
           </div>
         </div>
       </div>

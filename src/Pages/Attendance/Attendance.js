@@ -1,3 +1,4 @@
+import Loading from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
@@ -283,7 +284,7 @@ const Attendance = () => {
             </h3>
             <div className="section-list">
               {loading && courses.length === 0 ? (
-                <div className="loading-text">Loading courses...</div>
+                <Loading variant="list" rows={4} label="Loading courses" />
               ) : courses.length === 0 ? (
                 <div className="empty-text">No courses available</div>
               ) : (
@@ -310,7 +311,7 @@ const Attendance = () => {
 
         <div className="attendance-main">
           {loading && !activeCourse ? (
-            <div className="loading">Loading...</div>
+            <Loading variant="table" rows={6} label="Loading attendance" />
           ) : !activeCourse ? (
             <div className="empty-state">
               <Users size={48} />
