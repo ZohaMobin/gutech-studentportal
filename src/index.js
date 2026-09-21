@@ -5,8 +5,10 @@ import './index.css';
 import App from './App';
 import { installAuthInterceptor } from './api/authInterceptor';
 import { installNoWheelNumbers } from './utils/noWheelNumber';
+import { installExtensionErrorFilter } from './utils/ignoreExtensionErrors';
 // import reportWebVitals from './reportWebVitals';
 // Central token header + 401 handling for every axios call in the portal.
+installExtensionErrorFilter();
 installNoWheelNumbers();
 installAuthInterceptor({ tokenKey: 'token', userKey: 'user' });
 
