@@ -1,4 +1,4 @@
-import Loading from '../../Components/Loading/Loading';
+import Loading, { Skeleton } from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from "react";
 import "./dashboardPage.css"; // Import the CSS file
 import axios from "axios";
@@ -283,23 +283,23 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="profile-info">
-              <h2>{user?.name || "Loading..."}</h2>
+              <h2>{user?.name || <Skeleton width="9rem" />}</h2>
               <div className="student-details">
                 <div className="detail-item">
                   <span className="detail-label">Roll No:</span>
-                  <span className="detail-value">{user?.studentId || "Loading..."}</span>
+                  <span className="detail-value">{user?.studentId || <Skeleton width="5rem" />}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Program:</span>
-                  <span className="detail-value">{isMobile ? "CS" : "Loading..."}</span>
+                  <span className="detail-value">{isMobile ? "CS" : "–"}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Semester:</span>
-                  <span className="detail-value">Loading...</span>
+                  <span className="detail-value">–</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Year:</span>
-                  <span className="detail-value">Loading...</span>
+                  <span className="detail-value">–</span>
                 </div>
               </div>
             </div>
