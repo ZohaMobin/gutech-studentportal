@@ -110,7 +110,6 @@ const Dashboard = () => {
             weightedMarks: course.totals.weightedMarks,
             gradedWeight: course.totals.gradedWeight,
             percentageSoFar: course.totals.percentageSoFar,
-            official: course.official,
           }));
         } catch (gradesError) {
           console.warn("Error fetching grades/attendance data:", gradesError);
@@ -547,7 +546,6 @@ const Dashboard = () => {
                         }}
                       ></div>
                     </div>
-                    {course.official && <div className="grade-indicator">{course.official.grade}</div>}
                   </div>
                 );
               })

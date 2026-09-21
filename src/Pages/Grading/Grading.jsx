@@ -154,8 +154,6 @@ const Grading = () => {
 
       processedData.courseStats[id] = {
         totals: course.totals,
-        official: course.official,
-        resultState: course.resultState,
         sectionMax: course.sectionStats.maxWeightedMarks,
         sectionMin: course.sectionStats.minWeightedMarks
       };

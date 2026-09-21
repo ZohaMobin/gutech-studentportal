@@ -3,6 +3,8 @@ import axios from "axios";
 import "./Transcript.css";
 import PrintButton from "../../Components/PrintButton/PrintButton";
 
+const GRADE_NOTES = { I: "I = Incomplete", W: "W = Withdrawn" };
+
 const Transcript = () => {
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -98,22 +100,19 @@ const Transcript = () => {
     return (
       <div className="print-wrapper">
         <div className="transcript-container">
-          <div className="no-transcript-message" style={{ padding: "4rem 2rem", textAlign: "center" }}>
-            <div style={{ fontSize: "48px", marginBottom: "1rem", color: "#ccc" }}>📄</div>
-            <h2 style={{ fontSize: "24px", marginBottom: "1rem", color: "#333" }}>No Transcript Available</h2>
-            <p style={{ fontSize: "16px", color: "#666", lineHeight: "1.6" }}>
-              There is no transcript data available for this student at this time.
-            </p>
-            {studentData.name && (
-              <p style={{ fontSize: "14px", color: "#999", marginTop: "1rem" }}>
-                Student: {studentData.name} ({studentData.studentId})
-              </p>
-            )}
+          <div className="no-transcript-message">
+            <div className="no-transcript-icon" aria-hidden="true">📄</div>
+            <h2>No Transcript Available</h2>
+            <p>There is no transcript data available for this student at this time.</p>
+            {studentData.name && <p className="no-transcript-student">{studentData.name} ({studentData.studentId})</p>}
           </div>
         </div>
       </div>
     );
   }
+
+  const hasAnyGrade = studentData.semesters.some((semester) => semester.courses.some((course) => course.grade !== "-"));
+  const legend = [...new Set(studentData.semesters.flatMap((semester) => semester.courses.map((course) => course.grade)))].filter((grade) => GRADE_NOTES[grade]).map((grade) => GRADE_NOTES[grade]);
 
   return (
     <div className="print-wrapper">
@@ -186,7 +185,7 @@ const Transcript = () => {
                   <tr>
                     <td colSpan="5" className="semester-summary">
                       <div className="summary-details">
-                        <span>Term GPA: {semester.gpa.toFixed(2)}</span>
+                        <span>Term GPA: {semester.courses.some((course) => course.grade !== "-") ? semester.gpa.toFixed(2) : "–"}</span>
                         <span>Credits Attempted: {semester.creditsAttempted}</span>
                         <span>Credits Earned: {semester.creditsEarned}</span>
                       </div>
@@ -198,6 +197,8 @@ const Transcript = () => {
           ))}
         </div>
 
+        {legend.length > 0 && <p className="grade-legend">{legend.join("   ·   ")}. These carry no grade points.</p>}
+
         <div className="academic-summary">
           <h2>ACADEMIC SUMMARY</h2>
           <div className="summary-table">
@@ -207,7 +208,7 @@ const Transcript = () => {
                   <td>
                     <span>Cumulative GPA:</span>
                   </td>
-                  <td>{studentData.cgpa.toFixed(2)}</td>
+                  <td>{hasAnyGrade ? studentData.cgpa.toFixed(2) : "–"}</td>
                 </tr>
                 <tr>
                   <td>
