@@ -1,3 +1,4 @@
+import Loading from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Grading.css";
@@ -168,7 +169,7 @@ const Grading = () => {
         <div className="page-header">
           <h1>Marks Overview</h1>
         </div>
-        <div className="loading-container">Loading marks data...</div>
+        <Loading variant="table" rows={6} label="Loading marks" />
       </div>
     );
   }

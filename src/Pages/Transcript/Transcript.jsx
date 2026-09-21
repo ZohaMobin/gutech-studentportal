@@ -1,3 +1,4 @@
+import Loading from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Transcript.css";
@@ -78,9 +79,7 @@ const Transcript = () => {
     return (
       <div className="print-wrapper">
         <div className="transcript-container">
-          <div style={{ padding: "2rem", textAlign: "center" }}>
-            <p>Loading transcript data...</p>
-          </div>
+          <div style={{ padding: "2rem" }}><Loading variant="table" rows={6} label="Loading transcript" /></div>
         </div>
       </div>
     );

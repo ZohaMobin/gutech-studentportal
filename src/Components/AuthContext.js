@@ -1,3 +1,4 @@
+import Loading from './Loading/Loading';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Create the authentication context
@@ -87,7 +88,7 @@ export const AuthProvider = ({ children }) => {
   // Render only when not loading
   return (
     <AuthContext.Provider value={value}>
-      {!loading ? children : <div>Loading...</div>}
+      {!loading ? children : <div style={{ padding: '2rem', maxWidth: 640 }}><Loading variant="page" rows={3} label="Loading" /></div>}
     </AuthContext.Provider>
   );
 };
