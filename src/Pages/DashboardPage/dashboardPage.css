@@ -359,21 +359,6 @@
     transition: var(--transition);
 }
 
-.grade-indicator {
-    position: absolute;
-    right: 0;
-    top: 26px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background-color: var(--light-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    font-weight: 600;
-    color: var(--text-dark);
-}
 
 @media (min-width: 768px) {
     .course-name, .course-marks {
@@ -387,13 +372,6 @@
     
     .course-progress {
         border-radius: 4px;
-    }
-    
-    .grade-indicator {
-        width: 20px;
-        height: 20px;
-        font-size: 10px;
-        top: 28px;
     }
     
     .course-item {

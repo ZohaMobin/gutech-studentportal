@@ -1,4 +1,6 @@
+import Loading from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Grading.css";
 
 const Grading = () => {
@@ -8,82 +10,23 @@ const Grading = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch data from the API
+  // Fetch the student's results. The server works out every total, percentage and grade.
   useEffect(() => {
     const fetchData = async () => {
       try {
         const apiUrl = process.env.REACT_APP_BACKEND_URL;
-        
-        // Get the student ID from session storage
-        const userData = sessionStorage.getItem('user');
-        if (!userData) {
-          throw new Error('Please log in again to view your marks');
-        }
-        
-        const user = JSON.parse(userData);
-        if (!user.studentId) {
-          throw new Error('Student ID not found. Please log in again');
-        }
-
-        // Get the auth token from session storage
-        const token = sessionStorage.getItem('token');
-        if (!token) {
-          throw new Error('Authentication token not found. Please log in again');
-        }
-
-        // First, fetch all registered courses for the student (current academic year)
-        const coursesResponse = await fetch(`${apiUrl}/api/course-registrations/student/${user.studentId}/courses`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!coursesResponse.ok) {
-          if (coursesResponse.status === 401) {
-            throw new Error('Your session has expired. Please log in again');
-          } else if (coursesResponse.status === 404) {
-            // No courses registered yet, but continue to show empty state
-            const processedData = createEmptyDataStructure();
-            setMarksData(processedData);
-            setLoading(false);
-            return;
-          } else {
-            throw new Error(`Unable to load courses (Error ${coursesResponse.status})`);
-          }
-        }
-
-        const coursesData = await coursesResponse.json();
-        
-        // Then, fetch grades for the student - filters by current academic year by default
-        const gradesResponse = await fetch(`${apiUrl}/api/grades/student/${user.studentId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        let gradesData = null;
-        if (gradesResponse.ok) {
-          gradesData = await gradesResponse.json();
-        } else if (gradesResponse.status !== 404) {
-          // Only throw error if it's not a 404 (no grades is acceptable)
-          throw new Error(`Unable to load grades (Error ${gradesResponse.status})`);
-        }
-        
-        // Process data combining courses and grades
-        const processedData = processApiData(coursesData, gradesData);
+        // Sent through axios so the portal's shared interceptor adds the token and handles an expired session.
+        const response = await axios.get(`${apiUrl}/api/results/me`);
+        const results = response.data;
+        const processedData = processResults(results);
         setMarksData(processedData);
-        
-        // Set active course to the first course in the list
         if (processedData.courses.length > 0) {
           setActiveCourse(processedData.courses[0].id);
         }
-        
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(err.message);
+        setError(err.response?.data?.message || err.message || "Unable to load marks");
         setLoading(false);
       }
     };
@@ -170,255 +113,54 @@ const Grading = () => {
     };
   };
 
-  // Process API data to match the component's expected structure
-  const processApiData = (coursesData, gradesData) => {
-    const processedData = {
-      courses: [],
-      quizzes: {},
-      assignments: {},
-      midterms: {},
-      finals: {},
-      projects: {},
-      courseStats: {}
-    };
+  const PLACEHOLDER = (serial) => ({
+    serial, weightage: 0, obtainedMarks: '-', totalMarks: '-', average: '-', min: '-', max: '-'
+  });
+  const CATEGORY_OF = { quiz: 'quizzes', assignment: 'assignments', midterm: 'midterms', final: 'finals', project: 'projects' };
+  const EMPTY_LABEL = { quizzes: 'No Quizzes', assignments: 'No Assignments', midterms: 'No Midterms', finals: 'No Finals', projects: 'No Projects' };
+  const format = (value) => (typeof value === 'number' ? parseFloat(value.toFixed(2)) : '-');
 
-    // Extract courses from registered courses (not just from grades)
-    if (coursesData && coursesData.courses && Array.isArray(coursesData.courses)) {
-      coursesData.courses.forEach(course => {
-        processedData.courses.push({
-          id: course.id,
-          name: `${course.code || ''}: ${course.name || 'Unknown Course'}`.trim(),
-          sectionId: course.sectionId || null
-        });
-      });
-    }
-
-    // If no courses found, return empty structure
-    if (processedData.courses.length === 0) {
+  // Arrange the server's course results into the tabs this page shows. No arithmetic happens here.
+  const processResults = (results) => {
+    const courses = results?.courses || [];
+    if (courses.length === 0) {
       return createEmptyDataStructure();
     }
 
-    // Initialize data structures for each course
-    processedData.courses.forEach(course => {
-      processedData.quizzes[course.id] = [];
-      processedData.assignments[course.id] = [];
-      processedData.midterms[course.id] = [];
-      processedData.finals[course.id] = [];
-      processedData.projects[course.id] = [];
-      
-      // Initialize course stats (will be populated from grades data if available)
-      processedData.courseStats[course.id] = {
-        sectionMax: 0,
-        sectionMin: 0,
-        assessmentTypes: {}
+    const processedData = { courses: [], quizzes: {}, assignments: {}, midterms: {}, finals: {}, projects: {}, courseStats: {} };
+
+    courses.forEach(course => {
+      const id = course.registrationId;
+      processedData.courses.push({ id, name: `${course.code || ''}: ${course.name || 'Unknown Course'}`.trim() });
+      Object.values(CATEGORY_OF).forEach(category => { processedData[category][id] = []; });
+
+      course.assessments.forEach(assessment => {
+        const category = CATEGORY_OF[String(assessment.type).toLowerCase()];
+        if (!category) return;
+        processedData[category][id].push({
+          serial: assessment.title || 'Untitled Assessment',
+          weightage: assessment.weightage,
+          isBonus: assessment.isBonus,
+          obtainedMarks: assessment.obtainedMarks ?? '-',
+          totalMarks: assessment.maxMarks,
+          average: format(assessment.stats?.average),
+          min: format(assessment.stats?.min),
+          max: format(assessment.stats?.max)
+        });
+      });
+
+      Object.entries(EMPTY_LABEL).forEach(([category, label]) => {
+        if (processedData[category][id].length === 0) processedData[category][id].push(PLACEHOLDER(label));
+      });
+
+      processedData.courseStats[id] = {
+        totals: course.totals,
+        sectionMax: course.sectionStats.maxWeightedMarks,
+        sectionMin: course.sectionStats.minWeightedMarks
       };
-    });
-
-    // Process grades if available
-    if (gradesData && gradesData.grades && Array.isArray(gradesData.grades) && gradesData.grades.length > 0) {
-      // Get section stats from grades data
-      if (gradesData.sectionStats) {
-        processedData.courses.forEach(course => {
-          if (course.sectionId && gradesData.sectionStats[course.sectionId]) {
-            const sectionStats = gradesData.sectionStats[course.sectionId];
-            processedData.courseStats[course.id] = {
-              sectionMax: sectionStats?.maxWeightedMarks || 0,
-              sectionMin: sectionStats?.minWeightedMarks || 0,
-              assessmentTypes: sectionStats?.assessmentTypes || {}
-            };
-          }
-        });
-      }
-
-      // Group grades by course
-      const courseGrades = {};
-      gradesData.grades.forEach(grade => {
-        const courseId = grade.registrationId?.courseId?._id;
-        if (!courseId) return;
-
-        if (!courseGrades[courseId]) {
-          courseGrades[courseId] = [];
-        }
-        courseGrades[courseId].push(grade);
-      });
-
-      // Process grades for each course
-      Object.entries(courseGrades).forEach(([courseId, grades]) => {
-        grades.forEach(grade => {
-          const assessmentType = grade.assessmentId?.type?.toLowerCase();
-          const gradeData = {
-            serial: grade.assessmentId?.title || 'Untitled Assessment',
-            weightage: grade.assessmentId?.weightage || 0,
-            isBonus: Boolean(grade.assessmentId?.isBonus),
-            obtainedMarks: grade.obtainedMarks || 0,
-            totalMarks: grade.assessmentId?.maxMarks || 0,
-            average: typeof grade.stats?.average === 'number' ? parseFloat(grade.stats.average.toFixed(2)) : (grade.stats?.average || 0),
-            min: typeof grade.stats?.min === 'number' ? parseFloat(grade.stats.min.toFixed(2)) : (grade.stats?.min || 0),
-            max: typeof grade.stats?.max === 'number' ? parseFloat(grade.stats.max.toFixed(2)) : (grade.stats?.max || 0)
-          };
-
-          switch(assessmentType) {
-            case 'quiz':
-              processedData.quizzes[courseId].push(gradeData);
-              break;
-            case 'assignment':
-              processedData.assignments[courseId].push(gradeData);
-              break;
-            case 'midterm':
-              processedData.midterms[courseId].push(gradeData);
-              break;
-            case 'final':
-              processedData.finals[courseId].push(gradeData);
-              break;
-            case 'project':
-              processedData.projects[courseId].push(gradeData);
-              break;
-            default:
-              // Unknown assessment type, skip
-              break;
-          }
-        });
-      });
-    }
-
-    // For courses without grades, add default "No data" entries
-    processedData.courses.forEach(course => {
-      const courseId = course.id;
-      
-      // If no grades found for any category, add default entries
-      if (processedData.quizzes[courseId].length === 0) {
-        processedData.quizzes[courseId].push({
-          serial: 'No Quizzes',
-          weightage: 0,
-          obtainedMarks: '-',
-          totalMarks: '-',
-          average: '-',
-          min: '-',
-          max: '-'
-        });
-      }
-
-      if (processedData.assignments[courseId].length === 0) {
-        processedData.assignments[courseId].push({
-          serial: 'No Assignments',
-          weightage: 0,
-          obtainedMarks: '-',
-          totalMarks: '-',
-          average: '-',
-          min: '-',
-          max: '-'
-        });
-      }
-
-      if (processedData.midterms[courseId].length === 0) {
-        processedData.midterms[courseId].push({
-          serial: 'No Midterms',
-          weightage: 0,
-          obtainedMarks: '-',
-          totalMarks: '-',
-          average: '-',
-          min: '-',
-          max: '-'
-        });
-      }
-
-      if (processedData.finals[courseId].length === 0) {
-        processedData.finals[courseId].push({
-          serial: 'No Finals',
-          weightage: 0,
-          obtainedMarks: '-',
-          totalMarks: '-',
-          average: '-',
-          min: '-',
-          max: '-'
-        });
-      }
-
-      if (processedData.projects[courseId].length === 0) {
-        processedData.projects[courseId].push({
-          serial: 'No Projects',
-          weightage: 0,
-          obtainedMarks: '-',
-          totalMarks: '-',
-          average: '-',
-          min: '-',
-          max: '-'
-        });
-      }
     });
 
     return processedData;
-  };
-  
-
-  // Calculate grand total for a course
-  const calculateGrandTotal = (courseId) => {
-    if (!marksData) return null;
-    
-    const categories = ['quizzes', 'assignments', 'midterms', 'finals', 'projects'];
-    let totalObtained = 0;
-    let totalMarks = 0;
-    let totalWeightage = 0;
-    let weightedMarks = 0;
-    let hasValidData = false;
-    
-    categories.forEach(category => {
-      const categoryData = marksData[category][courseId];
-      if (categoryData && categoryData.length > 0) {
-        // Check if the data contains placeholder values
-        if (categoryData[0].obtainedMarks !== '-') {
-          hasValidData = true;
-          // Calculate total obtained marks and weightage
-          categoryData.forEach(item => {
-            if (typeof item.obtainedMarks === 'number' && typeof item.totalMarks === 'number' && item.totalMarks > 0) {
-              totalObtained += item.obtainedMarks;
-              totalMarks += item.totalMarks;
-              // Bonus adds to score but not to course weightage denominator
-              if (!item.isBonus) {
-                totalWeightage += item.weightage;
-              }
-              
-              // Calculate weighted marks for this assessment
-              const weightedMark = (item.obtainedMarks / item.totalMarks) * item.weightage;
-              weightedMarks += weightedMark;
-            }
-          });
-        }
-      }
-    });
-    
-    if (!hasValidData) {
-      return {
-        totalObtained: '-',
-        totalMarks: '-',
-        totalWeightage: 0,
-        percentage: '-',
-        maxPossible: '-',
-        minPossible: '-',
-        weightedMarks: 0
-      };
-    }
-    
-    if (totalMarks === 0) return null;
-    
-    // Percentage out of course weightage (bonus included in numerator), clamp at 100
-    const percentage = totalWeightage > 0
-      ? Math.min(100, (weightedMarks / totalWeightage) * 100)
-      : 0;
-    
-    // Get section-wide stats from courseStats
-    const sectionMax = marksData.courseStats[courseId]?.sectionMax || 0;
-    const sectionMin = marksData.courseStats[courseId]?.sectionMin || 0;
-    
-    return {
-      totalObtained,
-      totalMarks,
-      totalWeightage,
-      percentage: percentage.toFixed(2),
-      maxPossible: sectionMax.toFixed(2),
-      minPossible: sectionMin.toFixed(2),
-      weightedMarks
-    };
   };
 
   if (loading) {
@@ -427,7 +169,7 @@ const Grading = () => {
         <div className="page-header">
           <h1>Marks Overview</h1>
         </div>
-        <div className="loading-container">Loading marks data...</div>
+        <Loading variant="table" rows={6} label="Loading marks" />
       </div>
     );
   }
@@ -531,7 +273,8 @@ const Grading = () => {
   }
 
   const activeCategoryData = marksData[activeTab][activeCourse];
-  const grandTotal = calculateGrandTotal(activeCourse);
+  const stats = marksData.courseStats[activeCourse];
+  const hasMarks = stats?.totals && stats.totals.gradedWeight > 0;
 
   return (
     <div className="marks-container">
@@ -605,30 +348,38 @@ const Grading = () => {
             ))}
           </tbody>
         </table>
+        {activeCategoryData.some((item) => item.isBonus) && (
+          <p className="bonus-note">Bonus marks are extra credit on top of the course's 100%.</p>
+        )}
       </div>
       
-      {/* Grand Total Section */}
-      {grandTotal && (
+      {/* Grand Total Section: every figure is calculated by the server */}
+      {stats && (
         <div className="grand-total-section">
-          <h2>Grand Total Marks</h2>
+          <h2>Total So Far</h2>
           <table className="grand-total-table">
             <thead>
               <tr>
-                <th>Total Weightage</th>
-                <th>Weighted Marks</th>
-                <th>Section Max</th>
-                <th>Section Min</th>
+                <th>Your Total</th>
+                <th>Percentage</th>
+                <th>Class Highest</th>
+                <th>Class Lowest</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{grandTotal.totalWeightage}%</td>
-                <td>{typeof grandTotal.weightedMarks === 'number' ? grandTotal.weightedMarks.toFixed(2) : '0.00'}</td>
-                <td>{marksData.courseStats[activeCourse]?.sectionMax.toFixed(2)}</td>
-                <td>{marksData.courseStats[activeCourse]?.sectionMin.toFixed(2)}</td>
+                <td>{hasMarks ? `${stats.totals.weightedMarks.toFixed(2)} out of ${stats.totals.gradedWeight}` : '-'}</td>
+                <td>{typeof stats.totals.percentageSoFar === 'number' ? `${stats.totals.percentageSoFar.toFixed(2)}%` : '-'}</td>
+                <td>{stats.sectionMax.toFixed(2)}</td>
+                <td>{stats.sectionMin.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
+          <p className="grand-total-note">
+            {hasMarks && stats.totals.gradedWeight < stats.totals.ordinaryWeight
+              ? `Based on the assessments marked so far (${stats.totals.gradedWeight} of the course's ${stats.totals.ordinaryWeight} marks). This is provisional and will change as more marks are added.`
+              : 'This is provisional. Final grades are published on your Transcript once results are finalised.'}
+          </p>
         </div>
       )}
     </div>

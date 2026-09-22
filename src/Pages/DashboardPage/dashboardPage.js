@@ -1,8 +1,8 @@
+import Loading, { Skeleton } from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from "react";
 import "./dashboardPage.css"; // Import the CSS file
 import axios from "axios";
 import ClassSchedule from "../ClassSchedule/ClassSchedule"; // Import the ClassSchedule component
-import { getGradeLetter, getGradeColor } from "../../utils/gradingScale";
 
 const Dashboard = () => {
   // State to track viewport size
@@ -88,32 +88,30 @@ const Dashboard = () => {
           courses: [],
         };
 
-        // Try to fetch grades data - don't fail if this errors
+        // Try to fetch results - don't fail if this errors. The server works out every total and grade.
         try {
-          const gradesResponse = await axios.get(`${apiUrl}/api/grades/student/${currentUser.studentId}`, {
+          const resultsResponse = await axios.get(`${apiUrl}/api/results/me`, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           });
-
-          // Process grades data
-          const processedGrades = processGradesData(gradesResponse.data);
+          const results = resultsResponse.data.courses || [];
 
           // Fetch attendance data for all courses
-          const attendanceData = await fetchAttendanceData(apiUrl, token, processedGrades.courses);
+          const attendanceData = await fetchAttendanceData(
+            apiUrl,
+            token,
+            results.map((course) => ({ id: course.courseId, name: `${course.code} - ${course.name}` }))
+          );
 
-          // Update with grades and attendance
           updatedStudentData.attendance = attendanceData;
-          updatedStudentData.courses = processedGrades.courses.map((course) => {
-            return {
-              name: course.name,
-              marks: course.totalObtainedMarks || 0,
-              total: course.totalMaxMarks || 100,
-              weightedMarks: course.weightedMarks || 0,
-              totalWeightage: course.totalWeightage || 100,
-            };
-          });
+          updatedStudentData.courses = results.map((course) => ({
+            name: `${course.code} - ${course.name}`,
+            weightedMarks: course.totals.weightedMarks,
+            gradedWeight: course.totals.gradedWeight,
+            percentageSoFar: course.totals.percentageSoFar,
+          }));
         } catch (gradesError) {
           console.warn("Error fetching grades/attendance data:", gradesError);
           // Continue with basic student data even if grades fail
@@ -198,69 +196,6 @@ const Dashboard = () => {
         subjects: [],
       };
     }
-  };
-
-  // Process grades data
-  const processGradesData = (apiData) => {
-    // Check if apiData is an array or an object
-    const data = Array.isArray(apiData) ? apiData[0] : apiData;
-
-    if (!data || !data.grades || !Array.isArray(data.grades)) {
-      return { courses: [] };
-    }
-
-    const courseMap = new Map();
-
-    // Process each grade
-    data.grades.forEach((grade) => {
-      if (!grade.registrationId || !grade.registrationId.courseId) {
-        return;
-      }
-
-      const courseId = grade.registrationId.courseId._id;
-      const courseName = grade.registrationId.courseId.name;
-      const courseCode = grade.registrationId.courseId.code;
-      const sectionId = grade.registrationId.sectionId;
-
-      if (!courseMap.has(courseId)) {
-        courseMap.set(courseId, {
-          id: courseId,
-          name: `${courseCode} - ${courseName}`,
-          totalObtainedMarks: 0,
-          totalMaxMarks: 0,
-          totalWeightage: 0,
-          weightedMarks: 0,
-          sectionId: sectionId,
-        });
-      }
-
-      const course = courseMap.get(courseId);
-
-      // Add the marks to the course totals
-      if (grade.obtainedMarks !== undefined && grade.assessmentId?.maxMarks !== undefined) {
-        // Get the weightage and maxMarks from the assessment
-        const weightage = grade.assessmentId?.weightage || 0;
-        const maxMarks = grade.assessmentId.maxMarks;
-        const isBonus = Boolean(grade.assessmentId?.isBonus);
-
-        // Calculate weighted marks
-        const weightedMark = (grade.obtainedMarks / maxMarks) * weightage;
-
-        // Update course totals — bonus adds to score but not denominator
-        course.totalObtainedMarks += grade.obtainedMarks;
-        course.totalMaxMarks += maxMarks;
-        if (!isBonus) {
-          course.totalWeightage += weightage;
-        }
-        course.weightedMarks += weightedMark;
-      }
-    });
-
-    const courses = Array.from(courseMap.values());
-
-    return {
-      courses: courses,
-    };
   };
 
   // Improved window resize handler with debounce
@@ -348,23 +283,23 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="profile-info">
-              <h2>{user?.name || "Loading..."}</h2>
+              <h2>{user?.name || <Skeleton width="9rem" />}</h2>
               <div className="student-details">
                 <div className="detail-item">
                   <span className="detail-label">Roll No:</span>
-                  <span className="detail-value">{user?.studentId || "Loading..."}</span>
+                  <span className="detail-value">{user?.studentId || <Skeleton width="5rem" />}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Program:</span>
-                  <span className="detail-value">{isMobile ? "CS" : "Loading..."}</span>
+                  <span className="detail-value">{isMobile ? "CS" : "–"}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Semester:</span>
-                  <span className="detail-value">Loading...</span>
+                  <span className="detail-value">–</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Year:</span>
-                  <span className="detail-value">Loading...</span>
+                  <span className="detail-value">–</span>
                 </div>
               </div>
             </div>
@@ -381,7 +316,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="loading-indicator">Loading attendance data...</div>
+            <Loading variant="inline" label="Loading attendance" />
           </div>
 
           <div className="dashboard-card marks-card">
@@ -393,7 +328,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="loading-indicator">Loading grades data...</div>
+            <Loading variant="inline" label="Loading grades" />
           </div>
 
           <div className="dashboard-card timetable-card">
@@ -405,7 +340,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            <div className="loading-indicator">Loading timetable data...</div>
+            <Loading variant="inline" label="Loading timetable" />
           </div>
         </div>
       </div>
@@ -593,14 +528,14 @@ const Dashboard = () => {
               <div className="no-data-message">No course data available</div>
             ) : (
               studentData.courses.map((course, index) => {
-                const rawPercentage = course.totalWeightage > 0 ? ((course.weightedMarks / course.totalWeightage) * 100) : 0;
-                const percentage = Math.min(100, rawPercentage).toFixed(1);
+                const hasMarks = typeof course.percentageSoFar === "number";
+                const percentage = hasMarks ? course.percentageSoFar.toFixed(1) : "0.0";
                 return (
                   <div key={index} className="course-item">
                     <div className="course-header">
                       <span className="course-name">{getSubjectLabel(course.name)}</span>
                       <span className="course-marks">
-                        {course.weightedMarks.toFixed(1)}/{course.totalWeightage.toFixed(1)} ({percentage}%)
+                        {hasMarks ? `${percentage}% so far` : "No marks yet"}
                       </span>
                     </div>
                     <div className="course-progress-container">
@@ -608,11 +543,10 @@ const Dashboard = () => {
                         className="course-progress"
                         style={{
                           width: `${percentage}%`,
-                          backgroundColor: getGradeColor(course.weightedMarks, course.totalWeightage),
+                          backgroundColor: "var(--primary-color)",
                         }}
                       ></div>
                     </div>
-                    <div className="grade-indicator">{getGradeLetter(course.weightedMarks, course.totalWeightage)}</div>
                   </div>
                 );
               })
