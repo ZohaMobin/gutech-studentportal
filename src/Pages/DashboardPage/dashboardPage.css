@@ -123,7 +123,8 @@
 
 .detail-label {
     font-weight: 500;
-    width: 70px;
+    width: 6rem;      /* "Department:" needs more than the 70px it had, and ran into its value */
+    flex: none;
     color: var(--text-light);
     font-size: 12px;
 }
@@ -172,7 +173,7 @@
     }
     
     .detail-label {
-        width: 80px;
+        width: 6.5rem;
         font-size: 13px;
     }
     
