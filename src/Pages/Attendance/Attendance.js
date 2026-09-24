@@ -263,9 +263,9 @@ const Attendance = () => {
   return (
     <div className="attendance-container">
       <div className="attendance-header">
-        <div className="header-content">
+        <div className="attendance-heading">
           <h1>Attendance</h1>
-          <p>View your attendance records for each course</p>
+          <p>Your attendance in each course this semester</p>
         </div>
       </div>
 
@@ -323,7 +323,7 @@ const Attendance = () => {
               <div className="attendance-controls">
                 <div className="date-selector">
                   <label>
-                    <Calendar size={16} /> Filter by Date
+                    <Calendar size={16} /> Date
                   </label>
                   <DatePicker
                     selected={selectedDate}
@@ -408,7 +408,7 @@ const Attendance = () => {
                       filteredRecords.map((record, index) => (
                   <tr key={index}>
                           <td className="date-cell">{record.date}</td>
-                          <td className="day-cell">{record.day}</td>
+                          <td className="attendance-day-cell">{record.day}</td>
                           <td className="slot-cell">Slot {record.slotNumber}</td>
                           <td className="duration-cell">{record.durationMinutes} min</td>
                           <td className="status-cell">
