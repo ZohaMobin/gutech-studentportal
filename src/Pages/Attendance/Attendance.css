@@ -690,3 +690,7 @@
    drifted apart as the columns grew wider. */
 .students-table th.slot-header,
 .students-table th.duration-header { text-align: center; }
+
+/* The date picker's popup has z-index 1 by default, and the records table's sticky header has 10, so the header was drawn
+   over the calendar and cut off whole weeks of it. The popup goes above the page content. */
+.react-datepicker-popper { z-index: 100; }
