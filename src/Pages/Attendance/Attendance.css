@@ -685,3 +685,8 @@
   .slot-cell, .status-cell { min-width: 0; }
   .students-table th, .students-table td { padding-left: 0.5rem; padding-right: 0.5rem; }
 }
+
+/* The Slot and Duration cells are centred, but ".students-table th" (more specific) left-aligned their headers, so the two
+   drifted apart as the columns grew wider. */
+.students-table th.slot-header,
+.students-table th.duration-header { text-align: center; }
