@@ -72,7 +72,7 @@
   gap: var(--spacing-md);
 }
 
-.header-content h1 {
+.attendance-heading h1 {
   font-size: 1.875rem;
   font-weight: 600;
   color: var(--primary-color);
@@ -80,7 +80,7 @@
   letter-spacing: -0.025em;
 }
 
-.header-content p {
+.attendance-heading p {
   color: var(--text-secondary);
   font-size: 0.875rem;
   margin: 0;
@@ -477,12 +477,12 @@
 .date-cell {
   font-weight: 500;
   color: var(--text-primary);
-  min-width: 120px;
+  white-space: nowrap;     /* a date must never break across two lines */
 }
 
-.day-cell {
+.attendance-day-cell {
   color: var(--text-secondary);
-  min-width: 150px;
+  white-space: nowrap;
 }
 
 .slot-header,
@@ -629,4 +629,59 @@
   .section-code {
     font-size: 0.625rem;
   }
+}
+
+/* ---- Compact controls and stats (same shape as the teacher portal's Attendance) -------------------------------------- */
+
+.attendance-controls {
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* label, date box and the "dates with attendance" note on ONE line */
+.date-selector {
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  min-width: 0;
+  gap: 0.35rem 0.6rem;
+}
+
+.date-selector label { white-space: nowrap; }
+.date-selector .react-datepicker-wrapper { width: 11.5rem; }
+.date-selector .date-input { height: 2.2rem; padding-top: 0; padding-bottom: 0; }
+.date-selector .date-legend { margin-top: 0; white-space: nowrap; }
+
+.search-container { flex: 1 1 14rem; min-width: 0; }
+.search-container .search-input { height: 2.2rem; padding-top: 0; padding-bottom: 0; }
+
+/* five small stat cards in one row instead of four and a straggler */
+.attendance-stats {
+  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+  padding: 0.6rem 0.75rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.stat-card { padding: 0.5rem 0.25rem; }
+.stat-card:hover { transform: none; box-shadow: none; }
+.stat-value { font-size: 1.2rem; }
+.stat-label { font-size: 0.7rem; margin-top: 0.2rem; }
+
+/* The 768px rule above stacks the controls as a column; there the search's flex-basis would become a HEIGHT (a tall empty
+   box with the icon floating in it). They stay a wrapping row instead, so the search simply drops to its own full line. */
+@media (max-width: 768px) {
+  .attendance-controls { flex-direction: row; align-items: center; }
+  .search-container { flex: 1 1 100%; }
+}
+
+/* On a phone the table scrolled sideways and the Status column, the one that matters, was off-screen behind Duration. Duration is the least useful column, so it gives way. */
+@media (max-width: 520px) {
+  .students-table .duration-header, .students-table .duration-cell { display: none; }
+  /* ...and the columns that are left stop insisting on desktop minimum widths, so all four fit without scrolling. */
+  .slot-cell, .status-cell { min-width: 0; }
+  .students-table th, .students-table td { padding-left: 0.5rem; padding-right: 0.5rem; }
 }
