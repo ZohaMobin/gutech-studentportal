@@ -57,7 +57,7 @@
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--text-primary);
   background-color: var(--background-light);
-  min-height: 100vh;
+  min-height: calc(125vh - 100px);
 }
 
 /* Header section */
