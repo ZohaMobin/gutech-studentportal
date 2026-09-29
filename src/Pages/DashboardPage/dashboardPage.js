@@ -4,12 +4,40 @@ import "./dashboardPage.css"; // Import the CSS file
 import axios from "axios";
 import ClassSchedule from "../ClassSchedule/ClassSchedule"; // Import the ClassSchedule component
 
+// One place for the student's details, so the loading, error and loaded states can never disagree about labels or
+// values. While the record is on its way each value is an inline placeholder, like everywhere else in the portal.
+const emptyValue = (value) => value === undefined || value === null || value === "";
+const ProfileDetails = ({ data, loading, isMobile }) => {
+  const show = (value) => (loading ? <Skeleton width="6rem" /> : emptyValue(value) ? "N/A" : value);
+  return (
+    <div className="student-details">
+      <div className="detail-item">
+        <span className="detail-label">Roll No:</span>
+        <span className="detail-value">{show(data?.rollNumber)}</span>
+      </div>
+      <div className="detail-item">
+        <span className="detail-label">Program:</span>
+        <span className="detail-value">{show(isMobile ? data?.programCode || data?.program : data?.program)}</span>
+      </div>
+      <div className="detail-item">
+        <span className="detail-label">Semester:</span>
+        <span className="detail-value">{show(data?.semester)}</span>
+      </div>
+      <div className="detail-item">
+        <span className="detail-label">Department:</span>
+        <span className="detail-value">{show(isMobile ? data?.departmentCode || data?.department : data?.department)}</span>
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   // State to track viewport size
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [studentData, setStudentData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);            // the student's own record
+  const [cardsLoading, setCardsLoading] = useState(true);   // attendance and course performance: more requests, later
   const [error, setError] = useState(null);
   const [apiCalled, setApiCalled] = useState(false);
 
@@ -79,6 +107,8 @@ const Dashboard = () => {
           name: studentName,
           program: programName,
           department: departmentName,
+          programCode: studentResponse.data.program?.code,
+          departmentCode: studentResponse.data.department?.code,
           semester: semester,
           rollNumber: studentResponse.data.rollNumber || null,
           attendance: {
@@ -87,6 +117,10 @@ const Dashboard = () => {
           },
           courses: [],
         };
+
+        // The details are ready now: show them, and let the cards below fill in as their data arrives.
+        setStudentData({ ...updatedStudentData });
+        setLoading(false);
 
         // Try to fetch results - don't fail if this errors. The server works out every total and grade.
         try {
@@ -117,13 +151,14 @@ const Dashboard = () => {
           // Continue with basic student data even if grades fail
         }
 
-        setStudentData(updatedStudentData);
+        setStudentData({ ...updatedStudentData });
         setApiCalled(true);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error.message || "Failed to load student data");
       } finally {
         setLoading(false);
+        setCardsLoading(false);
       }
     };
 
@@ -269,85 +304,7 @@ const Dashboard = () => {
     return subject;
   };
 
-  if (loading) {
-    return (
-      <div className="dashboard-container">
-        <div className="student-profile">
-          <div className="profile-content">
-            <div className="profile-avatar">
-              <div className="avatar-circle">
-                {user?.name
-                  ?.split(" ")
-                  .map((name) => name[0])
-                  .join("") || "S"}
-              </div>
-            </div>
-            <div className="profile-info">
-              <h2>{user?.name || <Skeleton width="9rem" />}</h2>
-              <div className="student-details">
-                <div className="detail-item">
-                  <span className="detail-label">Roll No:</span>
-                  <span className="detail-value">{user?.studentId || <Skeleton width="5rem" />}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Program:</span>
-                  <span className="detail-value">{isMobile ? "CS" : "–"}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Semester:</span>
-                  <span className="detail-value">–</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Year:</span>
-                  <span className="detail-value">–</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard-grid">
-          <div className="dashboard-card attendance-card">
-            <div className="card-header">
-              <h3>Attendance</h3>
-              <div className="card-actions">
-                <button className="card-action-button" aria-label="More options">
-                  <i className="fas fa-ellipsis-h"></i>
-                </button>
-              </div>
-            </div>
-            <Loading variant="inline" label="Loading attendance" />
-          </div>
-
-          <div className="dashboard-card marks-card">
-            <div className="card-header">
-              <h3>Course Performance</h3>
-              <div className="card-actions">
-                <button className="card-action-button" aria-label="More options">
-                  <i className="fas fa-ellipsis-h"></i>
-                </button>
-              </div>
-            </div>
-            <Loading variant="inline" label="Loading grades" />
-          </div>
-
-          <div className="dashboard-card timetable-card">
-            <div className="card-header">
-              <h3>{windowWidth < 576 ? "Schedule" : "Class Schedule"}</h3>
-              <div className="card-actions">
-                <button className="card-action-button" aria-label="More options">
-                  <i className="fas fa-ellipsis-h"></i>
-                </button>
-              </div>
-            </div>
-            <Loading variant="inline" label="Loading timetable" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !studentData) {
+  if (error && !studentData) {
     return (
       <div className="dashboard-container">
         <div className="student-profile">
@@ -362,24 +319,7 @@ const Dashboard = () => {
             </div>
             <div className="profile-info">
               <h2>{user?.name || "Student"}</h2>
-              <div className="student-details">
-                <div className="detail-item">
-                  <span className="detail-label">Roll No:</span>
-                  <span className="detail-value">{user?.studentId || "N/A"}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Program:</span>
-                  <span className="detail-value">{isMobile ? "CS" : "N/A"}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Semester:</span>
-                  <span className="detail-value">N/A</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Year:</span>
-                  <span className="detail-value">N/A</span>
-                </div>
-              </div>
+              <ProfileDetails data={null} loading={false} isMobile={isMobile} />
             </div>
           </div>
         </div>
@@ -431,14 +371,18 @@ const Dashboard = () => {
     );
   }
 
+  // The same page in every state: details and cards fill in as their data arrives, nothing is swapped for a loader.
+  const displayName = studentData?.name || user?.name;
+  const cardsBusy = loading || cardsLoading;
+
   return (
     <div className="dashboard-container">
       <div className="student-profile">
         <div className="profile-content">
           <div className="profile-avatar">
             <div className="avatar-circle">
-              {studentData?.name
-                ? studentData.name
+              {displayName
+                ? displayName
                     .split(" ")
                     .map((name) => name[0])
                     .join("")
@@ -446,27 +390,8 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="profile-info">
-            <h2>{studentData?.name || "Student"}</h2>
-            <div className="student-details">
-              <div className="detail-item">
-                <span className="detail-label">Roll No:</span>
-                <span className="detail-value">{studentData?.rollNumber || "N/A"}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Program:</span>
-                <span className="detail-value">{isMobile ? "CS" : studentData?.program || "N/A"}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Semester:</span>
-                <span className="detail-value">{studentData?.semester ?? studentData?.currentSemester ?? "N/A"}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Department:</span>
-                <span className="detail-value">
-                  {isMobile ? studentData?.department?.code || studentData?.department || "N/A" : studentData?.department?.name || studentData?.department || "N/A"}
-                </span>
-              </div>
-            </div>
+            <h2>{displayName || (loading ? <Skeleton width="9rem" /> : "Student")}</h2>
+            <ProfileDetails data={studentData} loading={loading} isMobile={isMobile} />
           </div>
         </div>
       </div>
@@ -481,7 +406,9 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-          {studentData.attendance.subjects.length === 0 ? (
+          {cardsBusy ? (
+            <Loading variant="inline" label="Loading attendance" />
+          ) : studentData.attendance.subjects.length === 0 ? (
             <div className="empty-attendance">
               <div className="empty-icon">
                 <i className="fas fa-calendar-check"></i>
@@ -524,7 +451,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="course-performance">
-            {!studentData || !studentData.courses || studentData.courses.length === 0 ? (
+            {cardsBusy ? (
+              <Loading variant="inline" label="Loading grades" />
+            ) : !studentData || !studentData.courses || studentData.courses.length === 0 ? (
               <div className="no-data-message">No course data available</div>
             ) : (
               studentData.courses.map((course, index) => {
