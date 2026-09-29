@@ -1,2 +1,7 @@
-
-
+/* Matches the admin portal: the whole app renders at 80% of its built sizes. zoom (not transform) so layout reflows
+   and text stays sharp, the same way real browser zoom works. See gutech-adminportal-new's index.css for the fuller
+   note and the sidebar fix that had to go with it (a box sized with 100vh stops short of the real zoomed bottom of
+   the screen; fixed here the same way, in sidebar.css). */
+body {
+  zoom: 0.8;
+}
