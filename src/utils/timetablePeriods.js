@@ -43,3 +43,10 @@ export const to12Hour = (time) => {
   const hour = parseInt(hours, 10);
   return `${hour % 12 || 12}:${minutes} ${hour >= 12 ? "PM" : "AM"}`;
 };
+
+// "08:30","09:55" -> "8:30 - 9:55 AM"; "11:45","13:10" -> "11:45 AM - 1:10 PM" (a short label for tight spaces)
+export const to12HourRange = (start, end) => {
+  const meridiem = (time) => (parseInt(String(time).split(":")[0], 10) >= 12 ? "PM" : "AM");
+  const bare = (time) => to12Hour(time).replace(/ (AM|PM)$/, "");
+  return meridiem(start) === meridiem(end) ? `${bare(start)} - ${bare(end)} ${meridiem(end)}` : `${to12Hour(start)} - ${to12Hour(end)}`;
+};
