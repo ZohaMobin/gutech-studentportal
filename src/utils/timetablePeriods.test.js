@@ -1,4 +1,4 @@
-import { buildPeriods, periodIndexOf, to12Hour } from "./timetablePeriods";
+import { buildPeriods, periodIndexOf, to12Hour, to12HourRange } from "./timetablePeriods";
 
 const cls = (day, startTime, endTime, room = "SF1") => ({ day, timeSlot: { startTime, endTime, room } });
 const printed = [["08:30", "09:55"], ["10:10", "11:35"], ["11:45", "13:10"], ["14:00", "15:25"]];
@@ -39,4 +39,10 @@ test("twelve-hour times read as a person would say them", () => {
   expect(to12Hour("13:10")).toBe("1:10 PM");
   expect(to12Hour("12:00")).toBe("12:00 PM");
   expect(to12Hour("00:15")).toBe("12:15 AM");
+});
+
+test("a short range label drops the repeated AM/PM, and keeps both when the range crosses noon", () => {
+  expect(to12HourRange("08:30", "09:55")).toBe("8:30 - 9:55 AM");
+  expect(to12HourRange("14:00", "15:25")).toBe("2:00 - 3:25 PM");
+  expect(to12HourRange("11:45", "13:10")).toBe("11:45 AM - 1:10 PM");
 });
