@@ -4,6 +4,7 @@ import axios from 'axios';
 import { showToast, TOAST_TYPES } from '../../Components/Toast/Toast';
 import './ClassSchedule.css';
 import { buildPeriods, periodIndexOf, to12Hour, to12HourRange } from '../../utils/timetablePeriods';
+import { assignCardColors, cardStyle } from '../../utils/scheduleColors';
 
 const ClassSchedule = ({ isDashboard }) => {
   const [schedule, setSchedule] = useState({});
@@ -43,43 +44,6 @@ const ClassSchedule = ({ isDashboard }) => {
     }
   };
 
-  // Generate a consistent color for each course
-  const generateSectionColor = (courseId) => {
-    // Predefined distinct vibrant pastel colors
-    const distinctColors = [
-      '#ffcccb',  // Light red
-      '#c1e1c1',  // Mint green
-      '#c4c3e0',  // Lavender
-      '#ffdab9',  // Peach
-      '#b0e0e6',  // Powder blue
-      '#ffffcc',  // Light yellow
-      '#d8bfd8',  // Thistle
-      '#ffdead',  // Navajo white
-      '#98fb98',  // Pale green
-      '#afeeee',  // Pale turquoise
-      '#ffc0cb',  // Pink
-      '#dda0dd',  // Plum
-      '#ffefd5',  // Papaya whip
-      '#87ceeb',  // Sky blue
-      '#f0e68c',  // Khaki
-    ];
-    
-    // For empty or invalid IDs, return a default color
-    if (!courseId || courseId.length < 3) {
-      return '#f9f9f9';
-    }
-    
-    // Use a hash of the course ID to select a color
-    let hash = 0;
-    for (let i = 0; i < courseId.length; i++) {
-      hash = courseId.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    
-    // Select a color from the predefined palette
-    const colorIndex = Math.abs(hash) % distinctColors.length;
-    return distinctColors[colorIndex];
-  };
-
   // Get course color for a schedule
   const getSectionColor = (schedule) => {
     if (!schedule || !schedule.courseId) return '#f8f9fa';
@@ -94,17 +58,8 @@ const ClassSchedule = ({ isDashboard }) => {
       courseIdentifier = schedule.courseId;
     }
     
-    // If we have a course identifier, use or generate a color for it
-    if (courseIdentifier) {
-      // First try to use a predetermined color from sectionColors
-      if (sectionColors[courseIdentifier]) {
-        return sectionColors[courseIdentifier];
-      }
-      
-      // If we don't have a color yet, generate one
-      return generateSectionColor(courseIdentifier);
-    }
-    
+    if (courseIdentifier && sectionColors[courseIdentifier]) return sectionColors[courseIdentifier];
+
     return '#f8f9f9'; // Default color if no identifier found
   };
 
@@ -126,26 +81,15 @@ const ClassSchedule = ({ isDashboard }) => {
         throw new Error('Invalid response data structure');
       }
       
-      // Generate colors by course ID, not section ID
-      const newSectionColors = {};
+      // One colour per course, handed out in order so no two courses on the timetable share one.
+      const courseKeys = [];
       Object.values(response.data).forEach(daySchedules => {
         daySchedules.forEach(schedule => {
-          // Extract course ID or code correctly to ensure consistent colors
-          let courseIdentifier = '';
-          
-          if (typeof schedule.courseId === 'object') {
-            // Prioritize course code (ICT101) for more distinct colors
-            courseIdentifier = schedule.courseId.code || schedule.courseId._id || '';
-          } else if (typeof schedule.courseId === 'string') {
-            courseIdentifier = schedule.courseId;
-          }
-          
-          if (courseIdentifier && !newSectionColors[courseIdentifier]) {
-            newSectionColors[courseIdentifier] = generateSectionColor(courseIdentifier);
-          }
+          if (typeof schedule.courseId === 'object') courseKeys.push(schedule.courseId?.code || schedule.courseId?._id);
+          else if (typeof schedule.courseId === 'string') courseKeys.push(schedule.courseId);
         });
       });
-      
+      const newSectionColors = assignCardColors(courseKeys);
       setSectionColors(newSectionColors);
       
       setSchedule(response.data);
@@ -294,7 +238,7 @@ const ClassSchedule = ({ isDashboard }) => {
                         <div
                           key={item._id}
                           className="class-item"
-                          style={{ backgroundColor: getSectionColor(item) }}
+                          style={cardStyle(getSectionColor(item))}
                         >
                           <div className="course-info">
                             <span className="course-code">{item.courseId?.code}</span>
