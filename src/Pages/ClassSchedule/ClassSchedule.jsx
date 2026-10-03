@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { showToast, TOAST_TYPES } from '../../Components/Toast/Toast';
 import './ClassSchedule.css';
-import { buildPeriods, periodIndexOf, to12Hour } from '../../utils/timetablePeriods';
+import { buildPeriods, periodIndexOf, to12Hour, to12HourRange } from '../../utils/timetablePeriods';
 
 const ClassSchedule = ({ isDashboard }) => {
   const [schedule, setSchedule] = useState({});
@@ -221,14 +221,8 @@ const ClassSchedule = ({ isDashboard }) => {
   // The rows are this student's real class windows (8:30 - 9:55, ...), not whole hours.
   const formatTime = to12Hour;
 
-  // Define more compact time display for dashboard
-  const getTimeLabel = (timeSlot) => {
-    if (isDashboard) {
-      // Simplified display for dashboard
-      return `${formatTime(timeSlot.start)}`;
-    }
-    return `${formatTime(timeSlot.start)} - ${formatTime(timeSlot.end)}`;
-  };
+  // The row's time: the full range, shorter on the dashboard where space is tight.
+  const getTimeLabel = (timeSlot) => (isDashboard ? to12HourRange(timeSlot.start, timeSlot.end) : `${formatTime(timeSlot.start)} - ${formatTime(timeSlot.end)}`);
 
   if (loading) {
     return (
@@ -318,7 +312,7 @@ const ClassSchedule = ({ isDashboard }) => {
                             <div className="section-info">
                               Section {item.sectionId?.section}
                             </div>
-                            {!isDashboard && (
+                            {(!isDashboard || item.timeSlot.startTime !== timeSlot.start || item.timeSlot.endTime !== timeSlot.end) && (
                               <div className="time-info">
                                 {formatTime(item.timeSlot.startTime)} - {formatTime(item.timeSlot.endTime)}
                               </div>
