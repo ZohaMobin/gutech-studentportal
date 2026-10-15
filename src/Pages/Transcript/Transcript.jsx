@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Transcript.css";
 import PrintButton from "../../Components/PrintButton/PrintButton";
+import { messageOf, NETWORK_MESSAGE } from "../../utils/apiMessage";
+import ErrorState from "../../Components/ErrorState/ErrorState";
 
 const GRADE_NOTES = { I: "I = Incomplete", W: "W = Withdrawn" };
 
@@ -66,7 +68,7 @@ const Transcript = () => {
         });
       } catch (err) {
         console.error("Error fetching transcript data:", err);
-        setError(err.response?.data?.message || err.message || "Failed to load transcript data");
+        setError(messageOf(err, "Failed to load transcript data"));
       } finally {
         setLoading(false);
       }
@@ -89,9 +91,7 @@ const Transcript = () => {
     return (
       <div className="print-wrapper">
         <div className="transcript-container">
-          <div style={{ padding: "2rem", textAlign: "center" }}>
-            <p style={{ color: "red" }}>{error || "Failed to load transcript data"}</p>
-          </div>
+          <ErrorState message={error || "Failed to load transcript data"} title={error === NETWORK_MESSAGE ? undefined : "Your transcript could not be loaded"} onRetry={() => window.location.reload()} />
         </div>
       </div>
     );

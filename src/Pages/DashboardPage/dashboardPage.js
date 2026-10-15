@@ -10,6 +10,8 @@ import {
   initialsOf, nextClassAfter, overallAttendance, percent, todaysClasses,
 } from "../../utils/studentDashboard";
 import "./dashboardPage.css";
+import { messageOf } from "../../utils/apiMessage";
+import ErrorState from "../../Components/ErrorState/ErrorState";
 
 const apiUrl = process.env.REACT_APP_BACKEND_URL;
 const plural = (n, word) => `${n} ${n === 1 ? word : word.endsWith("s") ? `${word}es` : `${word}s`}`;
@@ -34,7 +36,7 @@ const useDashboard = () => {
     ]);
     if ([student, results, schedule].every((r) => r.status === "rejected")) {
       const reason = student.reason;
-      setState((current) => (soft && current.status === "ready" ? { ...current, refreshing: false, refreshFailed: true } : { status: "error", message: reason?.response?.data?.message || reason?.message || "The dashboard could not be loaded." }));
+      setState((current) => (soft && current.status === "ready" ? { ...current, refreshing: false, refreshFailed: true } : { status: "error", message: messageOf(reason, "The dashboard could not be loaded.") }));
       return;
     }
     const resultCourses = results.status === "fulfilled" ? results.value.data?.courses || [] : [];
@@ -106,7 +108,7 @@ const Dashboard = () => {
   if (state.status === "error") {
     return (
       <div className="sd">
-        <div className="sd-card sd-error" role="alert"><p>{state.message}</p><button type="button" className="sd-btn" onClick={() => reload()}>Try again</button></div>
+        <ErrorState message={state.message} onRetry={() => reload()} />
       </div>
     );
   }

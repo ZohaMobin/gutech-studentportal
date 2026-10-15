@@ -5,6 +5,8 @@ import { showToast, TOAST_TYPES } from '../../Components/Toast/Toast';
 import './ClassSchedule.css';
 import { buildPeriods, periodIndexOf, to12Hour, to12HourRange } from '../../utils/timetablePeriods';
 import { assignCardColors, cardStyle } from '../../utils/scheduleColors';
+import { messageOf, isNetworkError, NETWORK_MESSAGE } from '../../utils/apiMessage';
+import ErrorState from '../../Components/ErrorState/ErrorState';
 
 const ClassSchedule = ({ isDashboard }) => {
   const [schedule, setSchedule] = useState({});
@@ -127,7 +129,7 @@ const ClassSchedule = ({ isDashboard }) => {
       }
     } catch (err) {
       console.error('Error fetching schedule:', err);
-      setError(err.message || 'Failed to fetch schedule');
+      setError(messageOf(err, 'Failed to fetch schedule'));
       setLoading(false);
       
       if (retryCount < MAX_RETRIES) {
@@ -138,7 +140,7 @@ const ClassSchedule = ({ isDashboard }) => {
           fetchSchedule();
         }, delay);
       } else {
-        showToast('Failed to load schedule after multiple attempts. Please try again later.', TOAST_TYPES.ERROR);
+        showToast(isNetworkError(err) ? NETWORK_MESSAGE : 'Failed to load schedule after multiple attempts. Please try again later.', TOAST_TYPES.ERROR);
       }
     }
   };
@@ -176,22 +178,7 @@ const ClassSchedule = ({ isDashboard }) => {
 
   if (error) {
     return (
-      <div className="error-container">
-        <div className="error-message">
-          <p>{error}</p>
-          <button 
-            onClick={() => {
-              setRetryCount(0);
-              setLoading(true);
-              fetchSchedule();
-            }}
-            disabled={retryCount >= MAX_RETRIES}
-            className={retryCount >= MAX_RETRIES ? 'disabled' : ''}
-          >
-            {retryCount >= MAX_RETRIES ? 'Max retries reached' : 'Try Again'}
-          </button>
-        </div>
-      </div>
+      <ErrorState message={error} title={error === NETWORK_MESSAGE ? undefined : "Your timetable could not be loaded"} onRetry={() => { setRetryCount(0); setLoading(true); fetchSchedule(); }} />
     );
   }
 
