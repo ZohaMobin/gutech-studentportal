@@ -3,6 +3,8 @@ import axios from "axios";
 import { useAuth } from "../../Components/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import "./Signup.css";
+import { formMessageOf } from "../../utils/apiMessage";
+import { InlineAlert } from "../../Components/ErrorState/ErrorState";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +62,7 @@ const Signup = () => {
       login(user, token); // 🔑 Save user and token in context + sessionStorage
       navigate("/main/dashboard"); // 🚀 Redirect to dashboard
     } catch (error) {
-      setError(error.response?.data?.message || "Login failed. Please check your credentials.");
+      setError(formMessageOf(error, "Login failed. Please check your credentials."));
     } finally {
       setIsSubmitting(false);
     }
@@ -80,7 +82,7 @@ const Signup = () => {
             <h1 className="form-title">Student Login</h1>
             <p className="form-subtitle">Enter your credentials to access your account</p>
 
-            {error && <div className="error-message">{error}</div>}
+            <InlineAlert message={error} />
 
             <input type="text" name="rollNumber" placeholder="Roll Number" value={loginForm.rollNumber} onChange={handleLoginChange} disabled={isSubmitting} required />
 

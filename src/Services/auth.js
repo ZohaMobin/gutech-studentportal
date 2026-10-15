@@ -1,4 +1,5 @@
 import api from './api';
+import { formMessageOf } from '../utils/apiMessage';
 
 // Forgot Password - Request Reset Code
 export const requestPasswordReset = async (email) => {
@@ -6,7 +7,7 @@ export const requestPasswordReset = async (email) => {
     const response = await api.post('/api/auth/forgot-password', { email });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to request password reset');
+    throw new Error(formMessageOf(error, 'Failed to request password reset'));
   }
 };
 
@@ -16,7 +17,7 @@ export const verifyResetCode = async (email, code) => {
     const response = await api.post('/api/auth/verify-reset-code', { email, code });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to verify reset code');
+    throw new Error(formMessageOf(error, 'Failed to verify reset code'));
   }
 };
 
@@ -30,7 +31,7 @@ export const resetPassword = async (email, code, newPassword) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to reset password');
+    throw new Error(formMessageOf(error, 'Failed to reset password'));
   }
 };
 
@@ -42,7 +43,7 @@ export const login = async (email, password) => {
     localStorage.setItem('user', JSON.stringify(user));
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Login failed');
+    throw new Error(formMessageOf(error, 'Login failed'));
   }
 };
 

@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Calendar, Search, Users, AlertCircle, BookOpen } from 'lucide-react';
+import { Calendar, Search, Users, BookOpen } from 'lucide-react';
 import './Attendance.css';
 import { takeCourseHint } from '../../utils/dashboardHint';
+import { messageOf } from '../../utils/apiMessage';
+import ErrorState, { InlineAlert } from '../../Components/ErrorState/ErrorState';
 
 const Attendance = () => {
   // State variables
@@ -61,7 +63,7 @@ const Attendance = () => {
       } else if (error.response?.status === 400) {
         setError(error.response.data.message || "Invalid request.");
       } else {
-        setError("Network error. Please check your connection.");
+        setError(messageOf(error, "Something went wrong. Please try again."));
       }
     } else {
       setError("An unexpected error occurred. Please try again.");
@@ -270,12 +272,7 @@ const Attendance = () => {
         </div>
       </div>
 
-      {error && (
-        <div className="error-message">
-          <AlertCircle size={16} />
-          <span>{error}</span>
-        </div>
-      )}
+      <InlineAlert message={courses.length > 0 || loading ? error : null} />
 
       <div className="attendance-content">
         <div className="attendance-sidebar">
@@ -287,7 +284,7 @@ const Attendance = () => {
               {loading && courses.length === 0 ? (
                 <Loading variant="list" rows={4} label="Loading courses" />
               ) : courses.length === 0 ? (
-                <div className="empty-text">No courses available</div>
+                error ? null : <div className="empty-text">No courses available</div>
               ) : (
                 courses.map(course => (
                   <div 
@@ -313,6 +310,8 @@ const Attendance = () => {
         <div className="attendance-main">
           {loading && !activeCourse ? (
             <Loading variant="table" rows={6} label="Loading attendance" />
+          ) : !activeCourse && courses.length === 0 && error ? (
+            <ErrorState message={error} onRetry={fetchStudentCourses} />
           ) : !activeCourse ? (
             <div className="empty-state">
               <Users size={48} />

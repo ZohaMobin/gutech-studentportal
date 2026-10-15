@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { takeCourseHint } from "../../utils/dashboardHint";
 import axios from "axios";
 import "./Grading.css";
+import { messageOf, NETWORK_MESSAGE } from "../../utils/apiMessage";
+import ErrorState from "../../Components/ErrorState/ErrorState";
 
 const Grading = () => {
   const [activeTab, setActiveTab] = useState("quizzes");
@@ -27,7 +29,7 @@ const Grading = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(err.response?.data?.message || err.message || "Unable to load marks");
+        setError(messageOf(err, "Unable to load marks"));
         setLoading(false);
       }
     };
@@ -181,83 +183,7 @@ const Grading = () => {
         <div className="page-header">
           <h1>Marks Overview</h1>
         </div>
-        <div className="error-container">
-          <div className="error-message">
-            <p>{error}</p>
-            <button onClick={() => window.location.reload()} className="retry-button">
-              Retry
-            </button>
-          </div>
-        </div>
-        
-        {/* Course Tabs - Show empty tabs when API fails */}
-        <div className="course-tabs">
-          <button className="course-tab active">No Courses Available</button>
-        </div>
-        
-        {/* Assessment Type Tabs - Show all tabs when API fails */}
-        <div className="assessment-tabs">
-          <button className={`assessment-tab ${activeTab === 'quizzes' ? 'active' : ''}`}>
-            Quizzes
-          </button>
-          <button className={`assessment-tab ${activeTab === 'assignments' ? 'active' : ''}`}>
-            Assignments
-          </button>
-          <button className={`assessment-tab ${activeTab === 'midterms' ? 'active' : ''}`}>
-            Midterms
-          </button>
-          <button className={`assessment-tab ${activeTab === 'projects' ? 'active' : ''}`}>
-            Projects
-          </button>
-          <button className={`assessment-tab ${activeTab === 'finals' ? 'active' : ''}`}>
-            Finals
-          </button>
-        </div>
-        
-        {/* Marks Table - Show empty table when API fails */}
-        <div className="marks-table-container">
-          <table className="marks-table">
-            <thead>
-              <tr>
-                <th>Assessment</th>
-                <th>Weightage (%)</th>
-                <th>Your Marks</th>
-                <th>Total Marks</th>
-                <th>Class Average</th>
-                <th>Min Marks</th>
-                <th>Max Marks</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={7} className="no-data">Unable to load marks data</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-        {/* Grand Total Section - Show empty section when API fails */}
-        <div className="grand-total-section">
-          <h2>Grand Total Marks</h2>
-          <table className="grand-total-table">
-            <thead>
-              <tr>
-                <th>Total Weightage</th>
-                <th>Weighted Marks</th>
-                <th>Section Max</th>
-                <th>Section Min</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <ErrorState message={error} title={error === NETWORK_MESSAGE ? undefined : "Marks could not be loaded"} onRetry={() => window.location.reload()} />
       </div>
     );
   }
