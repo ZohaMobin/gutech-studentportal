@@ -1,5 +1,6 @@
 import Loading from '../../Components/Loading/Loading';
 import React, { useState, useEffect } from "react";
+import { takeCourseHint } from "../../utils/dashboardHint";
 import axios from "axios";
 import "./Grading.css";
 
@@ -21,7 +22,7 @@ const Grading = () => {
         const processedData = processResults(results);
         setMarksData(processedData);
         if (processedData.courses.length > 0) {
-          setActiveCourse(processedData.courses[0].id);
+          setActiveCourse((takeCourseHint(processedData.courses, "registrationId") || processedData.courses[0]).id);
         }
         setLoading(false);
       } catch (err) {

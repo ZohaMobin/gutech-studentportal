@@ -3,103 +3,145 @@ import { createRoot } from "react-dom/client";
 import { act } from "react";
 import axios from "axios";
 import Dashboard from "./dashboardPage";
+import { DAY_NAMES } from "../../utils/studentDashboard";
 
 jest.mock("axios");
-jest.mock("../ClassSchedule/ClassSchedule", () => () => <div data-testid="schedule">schedule</div>);
+jest.mock("lucide-react", () => new Proxy({}, { get: () => () => null }));
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({ useNavigate: () => mockNavigate }), { virtual: true });
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const student = (over = {}) => ({
-  userId: { name: "Ahmed Hassan" }, rollNumber: "26G-BCS001", currentSemester: 3,
-  program: { name: "Bachelor of Science in Computer Science", code: "BSCS" },
-  department: { name: "Electrical Engineering", code: "EE" },
-  ...over,
-});
-const results = { courses: [{ courseId: "c1", code: "CS101", name: "Programming", totals: { weightedMarks: 10, gradedWeight: 20, percentageSoFar: 50 } }] };
-const attendance = { summary: { percentage: "88", totalClasses: 10, present: 9, absent: 1, late: 0 } };
+const todayName = DAY_NAMES[new Date().getDay()];
+const student = { userId: { name: "Syed Ali Hassan Khan" }, rollNumber: "26G-BCS001", currentSemester: 3, CGPA: 3.4, program: { name: "BS Computer Science", code: "BSCS" }, department: { name: "Computer Science", code: "CS" } };
+const course = (id, code, name, over = {}) => ({ courseId: id, registrationId: `reg-${id}`, code, name, creditHours: 3, term: { displayName: "Fall 2026" }, totals: { percentageSoFar: 0, gradedWeight: 0, missingCount: 0 }, assessments: [], ...over });
+const summary = (total, present, late = 0) => ({ summary: { totalClasses: total, present, late, absent: total - present - late, percentage: 0 }, records: [] });
+const klass = (id, courseId, name, start, end) => ({ _id: id, courseId: { _id: courseId, code: "X", name }, teacherId: { userId: { name: "Dr. T" } }, sectionId: { section: "A" }, timeSlot: { startTime: start, endTime: end, room: "SL" } });
 
-const deferred = () => { let resolve; let reject; const promise = new Promise((res, rej) => { resolve = res; reject = rej; }); return { promise, resolve, reject }; };
-let container; let root; let studentReq; let resultsReq;
+let container; let root;
 const wait = (ms = 0) => act(async () => { await new Promise((r) => setTimeout(r, ms)); });
+const click = (el) => act(async () => { el.dispatchEvent(new MouseEvent("click", { bubbles: true })); });
+const text = () => container.textContent;
 
-const mount = async ({ width = 1200 } = {}) => {
-  window.innerWidth = width;
-  studentReq = deferred(); resultsReq = deferred();
-  axios.get.mockImplementation((url) => {
-    if (url.includes("/api/students/attendance/")) return Promise.resolve({ data: attendance });
-    if (url.includes("/api/students/")) return studentReq.promise;
-    if (url.includes("/api/results/me")) return resultsReq.promise;
-    return Promise.resolve({ data: [] });
+const mount = async ({ results = { courses: [] }, schedule = {}, attendance = {}, fail = [] } = {}) => {
+  sessionStorage.setItem("token", "t");
+  sessionStorage.setItem("user", JSON.stringify({ studentId: "st1", name: "Syed Ali Hassan Khan" }));
+  axios.get.mockImplementation(async (url) => {
+    const failing = fail.some((part) => url.includes(part));
+    if (failing) throw Object.assign(new Error("boom"), { response: { data: { message: "Server is down" } } });
+    if (url.includes("/api/students/attendance/")) return { data: attendance[url.split("/").pop()] || summary(0, 0) };
+    if (url.includes("/api/students/")) return { data: student };
+    if (url.includes("/api/results/me")) return { data: results };
+    if (url.includes("/section-schedules/student/")) return { data: schedule };
+    return { data: {} };
   });
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
   await act(async () => { root.render(<Dashboard />); });
-  await wait();
+  await wait(30);
 };
-const detail = (label) => [...container.querySelectorAll(".detail-item")].find((d) => d.querySelector(".detail-label").textContent === label).querySelector(".detail-value");
-const card = (cls) => container.querySelector(`.${cls}`);
+beforeEach(() => { jest.spyOn(console, "error").mockImplementation(() => {}); });
+afterEach(() => { act(() => root.unmount()); container.remove(); sessionStorage.clear(); jest.restoreAllMocks(); jest.clearAllMocks(); });
 
-beforeEach(() => {
-  sessionStorage.setItem("token", "t");
-  sessionStorage.setItem("user", JSON.stringify({ studentId: "st1", name: "Ahmed Hassan" }));
-  jest.spyOn(console, "error").mockImplementation(() => {});
-  jest.spyOn(console, "warn").mockImplementation(() => {});
+test("the page never shows the semester or the CGPA, whatever the record says", async () => {
+  await mount({ results: { courses: [course("a", "CS-1", "Databases")] } });
+  expect(text()).not.toMatch(/semester/i);
+  expect(text()).not.toMatch(/cgpa|gpa/i);
+  expect(text()).not.toContain("3.4");
+  expect(text()).toMatch(/Program\s*BS Computer Science/);
+  expect(text()).toMatch(/Fall 2026/);
 });
-afterEach(() => { act(() => root.unmount()); container.remove(); jest.restoreAllMocks(); });
 
-test("while the record is on its way every detail is an inline placeholder, under the same labels as the loaded page", async () => {
+test("the avatar shows two initials, not one per name", async () => {
   await mount();
-  const labels = [...container.querySelectorAll(".detail-label")].map((l) => l.textContent);
-  expect(labels).toEqual(["Roll No:", "Program:", "Semester:", "Department:"]);        // not "Year:", which vanished on load
-  for (const label of labels) expect(detail(label).querySelector(".ld-chip")).not.toBeNull();
-  expect(container.textContent).not.toContain("st1");                                    // the database id is not a roll number
-  expect(container.textContent).not.toMatch(/\bCS\b/);                                   // and no program is assumed
-  expect(container.textContent).toContain("Ahmed Hassan");                               // the name is already known from login
+  expect(container.querySelector(".sd-avatar").textContent).toBe("SK");
+  expect(text()).toMatch(/, Ali/);       // the title "Syed" is skipped: it is not the first name
 });
 
-test("the details appear as soon as the record arrives, while the cards are still loading", async () => {
-  await mount();
-  await act(async () => { studentReq.resolve({ data: student() }); });
-  await wait();
-  expect(detail("Roll No:").textContent).toBe("26G-BCS001");
-  expect(detail("Program:").textContent).toBe("Bachelor of Science in Computer Science");
-  expect(detail("Department:").textContent).toBe("Electrical Engineering");
-  expect(detail("Semester:").textContent).toBe("3");
-  expect(container.querySelector(".student-details .ld-chip")).toBeNull();
-  expect(card("attendance-card").querySelector(".ld-inline")).not.toBeNull();            // still on its way
-  expect(card("marks-card").querySelector(".ld-inline")).not.toBeNull();
-  expect(container.querySelector('[data-testid="schedule"]')).not.toBeNull();            // the timetable starts loading straight away
+test("a brand-new student: dashes and plain messages, not fake zeros", async () => {
+  await mount({ results: { courses: [] }, schedule: {} });
+  expect(text()).toMatch(/Attendance—/);
+  expect(text()).toMatch(/Courses—|Courses0/);
+  expect(text()).toMatch(/Your timetable isn't published yet/);
+  expect(text()).toMatch(/not registered in any courses/);
+  expect(text()).not.toMatch(/0%/);
 });
 
-test("the cards fill in when their data arrives", async () => {
-  await mount();
-  await act(async () => { studentReq.resolve({ data: student() }); });
-  await act(async () => { resultsReq.resolve({ data: results }); });
-  await wait(20);
-  expect(card("attendance-card").querySelector(".ld-inline")).toBeNull();
-  expect(card("attendance-card").textContent).toContain("88%");
-  expect(card("marks-card").textContent).toContain("50.0% so far");
+test("attendance below the minimum is flagged with how many classes it takes to recover, and the bar carries the 75% line", async () => {
+  await mount({
+    results: { courses: [course("a", "CS-1", "Databases", { totals: { percentageSoFar: 130, gradedWeight: 40, missingCount: 1 }, assessments: [{}, {}, {}] }), course("b", "CS-2", "Networks")] },
+    attendance: { a: summary(16, 11), b: summary(10, 10) },
+  });
+  expect(text()).toMatch(/Attendance below 75%/);
+  expect(text()).toMatch(/Databases · 69% · attend the next 4 classes to recover/);
+  expect(text()).toMatch(/Attendance81%/);                            // 21 of 26 classes, pooled
+  expect(text()).toMatch(/Minimum 75%/);
+  expect(container.querySelectorAll(".sd-bar u").length).toBe(2);     // the 75% marker on each attendance bar
+  const marksBar = [...container.querySelectorAll(".sd-metric")][1].querySelector("i");
+  expect(marksBar.style.width).toBe("100%");                           // bonus marks never draw a bar past full
+  expect(text()).toMatch(/100% · 2 of 3 graded/);
 });
 
-test("semester 0 is shown as 0, not as missing", async () => {
-  await mount();
-  await act(async () => { studentReq.resolve({ data: student({ currentSemester: 0 }) }); });
-  await wait();
-  expect(detail("Semester:").textContent).toBe("0");
+test("a request that fails says so, instead of looking like there is nothing", async () => {
+  await mount({ fail: ["/api/results/me"] });
+  expect(text()).toMatch(/Couldn't load your courses/);
+  expect(text()).not.toMatch(/You're all caught up/);
 });
 
-test("on a small screen the program and department show their own codes, not a hard-coded one", async () => {
-  await mount({ width: 500 });
-  await act(async () => { studentReq.resolve({ data: student() }); });
-  await wait();
-  expect(detail("Program:").textContent).toBe("BSCS");
-  expect(detail("Department:").textContent).toBe("EE");
+test("one course whose attendance cannot be loaded does not break the others", async () => {
+  await mount({ results: { courses: [course("a", "CS-1", "Databases"), course("b", "CS-2", "Networks")] }, attendance: { a: summary(10, 9) }, fail: ["/attendance/b"] });
+  expect(text()).toMatch(/90% · 9 of 10 classes/);
+  expect(text()).toMatch(/Couldn't load/);
 });
 
-test("if the record cannot be loaded, the details say N/A and the cards say there is no data", async () => {
-  await mount();
-  await act(async () => { studentReq.reject(new Error("boom")); });
-  await wait();
-  for (const label of ["Roll No:", "Program:", "Semester:", "Department:"]) expect(detail(label).textContent).toBe("N/A");
-  expect(card("attendance-card").textContent).toContain("No attendance data");
+test("today's classes show the live class and how finished ones were marked, with the teacher", async () => {
+  const now = new Date();
+  const hh = (n) => `${String(Math.min(Math.max(now.getHours() + n, 0), 23)).padStart(2, "0")}:00`;
+  const records = [{ date: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5).toISOString(), slotNumber: 1, status: "present" }];
+  await mount({
+    results: { courses: [course("a", "CS-1", "Databases")] },
+    schedule: { [todayName]: [klass("1", "a", "Databases", "00:00", "00:01"), klass("2", "a", "Databases", hh(0), `${String(Math.min(now.getHours() + 1, 23)).padStart(2, "0")}:59`)] },
+    attendance: { a: { ...summary(1, 1), records } },
+  });
+  expect(text()).toMatch(/Dr\. T/);
+  expect(text()).toMatch(/Present/);
+  expect(text()).toMatch(/Live now/);
+});
+
+test("a row opens Attendance on that course", async () => {
+  await mount({ results: { courses: [course("a", "CS-1", "Databases")] }, attendance: { a: summary(10, 9) } });
+  await click([...container.querySelectorAll(".sd-metric")][0]);
+  expect(mockNavigate).toHaveBeenCalledWith("/main/attendance");
+  expect(JSON.parse(sessionStorage.getItem("dashboard:course"))).toEqual({ courseId: "a", registrationId: "reg-a" });
+});
+
+test("everything failing shows a retry, and retrying loads again", async () => {
+  await mount({ fail: ["/api/"] });
+  expect(container.querySelector('[role="alert"]').textContent).toMatch(/Server is down/);
+  axios.get.mockClear();
+  await click(container.querySelector(".sd-error button"));
+  await wait(10);
+  expect(axios.get).toHaveBeenCalled();
+});
+
+test("refresh fetches again without going back to the skeleton", async () => {
+  await mount({ results: { courses: [course("a", "CS-1", "Databases")] }, attendance: { a: summary(10, 9) } });
+  axios.get.mockClear();
+  await click(container.querySelector(".sd-foot .sd-link"));
+  expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+  await wait(30);
+  expect(axios.get).toHaveBeenCalled();
+  expect(text()).toMatch(/Updated \d\d:\d\d/);
+});
+
+test("low marks show up in Needs your attention and turn the marks figure amber", async () => {
+  await mount({
+    results: { courses: [course("a", "CS-1", "Databases", { totals: { percentageSoFar: 38, gradedWeight: 40, ordinaryWeight: 100, missingCount: 1 }, assessments: [{}, {}, {}] })] },
+    attendance: { a: summary(10, 10) },
+  });
+  expect(text()).toMatch(/Marks below 50% so far/);
+  expect(text()).toMatch(/Databases · 38% on the 40% graded so far/);
+  expect(container.querySelector(".sd-metric-text.is-warn").textContent).toMatch(/38%/);
+  await click(container.querySelector(".sd-attention button"));
+  expect(mockNavigate).toHaveBeenCalledWith("/main/marks");
 });

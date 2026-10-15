@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './sidebar.css';
+import { initialsOf } from '../../../utils/studentDashboard';
 
 const Sidebar = ({ isOpen, activePage, onNavClick }) => {
   const navigate = useNavigate();
@@ -51,11 +52,10 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
       <div className="sidebar-footer">
         <div className="sidebar-footer-content">
           <div className="user-avatar-small">
-            <span>GU</span>
+            <span>{initialsOf(user?.name)}</span>
           </div>
           <div className="user-info">
             <span className="user-name-small">{user?.name}</span>
-            <a href="#" className="user-profile-link">View Profile</a>
           </div>
         </div>
       </div>

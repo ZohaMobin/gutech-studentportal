@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Calendar, Search, Users, AlertCircle, BookOpen } from 'lucide-react';
 import './Attendance.css';
+import { takeCourseHint } from '../../utils/dashboardHint';
 
 const Attendance = () => {
   // State variables
@@ -100,7 +101,7 @@ const Attendance = () => {
         setCourses(activeCourses);
         
         if (activeCourses.length > 0 && !activeCourse) {
-          setActiveCourse(activeCourses[0].id);
+          setActiveCourse((takeCourseHint(activeCourses) || activeCourses[0]).id);
           fetchCourseAttendance(activeCourses[0].id);
         }
       } else {
