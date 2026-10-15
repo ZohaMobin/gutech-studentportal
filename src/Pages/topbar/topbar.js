@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./topbar.css";
+import { initialsOf } from "../../utils/studentDashboard";
 
 const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -44,7 +45,7 @@ const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
           {/* User profile */}
           <div className="user-profile">
             <div className="user-avatar" onClick={toggleProfileMenu}>
-              <span>GU</span>
+              <span>{initialsOf(user?.name)}</span>
             </div>
 
             {/* Profile dropdown menu */}
