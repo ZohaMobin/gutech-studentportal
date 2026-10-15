@@ -44,16 +44,33 @@ export const classesOn = (schedule, date) => {
 
 export const hasAnyClass = (schedule) => Object.values(schedule || {}).some((list) => Array.isArray(list) && list.length > 0);
 
+// Back-to-back periods of one course (a lab printed as 8:30 and 10:10) are one session; a real gap makes a new one.
+const SAME_SESSION_GAP = 30;   // minutes: the break between consecutive periods is 10-15
+
 // recordsByCourse: { courseId: [{ date, slotNumber, status }] }. A finished class shows how it was marked, or null if it was not yet.
+// A teacher may take one attendance for a whole session or one per period, so: with a record for every period, each period gets its own;
+// otherwise a record covers its whole session.
 export const todaysClasses = (schedule, recordsByCourse, now) => {
   const today = dateKey(now);
   const minutes = nowMinutes(now);
-  const classes = classesOn(schedule, now).map(({ item, courseKey, ordinal }) => {
+  const rows = classesOn(schedule, now);
+  const sessionIndex = new Map();
+  const periods = {};
+  for (const { item, courseKey } of rows) {
+    const mine = (periods[courseKey] = periods[courseKey] || { count: 0, index: -1, lastEnd: -Infinity });
+    const start = minutesOf(item.timeSlot.startTime);
+    if (start - mine.lastEnd > SAME_SESSION_GAP) mine.index += 1;
+    mine.count += 1; mine.lastEnd = Math.max(mine.lastEnd, minutesOf(item.timeSlot.endTime));
+    sessionIndex.set(item._id, mine.index);
+  }
+  const classes = rows.map(({ item, courseKey, ordinal }) => {
     const start = minutesOf(item.timeSlot.startTime);
     const end = minutesOf(item.timeSlot.endTime);
     const state = minutes >= end ? "done" : minutes >= start ? "live" : "later";
     const slotsToday = (recordsByCourse[courseKey] || []).filter((record) => dateKey(new Date(record.date)) === today).sort((a, b) => a.slotNumber - b.slotNumber);
-    return { item, courseKey, state, status: slotsToday[ordinal]?.status || null, minutesUntil: start - minutes };
+    const perPeriod = slotsToday.length >= periods[courseKey].count;
+    const record = perPeriod ? slotsToday[ordinal] : slotsToday[sessionIndex.get(item._id)];
+    return { item, courseKey, state, status: record?.status || null, minutesUntil: start - minutes };
   });
   const firstLater = classes.findIndex((entry) => entry.state === "later");
   return classes.map((entry, index) => ({ ...entry, next: index === firstLater }));
