@@ -105,3 +105,20 @@ test("attendance alerts come before marks alerts", () => {
   ], { t: { totalClasses: 16, present: 11, late: 0, absent: 5 } });
   expect(attentionItems(rows).map((i) => i.kind)).toEqual(["below", "marks"]);
 });
+
+test("one attendance record covers a session printed as two back-to-back rows; a record per period gives each its own", () => {
+  const twoRows = { Thursday: [cls("p1", "lab", "08:30", "09:55", "Web Tech Lab"), cls("p2", "lab", "10:10", "11:35", "Web Tech Lab")] };
+  const afterBoth = new Date(2026, 9, 15, 12, 0);
+  const at = (slot, status) => ({ date: new Date(2026, 9, 15, 5).toISOString(), slotNumber: slot, status });
+  expect(todaysClasses(twoRows, { lab: [at(1, "absent")] }, afterBoth).map((c) => c.status)).toEqual(["absent", "absent"]);
+  expect(todaysClasses(twoRows, { lab: [at(1, "present"), at(2, "absent")] }, afterBoth).map((c) => c.status)).toEqual(["present", "absent"]);
+  expect(todaysClasses(twoRows, {}, afterBoth).map((c) => c.status)).toEqual([null, null]);
+});
+
+test("a morning and an afternoon class of one course are separate sessions, each with its own record", () => {
+  const split = { Thursday: [cls("m", "db", "08:30", "09:55", "Databases"), cls("a", "db", "14:00", "15:25", "Databases")] };
+  const evening = new Date(2026, 9, 15, 18, 0);
+  const at = (slot, status) => ({ date: new Date(2026, 9, 15, 5).toISOString(), slotNumber: slot, status });
+  expect(todaysClasses(split, { db: [at(1, "present"), at(2, "absent")] }, evening).map((c) => c.status)).toEqual(["present", "absent"]);
+  expect(todaysClasses(split, { db: [at(1, "present")] }, evening).map((c) => c.status)).toEqual(["present", null]);       // only the morning one is recorded so far: the afternoon one is not shown as present
+});
