@@ -119,7 +119,7 @@ test("everything failing shows a retry, and retrying loads again", async () => {
   await mount({ fail: ["/api/"] });
   expect(container.querySelector('[role="alert"]').textContent).toMatch(/Server is down/);
   axios.get.mockClear();
-  await click(container.querySelector(".sd-error button"));
+  await click(container.querySelector(".es-btn"));
   await wait(10);
   expect(axios.get).toHaveBeenCalled();
 });

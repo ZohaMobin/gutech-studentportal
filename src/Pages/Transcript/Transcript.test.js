@@ -4,6 +4,7 @@ import { act } from "react";
 import axios from "axios";
 import Transcript from "./Transcript";
 
+jest.mock("lucide-react", () => new Proxy({}, { get: () => () => null }));
 jest.mock("axios");
 jest.mock("../../Components/PrintButton/PrintButton", () => () => <button type="button">Print</button>);
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
