@@ -1,266 +1,211 @@
-import Loading from '../../Components/Loading/Loading';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { showToast, TOAST_TYPES } from '../../Components/Toast/Toast';
-import './ClassSchedule.css';
-import { buildPeriods, periodIndexOf, to12Hour, to12HourRange } from '../../utils/timetablePeriods';
-import { assignCardColors, cardStyle } from '../../utils/scheduleColors';
-import { messageOf, isNetworkError, NETWORK_MESSAGE } from '../../utils/apiMessage';
-import ErrorState from '../../Components/ErrorState/ErrorState';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { CalendarDays } from "lucide-react";
+import ErrorState from "../../Components/ErrorState/ErrorState";
+import { messageOf } from "../../utils/apiMessage";
+import { to12Hour } from "../../utils/timetablePeriods";
+import { hasAnyClass } from "../../utils/studentDashboard";
+import {
+  breaksOf, classesOfDay, courseColors, courseKey, dayAgenda, defaultDay, isSameDay, teacherChipOf, teachersOf, visibleDays, weekAxis, weekDates,
+} from "../../utils/timetableView";
+import "./ClassSchedule.css";
 
-const ClassSchedule = ({ isDashboard }) => {
-  const [schedule, setSchedule] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [retryCount, setRetryCount] = useState(0);
-  const [teacherNames, setTeacherNames] = useState({});
-  const [sectionColors, setSectionColors] = useState({});
-  const MAX_RETRIES = 3;
+const apiUrl = process.env.REACT_APP_BACKEND_URL;
+const PX_PER_MINUTE = 56 / 60;            // one hour is 56px tall on the week view
+const SHORT_CLASS = 50;                    // minutes: a block shorter than this shows only its name and time
+const classes = (n) => `${n} ${n === 1 ? "class" : "classes"}`;
+const hourLabel = (minutes) => { const h = Math.floor(minutes / 60); const m = minutes % 60; return `${h % 12 || 12}${m ? `:${String(m).padStart(2, "0")}` : ""}${h >= 12 ? "p" : "a"}`; };
+const duration = (minutes) => (minutes >= 60 ? `${Math.floor(minutes / 60)}h${minutes % 60 ? ` ${minutes % 60}m` : ""}` : `${minutes} min`);
+const timeRange = (item) => `${to12Hour(item.timeSlot.startTime).replace(/ (AM|PM)$/, "")}–${to12Hour(item.timeSlot.endTime)}`;
+const roomOf = (item) => (String(item.timeSlot.room || "").toUpperCase() === "ONLINE" ? "Online" : item.timeSlot.room || "");
 
-  const apiUrl = process.env.REACT_APP_BACKEND_URL;
+const useClock = () => {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => { const timer = setInterval(() => setNow(new Date()), 60000); return () => clearInterval(timer); }, []);
+  return now;
+};
 
-  // Function to fetch teacher names
-  const fetchTeacherNames = async (teacherIds) => {
-    try {
-      const uniqueTeacherIds = [...new Set(teacherIds)];
-      const teacherNamesMap = {};
-
-      for (const teacherId of uniqueTeacherIds) {
-        if (!teacherNamesMap[teacherId]) {
-          const response = await axios.get(`${apiUrl}/api/teachers/${teacherId}`, {
-            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-          });
-          
-          if (response.data && response.data.userId && response.data.userId.name) {
-            teacherNamesMap[teacherId] = response.data.userId.name;
-          } else {
-            teacherNamesMap[teacherId] = 'Teacher TBA';
-          }
-        }
-      }
-
-      setTeacherNames(teacherNamesMap);
-    } catch (err) {
-      console.error('Error fetching teacher names:', err);
-      // Don't throw error here, just log it and continue with default names
-    }
-  };
-
-  // Get course color for a schedule
-  const getSectionColor = (schedule) => {
-    if (!schedule || !schedule.courseId) return '#f8f9fa';
-    
-    // Get the course ID or code from the schedule
-    let courseIdentifier = '';
-    
-    if (typeof schedule.courseId === 'object') {
-      // Prioritize course code (ICT101) over internal ID when available for more visible colors
-      courseIdentifier = schedule.courseId.code || schedule.courseId._id || '';
-    } else if (typeof schedule.courseId === 'string') {
-      courseIdentifier = schedule.courseId;
-    }
-    
-    if (courseIdentifier && sectionColors[courseIdentifier]) return sectionColors[courseIdentifier];
-
-    return '#f8f9f9'; // Default color if no identifier found
-  };
-
-  const fetchSchedule = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const userData = JSON.parse(sessionStorage.getItem('user'));
-      if (!userData || !userData.studentId) {
-        throw new Error('Student ID not found');
-      }
-      
-      const response = await axios.get(`${apiUrl}/api/section-schedules/student/${userData.studentId}`, {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-      });
-      
-      if (!response.data) {
-        throw new Error('Invalid response data structure');
-      }
-      
-      // One colour per course, handed out in order so no two courses on the timetable share one.
-      const courseKeys = [];
-      Object.values(response.data).forEach(daySchedules => {
-        daySchedules.forEach(schedule => {
-          if (typeof schedule.courseId === 'object') courseKeys.push(schedule.courseId?.code || schedule.courseId?._id);
-          else if (typeof schedule.courseId === 'string') courseKeys.push(schedule.courseId);
-        });
-      });
-      const newSectionColors = assignCardColors(courseKeys);
-      setSectionColors(newSectionColors);
-      
-      setSchedule(response.data);
-      setLoading(false);
-      setError(null);
-      setRetryCount(0);
-
-      // Extract teacher names from schedule data (if populated) or fetch separately
-      const teacherNamesMap = {};
-      const teacherIdsToFetch = [];
-      
-      Object.values(response.data).flat().forEach(schedule => {
-        if (schedule && schedule.teacherId && schedule.teacherId._id) {
-          const teacherId = schedule.teacherId._id;
-          // If teacher name is already populated, use it
-          if (schedule.teacherId.userId && schedule.teacherId.userId.name) {
-            teacherNamesMap[teacherId] = schedule.teacherId.userId.name;
-          } else {
-            // Otherwise, add to list to fetch separately
-            if (!teacherIdsToFetch.includes(teacherId)) {
-              teacherIdsToFetch.push(teacherId);
-            }
-          }
-        }
-      });
-
-      // Set teacher names from populated data
-      if (Object.keys(teacherNamesMap).length > 0) {
-        setTeacherNames(prev => ({ ...prev, ...teacherNamesMap }));
-      }
-
-      // Fetch remaining teacher names if needed
-      if (teacherIdsToFetch.length > 0) {
-        await fetchTeacherNames(teacherIdsToFetch);
-      }
-    } catch (err) {
-      console.error('Error fetching schedule:', err);
-      setError(messageOf(err, 'Failed to fetch schedule'));
-      setLoading(false);
-      
-      if (retryCount < MAX_RETRIES) {
-        const delay = Math.pow(2, retryCount) * 1000;
-        setTimeout(() => {
-          setRetryCount(prev => prev + 1);
-          setLoading(true);
-          fetchSchedule();
-        }, delay);
-      } else {
-        showToast(isNetworkError(err) ? NETWORK_MESSAGE : 'Failed to load schedule after multiple attempts. Please try again later.', TOAST_TYPES.ERROR);
-      }
-    }
-  };
-
+// A phone has no room for five columns: the day view is used there.
+const useNarrow = (width = 640) => {
+  const query = `(max-width: ${width}px)`;
+  const read = () => (typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia(query).matches : false);
+  const [narrow, setNarrow] = useState(read);
   useEffect(() => {
-    let mounted = true;
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return undefined;
+    const list = window.matchMedia(query);
+    const onChange = () => setNarrow(list.matches);
+    list.addEventListener?.("change", onChange);
+    return () => list.removeEventListener?.("change", onChange);
+  }, [query]);
+  return narrow;
+};
 
-    const loadSchedule = async () => {
-      if (mounted) {
-        await fetchSchedule();
-      }
-    };
-
-    loadSchedule();
-
-    return () => {
-      mounted = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+// The timetable, and the term it belongs to. The term is only a label: if it cannot be read, the page simply has no pill.
+const useTimetable = () => {
+  const [state, setState] = useState({ status: "loading" });
+  const load = useCallback(async () => {
+    setState({ status: "loading" });
+    try {
+      const user = JSON.parse(sessionStorage.getItem("user") || "null");
+      if (!user?.studentId) throw new Error("Please sign in again.");
+      const headers = { Authorization: `Bearer ${sessionStorage.getItem("token")}` };
+      const fetchSchedule = () => axios.get(`${apiUrl}/api/section-schedules/student/${user.studentId}`, { headers });
+      const term = axios.get(`${apiUrl}/api/academic-years/current`, { headers }).then((r) => r.data).catch(() => null);
+      let response;
+      try { response = await fetchSchedule(); } catch (first) { await new Promise((r) => setTimeout(r, 1200)); response = await fetchSchedule().catch(() => { throw first; }); }   // one quiet second try, for a patchy connection
+      if (!response.data) throw new Error("The timetable could not be read.");
+      const label = await term;
+      setState({ status: "ready", schedule: response.data, term: label?.displayName || (label?.semesterType && label?.year ? `${label.semesterType} ${label.year}` : "") });
+    } catch (error) {
+      setState({ status: "error", message: messageOf(error, "Failed to fetch schedule") });
+    }
   }, []);
+  useEffect(() => { load(); }, [load]);
+  return [state, load];
+};
 
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  
-  // The rows are this student's real class windows (8:30 - 9:55, ...), not whole hours.
-  const formatTime = to12Hour;
+const Skeleton = () => (
+  <div className="tt" aria-busy="true">
+    <span className="ld-sr" role="status">Loading your timetable…</span>
+    <div className="ld-bar" style={{ height: 30, width: "34%", marginBottom: 18 }} />
+    <div className="ld-bar" style={{ height: 420 }} />
+  </div>
+);
 
-  // The row's time: the full range, shorter on the dashboard where space is tight.
-  const getTimeLabel = (timeSlot) => (isDashboard ? to12HourRange(timeSlot.start, timeSlot.end) : `${formatTime(timeSlot.start)} - ${formatTime(timeSlot.end)}`);
+const ClassSchedule = () => {
+  const now = useClock();
+  const narrow = useNarrow();
+  const [state, reload] = useTimetable();
+  const [view, setView] = useState("week");
+  const [chosenDay, setChosenDay] = useState(null);
 
-  if (loading) {
-    return (
-      <div style={{ padding: '1.25rem' }}><Loading variant="table" rows={6} label={`Loading your schedule${retryCount > 0 ? ` (attempt ${retryCount + 1} of ${MAX_RETRIES + 1})` : ''}`} /></div>
-    );
-  }
+  const model = useMemo(() => {
+    if (state.status !== "ready") return null;
+    const { schedule } = state;
+    const days = visibleDays(schedule);
+    const dates = weekDates(now, days);
+    return { days, dates, axis: weekAxis(schedule, days), colors: courseColors(schedule), any: hasAnyClass(schedule) };
+  }, [state, now]);
 
-  if (error) {
-    return (
-      <ErrorState message={error} title={error === NETWORK_MESSAGE ? undefined : "Your timetable could not be loaded"} onRetry={() => { setRetryCount(0); setLoading(true); fetchSchedule(); }} />
-    );
-  }
+  if (state.status === "loading") return <Skeleton />;
+  if (state.status === "error") return <div className="tt"><div className="tt-card"><ErrorState message={state.message} title={state.message.startsWith("Couldn't reach") ? undefined : "Your timetable could not be loaded"} onRetry={reload} /></div></div>;
 
-  // Check if there are any schedules
-  const hasSchedules = Object.values(schedule).some(daySchedules => daySchedules && daySchedules.length > 0);
-  if (!hasSchedules) {
-    return (
-      <div className="no-schedule-message">
-        <p>No classes scheduled yet</p>
-        <p className="subtext">Your class schedule will appear here once it's available</p>
+  const { schedule, term } = state;
+  const { days, dates, axis, colors, any } = model;
+  const effectiveView = narrow ? "day" : view;
+  const day = chosenDay && days.includes(chosenDay) ? chosenDay : defaultDay(days, schedule, now);
+  const colorOf = (item) => colors[courseKey(item)] || {};
+  // The agenda cards stay white and carry only the course tone on their left edge; the week blocks are filled with it.
+  const accentOf = (item) => { const { "--card-accent": accent } = colorOf(item); return accent ? { "--card-accent": accent } : {}; };
+
+  const header = (
+    <header className="tt-header">
+      <div className="tt-title">
+        <h1>Timetable</h1>
+        <p className="tt-sub"><span>Your weekly classes</span>{term && <span className="tt-term">{term}</span>}</p>
       </div>
-    );
-  }
-
-  const periods = buildPeriods(days.flatMap(day => schedule[day] || []));
-
-  return (
-    <div className="schedule-container">
-      {/* Only show the heading when not in dashboard mode */}
-      {!isDashboard && <h2 className="heading">My Class Schedule</h2>}
-      <div className="table-responsive">
-        <table className="schedule-table">
-          <thead>
-            <tr>
-              <th>Time</th>
-              {days.map(day => (
-                <th key={day}>{isDashboard && window.innerWidth < 576 ? day.substring(0, 3) : day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {periods.map((timeSlot, rowIndex) => (
-              <tr key={`${timeSlot.start}-${timeSlot.end}`}>
-                <td className="time-cell">
-                  <div className="time-slot-label">{getTimeLabel(timeSlot)}</div>
-                </td>
-                {days.map(day => {
-                  // Every class of this day that belongs in this row, each showing its own times.
-                  const classes = (schedule[day] || []).filter(item => periodIndexOf(item, periods) === rowIndex);
-
-                  return (
-                    <td key={`${day}-${timeSlot.start}`} className="schedule-cell">
-                      {classes.map(item => (
-                        <div
-                          key={item._id}
-                          className="class-item"
-                          style={cardStyle(getSectionColor(item))}
-                        >
-                          <div className="course-info">
-                            <span className="course-code">{item.courseId?.code}</span>
-                            <span className="course-name">{item.courseId?.name}</span>
-                          </div>
-                          <div className="schedule-details">
-                            <div className="teacher-info">
-                              {item.teacherId && item.teacherId._id
-                                ? (item.teacherId.userId?.name || teacherNames[item.teacherId._id] || 'Loading...')
-                                : 'Teacher TBA'}
-                            </div>
-                            <div className="room-info">
-                              Room: {item.timeSlot.room}
-                            </div>
-                            <div className="section-info">
-                              Section {item.sectionId?.section}
-                            </div>
-                            {(!isDashboard || item.timeSlot.startTime !== timeSlot.start || item.timeSlot.endTime !== timeSlot.end) && (
-                              <div className="time-info">
-                                {formatTime(item.timeSlot.startTime)} - {formatTime(item.timeSlot.endTime)}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      {any && !narrow && (
+        <div className="tt-seg" role="group" aria-label="View">
+          <button type="button" className={view === "week" ? "is-on" : ""} aria-pressed={view === "week"} onClick={() => setView("week")}>Week</button>
+          <button type="button" className={view === "day" ? "is-on" : ""} aria-pressed={view === "day"} onClick={() => setView("day")}>Day</button>
+        </div>
+      )}
+    </header>
   );
+
+  if (!any) {
+    return (
+      <div className="tt">
+        {header}
+        <div className="tt-card tt-empty"><CalendarDays size={24} aria-hidden="true" /><strong>Your timetable isn't published yet</strong><p>Your classes will appear here once the timetable is set for this term.</p></div>
+      </div>
+    );
+  }
+
+  const weekView = (
+    <section className="tt-card tt-week" aria-label="Week view">
+      <div className="tt-wkhead" role="row" style={{ gridTemplateColumns: `2.4rem repeat(${days.length}, minmax(0, 1fr))` }}>
+        <div />
+        {dates.map(({ name, short, date }) => <div key={name} role="columnheader" className={isSameDay(date, now) ? "is-today" : ""}>{short} {date.getDate()}</div>)}
+      </div>
+      <div className="tt-wkbody" style={{ gridTemplateColumns: `2.4rem repeat(${days.length}, minmax(0, 1fr))` }}>
+        <div className="tt-hours" style={{ height: (axis.end - axis.start) * PX_PER_MINUTE }}>
+          {axis.ticks.map((tick) => <span key={tick} style={{ top: (tick - axis.start) * PX_PER_MINUTE }}>{hourLabel(tick)}</span>)}
+        </div>
+        {axis.columns.map(({ day: name, blocks }, index) => {
+          const today = isSameDay(dates[index].date, now);
+          const nowMinutes = now.getHours() * 60 + now.getMinutes();
+          return (
+            <div key={name} className={`tt-col ${today ? "is-today" : ""}`} style={{ height: (axis.end - axis.start) * PX_PER_MINUTE }}>
+              {axis.ticks.map((tick) => <i key={tick} className="tt-line" style={{ top: (tick - axis.start) * PX_PER_MINUTE }} />)}
+              {blocks.length === 0 && <span className="tt-none">No classes</span>}
+              {blocks.map(({ item, top, length, lane, cols }) => {
+                const startsAt = axis.start + top;
+                const live = today && nowMinutes >= startsAt && nowMinutes < startsAt + length;
+                const teacher = teacherChipOf(item);
+                return (
+                  <div
+                    key={item._id}
+                    className={`tt-blk ${live ? "is-live" : ""} ${length < SHORT_CLASS ? "is-short" : ""}`}
+                    style={{ ...colorOf(item), top: top * PX_PER_MINUTE, height: length * PX_PER_MINUTE - 2, left: `${(lane / cols) * 100}%`, width: `calc(${100 / cols}% - 2px)` }}
+                    title={`${item.courseId?.name} · ${to12Hour(item.timeSlot.startTime)} – ${to12Hour(item.timeSlot.endTime)} · ${roomOf(item)}${teachersOf(item).length ? ` · ${teachersOf(item).join(", ")}` : ""}`}
+                  >
+                    <b>{item.courseId?.name}</b>
+                    <span>{timeRange(item)} · {roomOf(item)}</span>
+                    {teacher && <span className="tt-blk-teacher">{teacher}</span>}
+                  </div>
+                );
+              })}
+              {today && nowMinutes >= axis.start && nowMinutes <= axis.end && <div className="tt-now" style={{ top: (nowMinutes - axis.start) * PX_PER_MINUTE }} aria-hidden="true" />}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+
+  const selected = dates.find((entry) => entry.name === day) || dates[0];
+  const isToday = isSameDay(selected.date, now);
+  const agenda = dayAgenda(schedule, selected.name, now, isToday);
+  const items = classesOfDay(schedule, selected.name);
+  const gaps = Object.fromEntries(breaksOf(items).map((gap) => [gap.before, gap.minutes]));
+  const dayView = (
+    <section aria-label="Day view">
+      <div className="tt-days" role="tablist" aria-label="Day">
+        {dates.map(({ name, short, date }) => {
+          const count = classesOfDay(schedule, name).length;
+          return (
+            <button key={name} type="button" role="tab" aria-selected={name === selected.name} className={`tt-day ${name === selected.name ? "is-on" : ""} ${isSameDay(date, now) ? "is-today" : ""}`} onClick={() => setChosenDay(name)}>
+              <small>{short}</small><b>{date.getDate()}</b><i>{count || "–"}</i>
+            </button>
+          );
+        })}
+      </div>
+      <div className="tt-day-head"><b>{selected.date.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}</b>{items.length > 0 && <span className="tt-note">{classes(items.length)}</span>}</div>
+      {items.length === 0 ? (
+        <div className="tt-card tt-empty tt-empty-day"><strong>No classes on {selected.name}</strong></div>
+      ) : (
+        <ol className="tt-agenda">
+          {agenda.map(({ item, state: status, next, minutesUntil }) => (
+            <React.Fragment key={item._id}>
+              {gaps[item._id] && <li className="tt-break" aria-label={`${duration(gaps[item._id])} break`}>{duration(gaps[item._id])} break</li>}
+              <li className={`tt-class is-${status}`} style={accentOf(item)}>
+                <div className="tt-time"><b>{to12Hour(item.timeSlot.startTime).replace(/ (AM|PM)$/, "")}</b><span>{to12Hour(item.timeSlot.endTime)}</span></div>
+                <div className="tt-what">
+                  <strong>{item.courseId?.name}{roomOf(item) === "Online" && <em className="tt-online">Online</em>}</strong>
+                  <span className="tt-note">{[roomOf(item) === "Online" ? "" : roomOf(item), teachersOf(item).join(", ")].filter(Boolean).join(" · ")}</span>
+                </div>
+                {status === "live" && <span className="tt-pill is-live">Live now</span>}
+                {next && <span className="tt-pill">{minutesUntil < 60 ? `Next · in ${minutesUntil} min` : `Next · in ${duration(minutesUntil)}`}</span>}
+              </li>
+            </React.Fragment>
+          ))}
+        </ol>
+      )}
+    </section>
+  );
+
+  return <div className="tt">{header}{effectiveView === "week" ? weekView : dayView}</div>;
 };
 
 export default ClassSchedule;
