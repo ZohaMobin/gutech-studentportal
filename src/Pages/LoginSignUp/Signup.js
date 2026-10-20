@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../Components/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { BusyLabel } from "../../Components/Loading/Loading";
 import "./Signup.css";
 import { formMessageOf } from "../../utils/apiMessage";
 import { InlineAlert } from "../../Components/ErrorState/ErrorState";
@@ -18,7 +19,7 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
 
   // Handle login form input changes
   const handleLoginChange = (e) => {
@@ -50,6 +51,7 @@ const Signup = () => {
       const response = await axios.post(`${apiUrl}/api/auth/login`, {
         rollNumber: loginForm.rollNumber,
         password: loginForm.password,
+        portal: "student", // the server refuses other roles here; the check below covers an older server
       });
 
       // Check if the user is a student
@@ -68,48 +70,63 @@ const Signup = () => {
     }
   };
 
-  // Toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  // Already signed in: no reason to show the login page again.
+  if (isAuthenticated) return <Navigate to="/main/dashboard" replace />;
 
   return (
     <div className="auth-page">
       <div className="auth-container login-only">
-        {/* Login Form */}
+        <aside className="brand-panel">
+          <h2>Welcome back</h2>
+          <p>Your timetable, attendance and marks in one place.</p>
+          <ul>
+            <li><i className="fas fa-calendar-alt" aria-hidden="true"></i>Timetable</li>
+            <li><i className="fas fa-clipboard-check" aria-hidden="true"></i>Attendance</li>
+            <li><i className="fas fa-chart-bar" aria-hidden="true"></i>Marks</li>
+          </ul>
+        </aside>
+
         <div className="form-container login-form">
           <form onSubmit={handleLogin}>
-            <h1 className="form-title">Student Login</h1>
-            <p className="form-subtitle">Enter your credentials to access your account</p>
+            <h1 className="form-title">Student sign in</h1>
 
             <InlineAlert message={error} />
 
-            <input type="text" name="rollNumber" placeholder="Roll Number" value={loginForm.rollNumber} onChange={handleLoginChange} disabled={isSubmitting} required />
+            <label className="field-label" htmlFor="rollNumber">Roll number</label>
+            <input id="rollNumber" type="text" name="rollNumber" placeholder="2522-4CS-001" autoComplete="username" value={loginForm.rollNumber} onChange={handleLoginChange} disabled={isSubmitting} required />
 
+            <div className="field-label row">
+              <label htmlFor="password">Password</label>
+              <Link to="/forgot-password" className="forgot-password">Forgot password?</Link>
+            </div>
             <div className="password-field">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password"
+                autoComplete="current-password"
                 value={loginForm.password}
                 onChange={handleLoginChange}
                 disabled={isSubmitting}
                 required
               />
-              <div className="password-toggle" onClick={togglePasswordVisibility} aria-label={showPassword ? "Hide password" : "Show password"}>
-                {showPassword ? <i className="fas fa-eye-slash"></i> : <i className="fas fa-eye"></i>}
-              </div>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
+              >
+                <i className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"} aria-hidden="true"></i>
+              </button>
             </div>
 
-            <Link to="/forgot-password" className="forgot-password">
-              Forgot Your Password?
-            </Link>
-
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Signing In..." : "Sign In"}
+            <button type="submit" className="submit-button" disabled={isSubmitting}>
+              <BusyLabel busy={isSubmitting} busyText="Signing in…" idle="Sign In" />
             </button>
 
-            <p className="help-text">Don't have an account? Contact your administrator to get your credentials.</p>
+            <p className="help-text">No account? Contact your administrator for your credentials.</p>
           </form>
         </div>
       </div>
