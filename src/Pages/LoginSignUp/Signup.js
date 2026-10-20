@@ -88,7 +88,7 @@ const Signup = () => {
 
         <div className="form-container login-form">
           <form onSubmit={handleLogin}>
-            <h1 className="form-title">Student sign in</h1>
+            <h1 className="form-title">Sign in</h1>
 
             <InlineAlert message={error} />
 
