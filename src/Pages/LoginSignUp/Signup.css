@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 125vh;
+  min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
   background-color: #f8f8f8;
@@ -17,9 +17,9 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
-  width: 450px;
+  width: 800px;
   max-width: 100%;
-  min-height: 500px;
+  min-height: 440px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +28,68 @@
 }
 
 .auth-container.login-only {
-  width: 450px;
+  width: 800px;
+}
+
+.brand-panel {
+  flex: 0 0 40%;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 36px;
+  background-color: #991D20;
+  color: #fff;
+  border-radius: 0 110px 110px 0;
+}
+
+.auth-container .brand-panel h2 {
+  margin: 0 0 10px;
+  padding: 0;
+  border: none;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.brand-panel p {
+  margin: 0 0 20px;
+  color: #f6dcdc;
+  font-size: 14px;
+}
+
+.brand-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.brand-panel li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  font-size: 13px;
+  color: #f6dcdc;
+}
+
+.brand-panel li i {
+  width: 16px;
+  text-align: center;
+}
+
+.field-label {
+  align-self: stretch;
+  margin: 12px 0 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #444;
+}
+
+.field-label.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
 .auth-container p {
@@ -107,9 +168,9 @@
 
 .help-text {
   text-align: center;
-  color: #666;
+  color: #777;
   font-size: 12px;
-  margin-top: 20px;
+  margin-top: 16px;
   margin-bottom: 0;
   line-height: 1.5;
 }
@@ -137,18 +198,40 @@
   padding-right: 40px;
 }
 
-.password-toggle {
+.auth-container .password-toggle {
   position: absolute;
   right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
   padding: 8px;
-  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 6px;
   font-size: 14px;
+  letter-spacing: normal;
+  text-transform: none;
   color: #666;
+  cursor: pointer;
   transition: color 0.3s ease;
 }
 
-.password-toggle:hover {
+.auth-container .password-toggle:hover {
+  background: none;
+  transform: translateY(-50%);
   color: #991D20;
+}
+
+.auth-container .password-toggle:focus-visible {
+  outline: 2px solid #991D20;
+  outline-offset: 1px;
+}
+
+.auth-container .submit-button {
+  width: 100%;
+  height: 42px;
+  margin-top: 18px;
+  padding: 0 20px;
 }
 
 .auth-container input {
@@ -183,10 +266,10 @@
 }
 
 
-.forgot-password {
-  align-self: flex-end;
-  font-size: 13px;
-  margin: 5px 0 15px;
+.auth-container .forgot-password {
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
   transition: color 0.3s ease;
 }
 
@@ -195,10 +278,25 @@
   text-decoration: underline;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments: the brand panel becomes a slim banner above the form */
 @media (max-width: 768px) {
-  .auth-container {
-    min-height: 580px;
+  .auth-container,
+  .auth-container.login-only {
+    flex-direction: column;
+    align-items: stretch;
     width: 100%;
+    min-height: 0;
   }
+
+  .brand-panel {
+    flex: none;
+    padding: 20px 24px;
+    border-radius: 0;
+  }
+
+  .auth-container .brand-panel h2 { margin-bottom: 0; font-size: 20px; }
+  .brand-panel p { margin: 4px 0 0; font-size: 13px; }
+  .brand-panel ul { display: none; }
+
+  .login-form { padding: 24px 8px; }
 }
