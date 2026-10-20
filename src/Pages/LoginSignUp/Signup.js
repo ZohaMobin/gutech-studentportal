@@ -77,6 +77,7 @@ const Signup = () => {
     <div className="auth-page">
       <div className="auth-container login-only">
         <aside className="brand-panel">
+          <span className="eyebrow">Student portal</span>
           <h2>Welcome back</h2>
           <p>Your timetable, attendance and marks in one place.</p>
           <ul>
@@ -88,7 +89,6 @@ const Signup = () => {
 
         <div className="form-container login-form">
           <form onSubmit={handleLogin}>
-            <h1 className="form-title">Sign in</h1>
 
             <InlineAlert message={error} />
 
