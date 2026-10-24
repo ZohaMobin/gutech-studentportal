@@ -72,8 +72,9 @@ test("the Day view has a tab per day, today's class states, breaks, and every te
   await mount({ schedule: todays });
   await click(button("Day"));
   expect(container.querySelector(".tt-agenda")).not.toBeNull();
-  expect(container.querySelectorAll('.tt-days [role="tab"]').length).toBe(5);
-  if (now.getHours() >= 3 && now.getHours() < 23) {
+  expect(container.querySelectorAll('.tt-days [role="tab"]').length).toBe(now.getDay() === 0 || now.getDay() === 6 ? 6 : 5);       // a weekend day shows once it has a class
+  const weekend = now.getDay() === 0 || now.getDay() === 6;               // at the weekend the coming week is shown, so nothing is live
+  if (!weekend && now.getHours() >= 3 && now.getHours() < 23) {
     expect(text()).toContain("Live now");
     expect(text()).toContain("Dr. A, Mr. B");
     expect(container.querySelector(".tt-break")).not.toBeNull();
