@@ -61,7 +61,7 @@
   color: var(--d-text);
   background: var(--d-soft);
   padding: 2rem 2rem 0;
-  min-height: calc(125vh - 100px);
+  min-height: calc(var(--fill-vh) - 100px);
 }
 .sd *, .sd *::before, .sd *::after { box-sizing: border-box; }
 
@@ -136,7 +136,7 @@
 .sd-quiet.is-big .sd-link { align-self: center; }
 .sd-quiet.is-ok { background: var(--d-ok-tint); color: var(--d-ok); }
 
-.sd-attention { list-style: none; margin: 0; padding: 0; display: grid; }
+.sd-attention { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }     /* minmax(0,..): a long line must wrap inside the card, not stretch the column past it */
 .sd-attention li { border-top: 1px solid var(--d-line); }
 .sd-attention li:first-child { border-top: 0; }
 .sd-attention button { position: relative; display: flex; align-items: center; gap: 0.75rem; margin: 0 -0.4rem; width: calc(100% + 0.8rem); padding: 0.65rem 0.4rem; border: 0; border-radius: 0.5rem; background: none; font: inherit; text-align: left; cursor: pointer; }
@@ -145,7 +145,7 @@
 .sd-attention button.is-bad::before { background: var(--d-bad); }
 .sd-attention-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .sd-attention-text strong { font-size: 0.9rem; font-weight: 600; }
-.sd-attention-text .sd-note { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sd-attention-text .sd-note { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; }
 .sd-chev { flex: none; color: #94a3b8; }
 .sd-ic { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border-radius: 0.5rem; }
 .sd-ic.is-warn { background: var(--d-warn-tint); color: var(--d-warn); }
@@ -187,3 +187,8 @@
   .sd-facts { gap: 1.25rem; }
 }
 @media (prefers-reduced-motion: reduce) { .sd-bar i { transition: none; } .is-spinning, .sd-class.is-live::before { animation: none; } }
+
+/* A bigger tap area for the small text links on phones and touch screens; a mouse keeps them as they were. */
+@media (max-width: 767px), (pointer: coarse) {
+  .sd-link { min-height: 2.25rem; padding: 0 0.25rem; margin: 0 -0.25rem; }
+}

@@ -14,7 +14,7 @@
   color: var(--t-text);
   background: var(--t-soft);
   padding: 2rem 2rem 0;
-  min-height: calc(125vh - 100px);
+  min-height: calc(var(--fill-vh) - 100px);
 }
 .tt *, .tt *::before, .tt *::after { box-sizing: border-box; }
 
@@ -26,7 +26,7 @@
 .tt-note { font-size: 0.8rem; color: var(--t-muted); }
 
 .tt-seg { display: inline-flex; padding: 2px; border-radius: 0.5rem; background: #eef1f5; }
-.tt-seg button { border: 0; border-radius: 0.4rem; background: transparent; padding: 0.3rem 0.9rem; font: inherit; font-size: 0.8rem; font-weight: 500; color: var(--t-muted); cursor: pointer; }
+.tt-seg button { border: 0; border-radius: 0.4rem; background: transparent; padding: 0.5rem 1rem; font: inherit; font-size: 0.8rem; font-weight: 500; color: var(--t-muted); cursor: pointer; }
 .tt-seg button.is-on { background: #fff; color: var(--t-brand); box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
 .tt-seg button:focus-visible, .tt-day:focus-visible { outline: 2px solid var(--t-brand); outline-offset: 2px; }
 
