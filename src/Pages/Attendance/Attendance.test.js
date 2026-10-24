@@ -56,3 +56,14 @@ test("each record shows its date, day and status", () => {
   expect(first.querySelector(".date-cell").textContent).toBe("2026-09-04");     // newest first
   expect(first.querySelector(".status-badge").textContent).toBe("Late");
 });
+
+test("the course whose attendance is shown is the one highlighted in the list", () => {
+  const active = container.querySelectorAll(".section-item.active");
+  expect(active.length).toBe(1);
+  expect(active[0].textContent).toContain("Programming");
+});
+
+test("every record is listed in the page itself, not in a small scrolling box", () => {
+  expect(container.querySelectorAll(".students-table tbody tr").length).toBe(records.length);
+  expect(container.querySelector(".students-table-container").className).toBe("students-table-container");
+});

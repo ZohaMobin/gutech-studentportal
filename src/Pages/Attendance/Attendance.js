@@ -9,6 +9,9 @@ import { takeCourseHint } from '../../utils/dashboardHint';
 import { messageOf } from '../../utils/apiMessage';
 import ErrorState, { InlineAlert } from '../../Components/ErrorState/ErrorState';
 
+// The picked day as YYYY-MM-DD in the student's own calendar. toISOString() is UTC, which in Pakistan turns midnight of the 7th into the 6th.
+const dayKey = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
 const Attendance = () => {
   // State variables
   const [courses, setCourses] = useState([]);
@@ -103,8 +106,10 @@ const Attendance = () => {
         setCourses(activeCourses);
         
         if (activeCourses.length > 0 && !activeCourse) {
-          setActiveCourse((takeCourseHint(activeCourses) || activeCourses[0]).id);
-          fetchCourseAttendance(activeCourses[0].id);
+          // The course the dashboard pointed at, else the first. It is the one highlighted AND the one whose attendance is loaded.
+          const first = takeCourseHint(activeCourses) || activeCourses[0];
+          setActiveCourse(first);
+          fetchCourseAttendance(first.id);
         }
       } else {
         setCourses([]);
@@ -207,7 +212,7 @@ const Attendance = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
     if (date) {
-      const dateStr = date.toISOString().split('T')[0];
+      const dateStr = dayKey(date);
       const filtered = attendanceRecords.filter(record => record.date === dateStr);
       setFilteredRecords(filtered);
     } else {
@@ -219,7 +224,7 @@ const Attendance = () => {
   useEffect(() => {
     if (!searchTerm) {
       if (selectedDate) {
-        const dateStr = selectedDate.toISOString().split('T')[0];
+        const dateStr = dayKey(selectedDate);
         setFilteredRecords(attendanceRecords.filter(record => record.date === dateStr));
       } else {
         setFilteredRecords(attendanceRecords);
@@ -331,7 +336,7 @@ const Attendance = () => {
                     maxDate={new Date()}
                     dateFormat="yyyy-MM-dd"
                     className="date-input"
-                    placeholderText="Select a date to filter"
+                    placeholderText="Filter by date"
                     isClearable
                     highlightDates={markedDates.map(dateStr => {
                       const [year, month, day] = dateStr.split('-');
@@ -409,7 +414,7 @@ const Attendance = () => {
                   <tr key={index}>
                           <td className="date-cell">{record.date}</td>
                           <td className="attendance-day-cell">{record.day}</td>
-                          <td className="slot-cell">Slot {record.slotNumber}</td>
+                          <td className="slot-cell">Slot {record.slotNumber}<small className="slot-duration">{record.durationMinutes} min</small></td>
                           <td className="duration-cell">{record.durationMinutes} min</td>
                           <td className="status-cell">
                             <span className={`status-badge ${getStatusBadgeClass(record.status)}`}>
