@@ -111,6 +111,7 @@
 }
 
 .user-avatar-small {
+  flex: 0 0 32px;                 /* never squeezed by a long name: it stays a circle */
   width: 32px;
   height: 32px;
   background-color: var(--primary-light);
@@ -124,11 +125,15 @@
 }
 
 .user-info {
+  min-width: 0;
   margin-left: 10px;
 }
 
 .user-name-small {
-  display: block;
+  display: -webkit-box;           /* a very long name wraps to two lines, then is cut with an ellipsis */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   font-size: 14px;
   font-weight: 500;
   color: var(--text-dark);
