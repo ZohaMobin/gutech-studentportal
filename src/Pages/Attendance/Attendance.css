@@ -725,3 +725,19 @@
   /* the duration column is hidden here, so it moves under the slot */
   .slot-duration { display: block; margin-top: 0.1rem; font-size: 0.75rem; color: var(--text-secondary); }
 }
+
+/* Phone: every pixel counts in the records table. With the page, card and cell paddings at their desktop sizes the table was 50px wider than
+   its card, which pushed the Status badge (the whole point of the page) partly out of view. */
+@media (max-width: 520px) {
+  .attendance-container { padding: 0.5rem; }
+  .attendance-main { padding: 0.6rem; }
+  .attendance-controls { padding: 0.5rem; }
+  .students-table th, .students-table td { padding-left: 0.35rem; padding-right: 0.35rem; }
+  .students-table th, .students-table td { font-size: 0.8rem; }
+  .status-badge { padding: 0.3rem 0.55rem; font-size: 0.72rem; }
+}
+
+/* The narrowest phones (320px): the weekday is the one column that gives way, the date already says which day it was. */
+@media (max-width: 340px) {
+  .students-table th:nth-child(2), .students-table td.attendance-day-cell { display: none; }
+}
