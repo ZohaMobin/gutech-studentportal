@@ -90,8 +90,7 @@ h3 {
 }
 
 .clear-button:hover {
-    background-color: #6b0000;
-}
+    background-color: #991D20; filter: brightness(0.9);}
 
 /* Recording List */
 .recordings-list {
@@ -153,14 +152,12 @@ h3 {
 }
 
 .watch-recording-button:hover {
-    background-color: #6b0000;
-    transform: scale(1.05);
-}
+    background-color: #991D20;
+    transform: scale(1.05); filter: brightness(0.9);}
 
 .watch-recording-button:active {
-    background-color: #6b0000;
-    transform: scale(0.95);
-}
+    background-color: #991D20;
+    transform: scale(0.95); filter: brightness(0.9);}
 
 /* No Results - Removed in favor of NoResultsFound component */
 
