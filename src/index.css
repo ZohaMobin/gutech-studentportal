@@ -2,6 +2,15 @@
    and text stays sharp, the same way real browser zoom works. See gutech-adminportal-new's index.css for the fuller
    note and the sidebar fix that had to go with it (a box sized with 100vh stops short of the real zoomed bottom of
    the screen; fixed here the same way, in sidebar.css). */
-body {
-  zoom: 0.8;
+/* Computers and tablets only. On a phone the app renders at its true size: at 80% every label, button and icon would be a fifth
+   smaller than designed. --fill-vh is the height that fills the screen: 125vh under the zoom (100vh only reaches 80% of it), 100vh without. */
+:root { --fill-vh: 100vh; }
+@media (min-width: 768px) {
+  :root { --fill-vh: 125vh; }
+  body { zoom: 0.8; }
+}
+
+/* A form field under 16px makes iPhones zoom the page in when it is tapped, and the page then has to be zoomed back out by hand. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea { font-size: 16px; }
 }

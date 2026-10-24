@@ -10,7 +10,6 @@ import ClassSchedule from './Pages/ClassSchedule/ClassSchedule';
 import Transcript from './Pages/Transcript/Transcript';
 import Dashboard from './Pages/DashboardPage/dashboardPage';
 import Attendance from './Pages/Attendance/Attendance';
-import ComingSoonPage from './Pages/ComingSoon/comingsoon';
 
 function App() {
   return (
@@ -30,7 +29,8 @@ function App() {
                 <Route path="marks" element={<GradingPage />} />
                 <Route path="timetable" element={<ClassSchedule />} />
                 <Route path="transcript" element={<Transcript />} />
-                <Route path="fees" element={<ComingSoonPage />} />
+                {/* Any other address under /main (an old link to a page that no longer exists) lands on the dashboard. */}
+                <Route path="*" element={<Navigate to="/main/dashboard" replace />} />
                 <Route path="attendance" element={<Attendance />} />
               </Route>
             </Route>

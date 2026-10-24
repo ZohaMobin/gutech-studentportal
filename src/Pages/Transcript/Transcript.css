@@ -310,3 +310,29 @@ h2 {
 
 /* The transcript is set in a serif for print; an error is not part of the document, so it uses the same sans as every other page */
 .transcript-container .es { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+/* ---- Phones (on screen only; printing is untouched) ------------------------------------------------------------------------
+   The paper keeps its look but stops wasting width: slim padding, labels above values, and a course table whose Grade column is on screen. */
+@media screen and (max-width: 640px) {
+  .transcript-container { margin: 12px 0; padding: 20px 14px; }
+  .transcript-header { margin-bottom: 20px; padding-bottom: 14px; }
+  .university-logo { font-size: 26px; }
+  .transcript-header h1 { font-size: 18px; }
+  .transcript-id { font-size: 13px; }
+  .info-group { flex-basis: 100%; min-width: 0; }
+  .student-info p { margin: 6px 0; }
+  .student-info p span { display: block; width: auto; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .course-table { font-size: 13px; }
+  .course-table th, .course-table td { padding: 8px 6px; }
+  .course-table th:nth-child(n+3), .course-table td:nth-child(n+3) { text-align: center; }
+  .course-table td:first-child { white-space: nowrap; }
+  .summary-details { flex-wrap: wrap; gap: 4px 14px; }
+  .summary-details span { margin-right: 0; }
+
+  .summary-table table { width: 100%; }
+  .summary-table td { padding: 8px 6px; }
+  .summary-table td:first-child { width: auto; }
+  .signature-section { gap: 16px; }
+}
+

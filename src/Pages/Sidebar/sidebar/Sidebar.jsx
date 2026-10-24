@@ -13,8 +13,7 @@ const Sidebar = ({ isOpen, activePage, onNavClick }) => {
     { id: 'attendance', label: 'Attendance', icon: '📅', path: '/main/attendance' },
     { id: 'marks', label: 'Marks', icon: '📄', path: '/main/marks' },
     { id: 'transcript', label: 'Transcript', icon: '📜', path: '/main/transcript' },
-    { id: 'timetable', label: 'Timetable', icon: '📆', path: '/main/timetable' },
-    { id: 'settings', label: 'Settings', icon: '⚙️', path: null }
+    { id: 'timetable', label: 'Timetable', icon: '📆', path: '/main/timetable' }
   ];
   
   return (
