@@ -2,7 +2,7 @@
 :root {
     --primary-color: #991D20;
     --primary-light: rgba(153, 29, 32, 0.1);
-    --primary-dark: #7A1619;
+    --primary-dark: #991D20;
     --secondary-color: #2A6592;
     --secondary-light: rgba(42, 101, 146, 0.1);
     --accent-color: #F5C32C;
@@ -40,7 +40,7 @@
 /* Student dashboard. Same visual language as the teacher dashboard and the Attendance page: maroon titles, a light grey
    panel, white cards, pale gold for what is happening now. */
 .sd {
-  --d-brand: rgb(153, 29, 32);
+  --d-brand: #991D20;
   --d-brand-tint: rgba(153, 29, 32, 0.06);
   --d-brand-track: rgba(153, 29, 32, 0.1);
   --d-gold: #f5c32c;
