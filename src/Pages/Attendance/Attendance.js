@@ -1,4 +1,4 @@
-import Loading from '../../Components/Loading/Loading';
+import { CourseListSkeleton, AttendanceSkeleton } from '../../Components/Loading/Skeletons';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
@@ -287,7 +287,7 @@ const Attendance = () => {
             </h3>
             <div className="section-list">
               {loading && courses.length === 0 ? (
-                <Loading variant="list" rows={4} label="Loading courses" />
+                <CourseListSkeleton />
               ) : courses.length === 0 ? (
                 error ? null : <div className="empty-text">No courses available</div>
               ) : (
@@ -314,7 +314,7 @@ const Attendance = () => {
 
         <div className="attendance-main">
           {loading && !activeCourse ? (
-            <Loading variant="table" rows={6} label="Loading attendance" />
+            <AttendanceSkeleton />
           ) : !activeCourse && courses.length === 0 && error ? (
             <ErrorState message={error} onRetry={fetchStudentCourses} />
           ) : !activeCourse ? (
