@@ -32,21 +32,28 @@ export const AttendanceSkeleton = () => (
   </div>
 );
 
-// Marks: course tabs, assessment-type tabs, the marks table and the total.
+// Marks: course tabs, the assessment-type bar, the table (seven centred columns) and the "Total so far" card.
+const Cols = ({ n, h, w = "46%", first, className = "" }) => (
+  <div className={`sk-cols ${className}`} style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+    {Array.from({ length: n }, (_, i) => <span key={i} className="sk-cell"><Bar w={i === 0 && first ? first : w} h={h} /></span>)}
+  </div>
+);
 export const MarksSkeleton = () => (
   <div className="sk-marks" aria-busy="true">
     <Status label="Loading marks" />
-    <div className="sk-tabs">{[9, 10, 8].map((w, i) => <Bar key={i} w={`${w}rem`} h={40} className="sk-pill" />)}</div>
-    <div className="sk-tabs sk-tabs-small">{[5, 6.5, 5.5, 5, 4].map((w, i) => <Bar key={i} w={`${w}rem`} h={32} className="sk-pill" />)}</div>
-    <div className="sk-card">
-      <div className="sk-thead"><Bar w="14%" h={11} /><Bar w="10%" h={11} /><Bar w="10%" h={11} /><Bar w="10%" h={11} /><Bar w="12%" h={11} /></div>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <div key={i} className="sk-line"><Bar w="22%" h={14} /><Bar w="8%" h={14} /><Bar w="8%" h={14} /><Bar w="8%" h={14} /><Bar w="10%" h={14} /><Bar w="8%" h={14} /></div>
-      ))}
+    <div className="sk-tabs">{[17, 14, 15].map((w, i) => <Bar key={i} w={`${w}rem`} h={38} className="sk-course-tab" />)}</div>
+    <div className="sk-card sk-typebar"><Cols n={5} h={12} w="5.5rem" /><span className="sk-underline" /></div>
+    <div className="sk-card sk-grid">
+      <Cols n={7} h={11} className="sk-head" />
+      {[0, 1, 2].map((i) => <Cols key={i} n={7} h={13} w="2.2rem" first="3.5rem" className="sk-row" />)}
     </div>
     <div className="sk-card sk-total">
-      <Bar w="9rem" h={20} />
-      <div className="sk-total-row">{[0, 1, 2, 3].map((i) => <div key={i}><Bar w="60%" h={11} /><Bar w="45%" h={22} /></div>)}</div>
+      <span className="sk-total-title"><Bar w="9rem" h={20} /></span>
+      <div className="sk-grid sk-total-grid">
+        <Cols n={4} h={11} className="sk-head" />
+        <Cols n={4} h={14} w="5rem" className="sk-row" />
+      </div>
+      <Bar w="min(34rem, 90%)" h={11} />
     </div>
   </div>
 );
