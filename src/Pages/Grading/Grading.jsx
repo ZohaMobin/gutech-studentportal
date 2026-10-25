@@ -1,4 +1,4 @@
-import Loading from '../../Components/Loading/Loading';
+import { MarksSkeleton } from '../../Components/Loading/Skeletons';
 import React, { useState, useEffect } from "react";
 import { takeCourseHint } from "../../utils/dashboardHint";
 import axios from "axios";
@@ -172,7 +172,7 @@ const Grading = () => {
         <div className="page-header">
           <h1>Marks Overview</h1>
         </div>
-        <Loading variant="table" rows={6} label="Loading marks" />
+        <MarksSkeleton />
       </div>
     );
   }
