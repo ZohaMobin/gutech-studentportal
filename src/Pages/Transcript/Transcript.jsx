@@ -1,4 +1,4 @@
-import Loading from '../../Components/Loading/Loading';
+import { TranscriptSkeleton } from '../../Components/Loading/Skeletons';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Transcript.css";
@@ -81,7 +81,7 @@ const Transcript = () => {
     return (
       <div className="print-wrapper">
         <div className="transcript-container">
-          <div style={{ padding: "2rem" }}><Loading variant="table" rows={6} label="Loading transcript" /></div>
+          <div style={{ padding: "2rem" }}><TranscriptSkeleton /></div>
         </div>
       </div>
     );
