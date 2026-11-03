@@ -264,11 +264,11 @@ const Grading = () => {
                     {item.isBonus ? <span className="bonus-badge">Bonus</span> : null}
                   </span>
                 </td>
-                <td data-label="Your marks" className="mt-mine"><span><strong>{item.obtainedMarks}</strong> <span className="mt-of">/ {item.totalMarks}</span></span></td>
-                <td data-label="Weightage" className="mt-quiet">{item.isBonus ? `+${item.weightage}%` : `${item.weightage}%`}</td>
-                <td data-label="Class average" className="mt-quiet">{typeof item.average === 'number' ? item.average.toFixed(2) : item.average}</td>
-                <td data-label="Min marks" className="mt-quiet">{item.min}</td>
-                <td data-label="Max marks" className="mt-quiet">{item.max}</td>
+                <td data-label="Your marks">{item.obtainedMarks} / {item.totalMarks}</td>
+                <td data-label="Weightage">{item.isBonus ? `+${item.weightage}%` : `${item.weightage}%`}</td>
+                <td data-label="Class average">{typeof item.average === 'number' ? item.average.toFixed(2) : item.average}</td>
+                <td data-label="Min marks">{item.min}</td>
+                <td data-label="Max marks">{item.max}</td>
               </tr>
             ))}
           </tbody>
@@ -293,7 +293,7 @@ const Grading = () => {
             </thead>
             <tbody>
               <tr>
-                <td data-label="Your total">{hasMarks ? <span><strong>{stats.totals.weightedMarks.toFixed(2)}</strong> <span className="mt-of">out of {stats.totals.gradedWeight}</span></span> : '-'}</td>
+                <td data-label="Your total">{hasMarks ? `${stats.totals.weightedMarks.toFixed(2)} out of ${stats.totals.gradedWeight}` : '-'}</td>
                 <td data-label="Percentage">{typeof stats.totals.percentageSoFar === 'number' ? `${stats.totals.percentageSoFar.toFixed(2)}%` : '-'}</td>
                 <td data-label="Class highest">{stats.sectionMax.toFixed(2)}</td>
                 <td data-label="Class lowest">{stats.sectionMin.toFixed(2)}</td>
