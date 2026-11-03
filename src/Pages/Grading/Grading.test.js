@@ -24,7 +24,7 @@ test("every figure carries its name, so on a phone each row can read as a small 
   await act(async () => { root.render(<Grading />); });
   await act(async () => { await new Promise((r) => setTimeout(r, 20)); });
   const cells = [...container.querySelectorAll(".marks-table tbody tr:first-child td")].slice(1);
-  expect(cells.map((c) => c.getAttribute("data-label"))).toEqual(["Weightage", "Your marks", "Total marks", "Class average", "Min marks", "Max marks"]);
+  expect(cells.map((c) => c.getAttribute("data-label"))).toEqual(["Your marks", "Weightage", "Class average", "Min marks", "Max marks"]);
   const totals = [...container.querySelectorAll(".grand-total-table tbody td")].map((c) => c.getAttribute("data-label"));
   expect(totals).toEqual(["Your total", "Percentage", "Class highest", "Class lowest"]);
   act(() => root.unmount());
